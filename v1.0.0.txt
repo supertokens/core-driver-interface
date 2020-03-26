@@ -14,6 +14,11 @@
         version: string
     }
 }
+- JsonObject is a non-stringified Json object (not json primitive or array). 
+An example is {
+    someKey: "someValue"
+}
+
 
 -----------------------------------------------------------------------
 
