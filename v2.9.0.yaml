@@ -872,7 +872,6 @@ paths:
     get:
       tags:
         - JWT Recipe
-      operation: getJWKS
       description: |
         Retrieve JWKs for JWT verification
       parameters:
@@ -885,9 +884,6 @@ paths:
           
         '400':
           $ref: '#/components/responses/400'
-        
-        '401':
-          $ref: '#/components/responses/401'
         
         '404':
           $ref: '#/components/responses/404'
@@ -1796,11 +1792,11 @@ components:
       type: object
       properties:
         payload:
-          $ref: '#components/schemad/createJWTPayload'
+          $ref: '#/components/schemas/createJWTPayload'
         algorithm:
-          $ref: '#components/schemad/createJWTAlgorithm'
+          $ref: '#/components/schemas/createJWTAlgorithm'
         jwksDomain:
-          $ref: '#components/schemad/jwksDomain'
+          $ref: '#/components/schemas/jwksDomain'
 
     
     emailVerificationVerifyGetResponse:
@@ -1977,9 +1973,9 @@ components:
       description: A JWK that can be used to verify a JWT
       properties:
         alg:
-          $ref: '#components/schemad/createJWTAlgorithm'
+          $ref: '#/components/schemas/createJWTAlgorithm'
         kty:
-          type: string,
+          type: string
           example: RSA
         use:
           type: string
