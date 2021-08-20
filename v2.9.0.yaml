@@ -1,0 +1,2482 @@
+openapi: 3.0.0
+info:
+  description: This version has not been released yet. Core Driver Interface http requests-responses
+  version: 2.8.0
+  title: Core Driver Interface
+  contact:
+    email: team@supertokens.io
+tags:
+  - name: EmailPassword Recipe
+  - name: ThirdParty Recipe
+  - name: EmailVerification Recipe
+  - name: Session Recipe
+  - name: Core
+paths:
+  /recipe/signin:
+    post:
+      tags:
+        - EmailPassword Recipe
+      operationId: emailPasswordSignin
+      description: |
+        Signin a user with email ID and password
+      parameters:
+        - $ref: '#/components/parameters/rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emailPasswordSigninRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/emailPasswordSignin'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+          
+  /recipe/signup:
+    post:
+      tags:
+        - EmailPassword Recipe
+      operationId: emailPasswordSignup
+      description: |
+        Signup a user with email ID and password
+      parameters:
+        - $ref: '#/components/parameters/rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emailPasswordSignupRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/emailPasswordSignup'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+          
+  /recipe/user:
+    get:
+      tags:
+        - EmailPassword Recipe
+      operationId: emailPasswordGetUser
+      description: |
+        Get a user's information
+      parameters:
+        - $ref: '#/components/parameters/rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: email
+          description: use either email or userId, not both
+          schema:
+            $ref: '#/components/schemas/email'
+        - in: query
+          name: userId
+          description: use either email or userId, not both
+          schema:
+            $ref: '#/components/schemas/userId'
+      
+      responses:
+        '200':
+          $ref: '#/components/responses/emailPasswordGetUser'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+        
+  /recipe/user/password/reset/token:
+    post:
+      tags:
+        - EmailPassword Recipe
+      operationId: emailPasswordGetPasswordResetToken
+      description: |
+        Generate a new reset password token for this user
+      parameters:
+        - $ref: '#/components/parameters/rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emailPasswordResetTokenRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/emailPasswordResetToken'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/users:
+    get:
+      deprecated: true
+      tags:
+        - EmailPassword Recipe
+      operationId: emailPasswordGetUsers
+      description: |
+        User Pagination API
+      parameters:
+        - $ref: '#/components/parameters/rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/paginationToken'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/timeJoinedOrder'
+      responses:
+        '200':
+          $ref: '#/components/responses/emailPasswordGetUsers'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+        
+        
+          
+  /recipe/user/password/reset:
+    post:
+      tags:
+        - EmailPassword Recipe
+      operationId: emailPasswordGetPasswordReset
+      description: |
+        Reset a password using password reset token
+      parameters:
+        - $ref: '#/components/parameters/rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emailPasswordResetRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/emailPasswordReset'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+          
+  
+  /recipe/users/count:
+    get:
+      deprecated: true
+      tags:
+        - EmailPassword Recipe
+      operationId: emailPasswordGetUserCount
+      description: |
+        Get number of users
+      parameters:
+        - $ref: '#/components/parameters/rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        '200':
+          $ref: '#/components/responses/emailPasswordGetUserCount'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/signinup:
+    post:
+      tags:
+        - ThirdParty Recipe
+      operationId: thirdPartySigninup
+      description: |
+        Signin/up a user
+      parameters:
+        - $ref: '#/components/parameters/thirdPartyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/thirdPartySigninupRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/thirdPartySigninup'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/user⠀:
+    get:
+      tags:
+        - ThirdParty Recipe
+      operationId: thirdPartyGetUser
+      description: |
+        Get a user's information.
+        Note that there is an invisible character at the end of the path, this was to avoid a conflict with the OpenAPI spec. 
+        
+      parameters:
+        - $ref: '#/components/parameters/thirdPartyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/userId'
+        - in: query
+          name: thirdPartyId
+          description: Either use userId or thirdPartyId and thirdPartyUserId
+          schema:
+            $ref: '#/components/schemas/thirdPartyId'
+        - in: query
+          name: thirdPartyUserId
+          description: Either use userId or thirdPartyId and thirdPartyUserId
+          schema:
+            $ref: '#/components/schemas/thirdPartyUserId'
+      responses:
+        '200':
+          $ref: '#/components/responses/thirdPartyGetUser'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+          
+  /recipe/users/by-email :
+    get:
+      operationId: thirdPartyGetUsersByEmail
+      tags:
+        - ThirdParty Recipe
+      description: |
+        Get all users accounts associated with given email
+        
+      parameters:
+        - $ref: '#/components/parameters/thirdPartyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: email
+          required: true
+          description: User's email
+          schema:
+            type: string
+            example: john.doe@example.com
+            
+        
+      responses:
+        '200':
+          $ref: '#/components/responses/thirdPartyGetUsersByEmail'
+          
+        '400':
+          $ref: '#/components/responses/400'
+          
+        '401':
+          $ref: '#/components/responses/401'
+          
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/users⠀:
+    get:
+      deprecated: true
+      tags:
+        - ThirdParty Recipe
+      operationId: thirdPartyGetUsers
+      description: |
+        Get User Pagination data.
+        Note that there is an invisible character at the end of the path, this was to avoid a conflict with the OpenAPI spec.
+      parameters:
+        - $ref: '#/components/parameters/thirdPartyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/paginationToken'
+        - $ref: '#/components/parameters/timeJoinedOrder'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          $ref: '#/components/responses/thirdPartyGetUsers'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/users/count⠀:
+    get:
+      deprecated: true
+      tags:
+        - ThirdParty Recipe
+      operationId: thirdPartyGetUserCount
+      description: |
+        Get number of users.
+        Note that there is an invisible character at the end of the path, this was to avoid a conflict with the OpenAPI spec
+      parameters:
+        - $ref: '#/components/parameters/thirdPartyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        '200':
+          $ref: '#/components/responses/thirdPartyGetUserCount'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+          
+  # /recipe/user/email/revoke/token:
+  #   post:
+  #     tags:
+  #       - EmailVerification Recipe
+  #     operationId: emailVerificationRevokeToken
+  #     description: |
+  #       Revoke a generated email verification token
+  #     parameters:
+  #       - $ref: '#/components/parameters/emailVerificationRid'
+  #       - $ref: '#/components/parameters/api-key'
+  #       - $ref: '#/components/parameters/cdi-version'
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/emailVerificationRevokeTokenRequest'
+  #     responses:
+  #       '200':
+  #         $ref: '#/components/responses/emailVerificationRevokeToken'
+  #       '400':
+  #         $ref: '#/components/responses/400'
+  #       '401':
+  #         $ref: '#/components/responses/401'
+  #       '404':
+  #         $ref: '#/components/responses/404'
+  #       '500':
+  #         $ref: '#/components/responses/500'
+  
+  /recipe/user/email/verify/token:
+    post:
+      tags:
+        - EmailVerification Recipe
+      operationId: emailVerificationVerifyToken
+      description: |
+        Generate a new email verification token for this user
+      parameters:
+        - $ref: '#/components/parameters/emailVerificationRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emailVerificationVerifyTokenRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/emailVerificationVerifyToken'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/user/email/verify:
+    post:
+      tags:
+        - EmailVerification Recipe
+      operationId: emailVerificationVerify
+      description: |
+        Verify an email
+      parameters:
+        - $ref: '#/components/parameters/emailVerificationRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emailVerificationVerifyRequest'
+      
+      responses:
+        '200':
+          $ref: '#/components/responses/emailVerificationVerify'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    get:
+      tags:
+        - EmailVerification Recipe
+      operationId: emailVerificationVerifyGet
+      description: |
+        Check if an email is verified
+      parameters:
+        - $ref: '#/components/parameters/emailVerificationRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/email'
+      responses:
+        '200':
+          $ref: '#/components/responses/emailVerificationVerifyGet'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/handshake:
+    post:
+      tags: 
+        - Session Recipe
+      operationId: sessionHandshake
+      description: |
+        Handshake for session
+      parameters:
+        - $ref: '#/components/parameters/sessionRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        '200':
+          $ref: '#/components/responses/sessionHandshake'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/session:
+    post:
+      tags:
+        - Session Recipe
+      operationId: createNewSession
+      description: |
+        Create a new Session 
+      parameters:
+        - $ref: '#/components/parameters/sessionRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createNewSessionRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/createNewSession'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    get:
+      tags:
+        - Session Recipe
+      operationId: getSessionInfo
+      description: |
+        Get user and session information for a given session handle
+      parameters:
+        - $ref: '#/components/parameters/sessionRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: sessionHandle
+          schema:
+            $ref: '#/components/schemas/handle'
+      responses:
+        '200':
+          $ref: '#/components/responses/getSesionInfo'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/session/remove:
+    post:
+      tags:
+        - Session Recipe
+      operationId: deleteSession
+      description: |
+        Delete a sesion
+      parameters:
+        - $ref: '#/components/parameters/sessionRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/sessionRemoveSessionHandleRequest'
+                - $ref: '#/components/schemas/sessionRemoveUserIdRequest'
+                
+      responses:
+        '200':
+          $ref: '#/components/responses/deleteSession'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/session/verify:
+    post:
+      tags:
+        - Session Recipe
+      operationId: verifySession
+      description: |
+        Verify a Session
+      parameters:
+        - $ref: '#/components/parameters/sessionRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/verifySessionRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/verifySession'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+      
+  
+  /recipe/session/refresh:
+    post:
+      tags:
+        - Session Recipe
+      operationId: refreshSession
+      description: |
+        Refresh a Session
+      parameters:
+        - $ref: '#/components/parameters/sessionRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/refreshSessionRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/refreshSession'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/session/user:
+    get:
+      tags:
+        - Session Recipe
+      operationId: getUserSessionHandles
+      description: |
+        Get session handles for a user
+      parameters:
+        - $ref: '#/components/parameters/sessionRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/userId'
+      responses:
+        '200':
+          $ref: '#/components/responses/getUserSession'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/session/regenerate:
+    post:
+      tags:
+        - Session Recipe
+      operationId: regenerateSession
+      description: |
+        Regenerate a session
+      parameters:
+        - $ref: '#/components/parameters/sessionRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/regenerateSessionRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/regenerateSession'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/session/data:
+    get:
+      deprecated: true
+      tags:
+        - Session Recipe
+      operationId: getSessionData
+      description: |
+        Get session data
+      parameters:
+        - $ref: '#/components/parameters/sessionRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: sessionHandle
+          description: Users session handle
+          schema:
+            $ref: '#/components/schemas/handle'
+      responses:
+        '200':
+          $ref: '#/components/responses/getSessionData'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    
+    put:
+      tags:
+        - Session Recipe
+      operationId: putSessionData
+      description: |
+        Change session data
+      parameters:
+        - $ref: '#/components/parameters/sessionRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/putSessionDataRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/putSessionData'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+          
+  /recipe/jwt:
+    post:
+      tags:
+        - JWT Recipe
+      operationId: createSignedJWT
+      description: |
+        Create a signed JWT
+      parameters:
+        - $ref: '#/components/parameters/jwtRID'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createJWTRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/createSignedJWT'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/jwt/jwks:
+    get:
+      tags:
+        - JWT Recipe
+      operation: getJWKS
+      description: |
+        Retrieve JWKs for JWT verification
+      parameters:
+        - $ref: '#/components/parameters/jwtRID'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        '200':
+          $ref: '#/components/responses/getJWKS'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+
+  /recipe/jwt/data:
+    get:
+      deprecated: true
+      tags:
+        - Session Recipe
+      operationId: getJWTData
+      description: |
+        Get JWT data for a session
+      parameters:
+        - $ref: '#/components/parameters/sessionRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: sessionHandle
+          description: Users session handle
+          schema:
+            $ref: '#/components/schemas/handle'
+      responses:
+        '200':
+          $ref: '#/components/responses/getJWTData'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    
+    put:
+      tags:
+        - Session Recipe
+      operationId: putJWTData
+      description: |
+        Change JWT data for a session
+      parameters:
+        - $ref: '#/components/parameters/sessionRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/putJWTDataRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/putJWTData'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    
+  /apiversion:
+    get:
+      tags:
+        - Core
+      operationId: getApiVersion
+      description: |
+        Get a list of compatible CDI versions
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+      responses:
+        '200':
+          $ref: '#/components/responses/getAPiVersion'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /config:
+    get:
+      tags:
+        - Core
+      operationId: getConfig
+      description: |
+        Get path to the loaded config file
+      parameters: 
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: pid
+          schema:
+            type: string
+            example: 21307
+          
+      responses:
+        '200':
+          $ref: '#/components/responses/getConfig'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    
+  /hello:
+    get:
+      tags:
+        - Core
+      operationId: getHello
+      description: |
+        Return a simple hello message
+      responses:
+        '200':
+          $ref: '#/components/responses/hello'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - Core
+      operationId: putHello
+      description: |
+        Return a simple hello message
+      responses:
+        '200':
+          $ref: '#/components/responses/hello'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    
+    post:
+      tags:
+        - Core
+      operationId: postHello
+      description: |
+        Return a simple hello message
+      responses:
+        '200':
+          $ref: '#/components/responses/hello'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+          
+    delete:
+      tags:
+        - Core
+      operationId: deleteHello
+      description: |
+        Return a simple hello message
+      responses:
+        '200':
+          $ref: '#/components/responses/hello'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /telemetry:
+    get:
+      tags:
+        - Core
+      operationId: getTelemetry
+      description: |
+        Returns the telemetryID if it exists
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        '200':
+          $ref: '#/components/responses/telemetry'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+          
+  /users/count:
+    get:
+      tags:
+        - Core
+      operationId: getUsersCount
+      description: |
+        Get number of users.
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/includeRecipeIds'
+      responses:
+        '200':
+          $ref: '#/components/responses/usersCount'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+        
+  /users:
+    get:
+      tags:
+        - Core
+      operationId: getUsers
+      description: |
+        User Pagination
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/includeRecipeIds'
+        - $ref: '#/components/parameters/paginationToken'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/timeJoinedOrder'
+      responses:
+        '200':
+          $ref: '#/components/responses/users'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /user/remove:
+    post:
+      tags:
+        - Core
+      operationId: deleteUser
+      description: |
+        Delete user
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteUserRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/deleteUser'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+          
+      
+        
+components:
+  parameters:
+    rid:
+      name: rid
+      in: header
+      example: emailpassword
+      required: true
+      schema:
+        type: string
+    api-key:
+      name: api-key
+      in: header
+      example: ajs30Nlbs0DjvsdFIne934n8NVee5n
+      required: false
+      schema:
+        type: string
+    
+    thirdPartyRid:
+      name: rid
+      in: header
+      example: thirdparty
+      required: true
+      schema:
+        type: string
+    
+    emailVerificationRid:
+      name: rid
+      in: header
+      example: emailverification
+      required: true
+      schema:
+        type: string
+        
+    sessionRid:
+      name: rid
+      in: header
+      example: session
+      required: true
+      schema:
+        type: string
+
+    jwtRID:
+      name: rid
+      in: header
+      example: jwt
+      required: true
+      schema:
+        type: string
+        
+        
+    cdi-version:
+      name: cdi-version
+      in: header
+      description: X.Y of the X.Y.Z CDI version. 
+      example: 2.8
+      required: true
+      schema:
+        type: string
+    
+    
+    paginationToken:
+      name: paginationToken
+      in: query
+      example: ZmE3YTA4NDEtY...MjM5MTgwMzIyMzE=
+      schema:
+        type: string
+    
+    limit:
+      name: limit
+      in: query
+      example: 1
+      schema:
+        type: number
+    
+    timeJoinedOrder:
+      name: timeJoinedOrder
+      in: query
+      schema:
+        type: string
+        enum: ["ASC", "DESC"]
+    
+
+    email:
+      name: email
+      in: query
+      required: false
+      schema:
+         type: string
+         example: johndoe@gmail.com
+    
+    userId:
+      name: userId
+      in: query
+      required: false
+      schema:
+         type: string
+         example: fa7a0841-b533-4478-9253-0fde890c576
+    
+    includeRecipeIds:
+      name: includeRecipeIds
+      in: query
+      required: false
+      description: The param should take an array of comma seperated strings
+      schema:
+        type: string
+        example: val1,val2,val3..
+      
+    
+  responses:
+    500:
+      description: error code 500
+      content:
+        text/plain:
+          schema:
+            $ref: "#/components/schemas/internalError"
+    404:
+      description: error code 404
+      content:
+        text/plain:
+          schema:
+            $ref: "#/components/schemas/notFound"
+    405:
+      description: error code 405
+      content:
+        text/plain:
+          schema:
+            $ref: "#/components/schemas/methodNotSupported"
+    400:
+      description: error code 400
+      content:
+        text/plain:
+          schema:
+            $ref: "#/components/schemas/invalidJSON"
+    401:
+      description: error code 401
+      content:
+        text/plain:
+          schema:
+            $ref: "#/components/schemas/requestUnauthorised"
+    
+    emailPasswordSignin:
+      description: signin response
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/emailPasswordUserResponse'
+            - $ref: '#/components/schemas/wrongCredentialsResponse'
+    
+    emailPasswordSignup:
+      description: signup response
+      content:
+        application/json:
+          schema:
+            oneOf:
+            - $ref: '#/components/schemas/emailPasswordSignupResponse'
+            - $ref: '#/components/schemas/emailExistsResponse'
+    
+    emailPasswordGetUser:
+      description: get user's information
+      content:
+        application/json:
+            schema: 
+              oneOf:
+              - $ref: '#/components/schemas/emailPasswordGetUserResponse'
+              - $ref: '#/components/schemas/unknownEmailOrUserIdResponse'
+    
+    emailPasswordGetUserCount:
+      description: Get number of users
+      content:
+        application/json:
+            schema: 
+              $ref: '#/components/schemas/emailPasswordGetUserCountResponse'
+
+              
+    emailPasswordResetToken:
+      description: Generate a new reset password token for this user
+      content:
+        application/json:
+            schema: 
+              oneOf:
+              - $ref: '#/components/schemas/emailPasswordResetTokenResponse'
+              - $ref: '#/components/schemas/unknownUserIdResponse'
+    
+    emailPasswordReset:
+      description: Reset a password using password reset token
+      content:
+        application/json:
+            schema: 
+              oneOf:
+              - $ref: '#/components/schemas/statusOKResponse'
+              - $ref: '#/components/schemas/resetPasswordInvalidTokenResponse'
+    
+    emailPasswordGetUsers:
+      description: get user's information
+      content:
+        application/json:
+            schema: 
+              $ref: '#/components/schemas/emailPasswordGetUsersResponse'
+    thirdPartySigninup:
+      description: Signin/up a user
+      content:
+        application/json:
+            schema: 
+              $ref: '#/components/schemas/thirdPartySigninupResponse'
+    
+    thirdPartyGetUser:
+      description: Get a user's information.
+      content:
+        application/json:
+            schema:
+              oneOf:
+               - $ref: '#/components/schemas/thirdPartyGetUserResponse'
+               - $ref: '#/components/schemas/thirdPartyGetUserErrorResponse'
+    
+    thirdPartyGetUsers:
+      description: Get user's information.
+      content:
+        application/json:
+            schema:
+               $ref: '#/components/schemas/thirdPartyGetUsersResponse'
+               
+    thirdPartyGetUsersByEmail:
+      description: Get all users associated with given email
+      content:
+        application/json:
+            schema:
+              $ref: '#/components/schemas/thirdPartyGetUsersByEmailResponse'
+    
+    thirdPartyGetUserCount:
+      description: Get number of users
+      content:
+        application/json:
+            schema: 
+              $ref: '#/components/schemas/thirdPartyGetUserCountResponse'
+    
+    emailVerificationVerifyToken:
+      description: Generate a new email verification token for this user
+      content:
+        application/json:
+            schema: 
+              oneOf:
+              - $ref: '#/components/schemas/emailVerificationVerifyTokenResponse'
+              - $ref: '#/components/schemas/emailAlreadyVerifiedResponse'
+    
+    emailVerificationVerify:
+      description: Verify an email
+      content:
+        application/json:
+            schema: 
+              oneOf:
+              - $ref: '#/components/schemas/emailVerificationVerifyResponse'
+              - $ref: '#/components/schemas/emailVerificationInvalidTokenResponse'
+    
+    emailVerificationVerifyGet:
+      description: Verify an email
+      content:
+        application/json:
+            schema: 
+              $ref: '#/components/schemas/emailVerificationVerifyGetResponse'
+    
+    sessionHandshake:
+      description: Session Handshake
+      content:
+        application/json:
+            schema: 
+              $ref: '#/components/schemas/sessionHandshakeResponse'
+    createNewSession:
+      description: Create a new Session
+      content:
+        application/json:
+            schema: 
+              $ref: '#/components/schemas/createNewSessionResponse'
+    
+    deleteSession:
+      description: Delete a session
+      content:
+        application/json:
+            schema: 
+              $ref: '#/components/schemas/deleteSessionResponse'
+    
+    verifySession:
+      description: Verify a session
+      content:
+        application/json:
+            schema: 
+              oneOf:
+                - $ref: '#/components/schemas/verifySessionResponse'
+                - $ref: '#/components/schemas/verifySesionUnauthorisedResponse'
+                - $ref: '#/components/schemas/verifySessionTryRefreshTokeResponse'
+    
+    refreshSession:
+      description: Refresh a session
+      content:
+        application/json:
+            schema: 
+              oneOf:
+                - $ref: '#/components/schemas/refreshSessionResponse'
+                - $ref: '#/components/schemas/refreshSessionTokenTheftDetectedResponse'
+                - $ref: '#/components/schemas/refreshSessionUnauthorisedResponse'
+    
+    getUserSession:
+      description: Get user Session Handles
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/getUserSessionResponse'
+            
+    regenerateSession:
+      description: Regenerate user session
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/regenerateSessionResponse'
+              - $ref: '#/components/schemas/regenerateSessionUnauthorisedResponse'
+    
+    getSessionData:
+      description: Get Session Data
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/getSessionDataResponse'
+              - $ref: '#/components/schemas/getSessionDataUnauthorisedResponse'
+    
+    putSessionData:
+      description: Change Session Data
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/statusOKResponse'
+              - $ref: '#/components/schemas/unauthorisedMessageResponse'
+    
+    getJWTData:
+      description: Get JWT Data
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/getJWTDataResponse'
+              - $ref: '#/components/schemas/getJWTDataUnauthorisedResponse'
+    
+    putJWTData:
+      description: Change JWT Data for a session
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/statusOKResponse'
+              - $ref: '#/components/schemas/unauthorisedMessageResponse'
+    
+    getAPiVersion:
+      description: get api version
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/getApiVersionResponse'
+    
+    getConfig:
+      description: get api version
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/getConfigResponse'
+              - $ref: '#/components/schemas/notAllowedResponse'
+    
+    hello:
+      description: return a simple hello message
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/helloResponse'
+            
+    telemetry:
+      description:  Returns the telemetryID if it exists
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/telemetryResponse'
+              - $ref: '#/components/schemas/existsFalseResponse'
+    
+    usersCount:
+      description: Get number of users
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/usersCountResponse'
+    
+    users:
+      description: User Pagination
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/usersResponse'
+            
+    deleteUser:
+      description: Delete user
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/deleteUserResponse'
+    
+    getSesionInfo:
+      description: Get user and session information for a given session handle
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/getSessionInfoResponse'
+              - $ref: '#/components/schemas/unauthorisedMessageResponse'
+
+    createSignedJWT:
+      description: Create a signed JWT
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/createJWTResponse'
+              - $ref: '#/components/schemas/createJWTErrorResponse'
+    
+    getJWKS:
+      description: Retrieve JWKs for JWT verification
+      content:
+        application/son:
+          schema:
+            $ref: '#/components/schemas/getJWKSResponse'
+      
+
+  schemas:
+    token:
+      type: string
+      example: ZTRiOTBjNz...jI5MTZlODkxw
+      
+    deleteUserResponse:
+      oneOf:
+        - $ref: '#/components/schemas/unknownUserIdResponse'
+        - $ref: '#/components/schemas/statusOKResponse'
+        
+    deleteUserRequest:
+      type: object
+      properties:
+        userId:
+          $ref: '#/components/schemas/userId'
+      
+    emailPasswordSigninRequest:
+      type: object
+      properties:
+        email:
+          $ref: '#/components/schemas/email'
+        password:
+          $ref: '#/components/schemas/password'
+    
+    emailPasswordSignupRequest:
+      $ref: '#/components/schemas/emailPasswordSigninRequest'
+      
+    emailPasswordResetTokenRequest:
+      type: object
+      properties:
+        userId:
+          $ref: '#/components/schemas/userId'
+    
+    emailPasswordResetRequest:
+      type: object
+      properties:
+        method:
+          type: string
+          enum: 
+            - token
+        token:
+          $ref: '#/components/schemas/token'
+        newPassword:
+          type: string
+          example: newpassword123
+    
+    thirdPartySigninupRequest:
+      type: object
+      properties:
+        thirdPartyId:
+          $ref: '#/components/schemas/thirdPartyId'
+        thirdPartyUserId:
+          $ref: '#/components/schemas/thirdPartyUserId'
+        email:
+          $ref: '#/components/schemas/thirdPartyEmail'
+    
+    emailVerificationVerifyTokenRequest:
+      type: object
+      properties:
+        userId:
+          $ref: '#/components/schemas/userId'
+        email:
+          $ref: '#/components/schemas/email'
+    
+    emailVerificationVerifyRequest:
+      type: object
+      properties:
+        method:
+          type: string
+          enum: 
+            - token
+        token:
+          $ref: '#/components/schemas/token'
+    
+    createNewSessionRequest:
+      type: object
+      properties:
+        userId:
+          $ref: '#/components/schemas/userId'
+        userDataInJWT:
+          $ref: '#/components/schemas/userDataInJWT'
+        userDataInDatabase:
+          $ref: '#/components/schemas/userDataInDatabase'
+        enableAntiCsrf:
+          $ref: '#/components/schemas/enableAntiCsrf'
+          
+    verifySessionRequest:
+      type: object
+      properties:
+        accessToken:
+          $ref: '#/components/schemas/token'
+        enableAntiCsrf:
+          $ref: '#/components/schemas/enableAntiCsrf'
+        doAntiCsrfCheck:
+          type: boolean
+          example: false
+        antiCsrfToken:
+          $ref: '#/components/schemas/token'
+    
+    refreshSessionRequest:
+      type: object
+      properties:
+        refreshToken:
+          $ref: '#/components/schemas/token'
+        enableAntiCsrf:
+          $ref: '#/components/schemas/token'
+        antiCsrfToken:
+          $ref: '#/components/schemas/token'
+    
+    sessionRemoveSessionHandleRequest:
+      type: object
+      properties:
+        sessionHandles:
+          $ref: '#/components/schemas/sessionHandles'
+    
+    sessionRemoveUserIdRequest:
+      type: object
+      properties:
+        userId:
+          $ref: '#/components/schemas/userId'
+    
+    regenerateSessionRequest:
+      type: object
+      properties:
+        accessToken: 
+          $ref: '#/components/schemas/token'
+        userDataInJWT:
+          $ref: '#/components/schemas/userDataInJWT'
+    
+    putSessionDataRequest:
+      type: object
+      properties:
+        sessionHandle:  
+          $ref: '#/components/schemas/handle'
+        userDataInDatabase:
+          $ref: '#/components/schemas/userDataInDatabase'
+    
+    putJWTDataRequest:
+      type: object
+      properties:
+        sessionHandle:
+          $ref: '#/components/schemas/handle'
+        userDataInJWT:
+          $ref: '#/components/schemas/userDataInJWT'
+
+    createJWTRequest:
+      type: object
+      properties:
+        payload:
+          $ref: '#components/schemad/createJWTPayload'
+        algorithm:
+          $ref: '#components/schemad/createJWTAlgorithm'
+        jwksDomain:
+          $ref: '#components/schemad/jwksDomain'
+
+    
+    emailVerificationVerifyGetResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        isVerified:
+          $ref: '#/components/schemas/isVerified'
+      
+    thirdPartyId:
+      type: string
+      example: google
+      
+    thirdPartyUserId:
+      type: string
+      example: 106347997792363865062
+    
+    thirdPartyEmail:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/email'
+    
+    isVerified:
+          type: boolean
+          example: true
+          
+    email:
+      type: string
+      example: johndoe@gmail.com
+      
+    password:
+      type: string
+      example: password123
+    
+    userId:
+      type: string
+      example: fa7a0841-b533-4478-95533-0fde890c3483
+    
+    timeJoined:
+      type: number
+      example: 1623918032231
+    
+    paginationToken:
+      type: string
+      example: ZmE3YTA4ND...OzE2MjM5MTgwMzIyMzE=
+    
+    user:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/userId'
+        email:
+          $ref: '#/components/schemas/email'
+        timeJoined:
+          $ref: '#/components/schemas/timeJoined'
+    
+    thirdPartyUser:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/userId'
+        timeJoined:
+          $ref: '#/components/schemas/timeJoined'
+        email:
+          $ref: '#/components/schemas/email'
+        thirdparty:
+          type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/thirdPartyId'
+            userId:
+              $ref: '#/components/schemas/thirdPartyUserId'
+      
+    jwtSigningPublicKey:
+      type: string
+      example: MIIBIjANBgkq...nKH0QIDAQAB
+    
+    jwtSigningPublicKeyExpiryTime:
+      type: number
+      example: 1624345236945
+    
+    accessTokenBlacklistingEnabled:
+      type: boolean
+      example: true
+      
+    accessTokenValidity:
+      type: number
+      example: 3600000
+    
+    refreshTokenValidity:
+      type: number
+      example: 8640000000
+              
+    statusOK:
+      type: string
+      enum:
+        - OK
+    
+    userDataInJWT:
+      type: object
+      description: should be a JSON object (not a JSON literal nor an array)
+      example: {"test":123}
+    
+    userDataInDatabase:
+      type: object
+      description: should be a JSON object (not a JSON literal nor an array)
+      example: {"test":123}
+      
+    enableAntiCsrf:
+      type: boolean
+      example: false
+    
+    handle:
+      type: string
+      example: 68en6gd6-865b-4af6-ba00-96e5c153257d
+    
+    message:
+      type: string
+      example: Error Message
+      
+    session:
+      type: object
+      properties:
+        handle:
+          $ref: '#/components/schemas/handle'
+        userId:
+          $ref: '#/components/schemas/userId'
+        userDataInJWT:
+          $ref: '#/components/schemas/userDataInJWT'
+    
+    cookieInfo:
+      type: object
+      properties:
+        token:
+          $ref: '#/components/schemas/token'
+        expiry:
+          $ref: '#/components/schemas/expiry'
+        createdTime:
+          $ref: '#/components/schemas/timeCreated'
+    
+    expiry:
+      type: number
+      example: 1637262633029
+      
+    timeCreated:
+      type: number
+      example: 1637262633029
+      
+          
+    sessionHandles:
+      type: array
+      items:
+        $ref: '#/components/schemas/handle'
+
+    createJWTPayload:
+      type: object
+      description: The payload of the JWT, should be a JSON object.
+      example: {"custom-claim": ""}
+
+    createJWTAlgorithm:
+      type: string
+      description: The algorithm to use when creating the JWT.
+      enum: ["RSA256"]
+
+    jwksDomain:
+      type: string
+      description: This is used as the value for the issuer claim in the JWT payload.
+      example: https://api.test.com/
+
+    jwk:
+      type: object
+      description: A JWK that can be used to verify a JWT
+      properties:
+        alg:
+          $ref: '#components/schemad/createJWTAlgorithm'
+        kty:
+          type: string,
+          example: RSA
+        use:
+          type: string
+          example: sig
+        kid:
+          type: string
+          description: Unique identifier for the JWK
+        x5c:
+          type: array
+          description: X.509 Certificate Chain
+          items:
+            type: string
+        
+      
+        
+    
+    emailPasswordUserResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+          
+        user:
+          $ref: '#/components/schemas/user'
+    
+    emailPasswordSignupResponse:
+      $ref: '#/components/schemas/emailPasswordUserResponse'
+    
+    emailPasswordGetUserResponse:
+      $ref: '#/components/schemas/emailPasswordUserResponse'
+    
+    emailPasswordGetUserCountResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        count:
+          type: number
+          example: 10
+    
+    emailPasswordGetUsersResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/user'
+        nextPaginationToken:
+          $ref: '#/components/schemas/paginationToken'
+            
+    emailPasswordResetTokenResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        token:
+          $ref: '#/components/schemas/token'
+    
+    thirdPartySigninupResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        createdNewUser:
+          type: boolean
+          example: true
+        user:
+          $ref: '#/components/schemas/thirdPartyUser'
+    
+    thirdPartyGetUserResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        user:
+          $ref: '#/components/schemas/thirdPartyUser'
+    
+    thirdPartyGetUserErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ["UNKNOWN_USER_ID_ERROR", "UNKNOWN_THIRD_PARTY_USER_ERROR"]
+    
+    thirdPartyGetUsersResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        user:
+          type: array
+          items:
+            $ref: '#/components/schemas/thirdPartyUser'
+        nextPaginationToken:
+          $ref: '#/components/schemas/paginationToken'
+          
+    thirdPartyGetUsersByEmailResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/thirdPartyUser'
+    
+    thirdPartyGetUserCountResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        count:
+          type: number
+          example: 10
+    
+    emailVerificationVerifyTokenResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        token:
+          $ref: '#/components/schemas/token'
+    
+    emailVerificationVerifyResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        userId:
+          $ref: '#/components/schemas/userId'
+        email:
+          $ref: '#/components/schemas/email'
+    
+    sessionHandshakeResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        jwtSigningPublicKey:
+          $ref: '#/components/schemas/jwtSigningPublicKey'
+        jwtSigningPublicKeyExpiryTime:
+          $ref: '#/components/schemas/jwtSigningPublicKeyExpiryTime'
+        accessTokenBlacklistingEnabled:
+          $ref: '#/components/schemas/accessTokenBlacklistingEnabled'
+        accessTokenValidity:
+          $ref: '#/components/schemas/accessTokenValidity'
+        refreshTokenValidity: 
+          $ref: '#/components/schemas/refreshTokenValidity'
+    
+    createNewSessionResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        session:
+          $ref: '#/components/schemas/session'
+        accessToken:
+          $ref: '#/components/schemas/cookieInfo'
+        refreshToken:
+          $ref: '#/components/schemas/cookieInfo'
+        idRefreshToken:
+          $ref: '#/components/schemas/cookieInfo'
+        antiCsrfToken:
+          $ref: '#/components/schemas/token'
+        jwtSigningPublicKey:
+          $ref: '#/components/schemas/jwtSigningPublicKey'
+        jwtSigningPublicKeyExpiryTime:
+          $ref: '#/components/schemas/jwtSigningPublicKeyExpiryTime'
+    
+    deleteSessionResponse:
+      type: object
+      properties:
+        status: 
+          $ref: '#/components/schemas/statusOK'
+        sessionHandlesRevoked:
+          $ref: '#/components/schemas/sessionHandles'
+    
+    verifySessionResponse:
+      type: object
+      properties:
+        status: 
+          $ref: '#/components/schemas/statusOK'
+        session:
+          $ref: '#/components/schemas/session'
+        accessToken:
+          $ref: '#/components/schemas/cookieInfo'
+        jwtSigningPublicKey:
+          $ref: '#/components/schemas/jwtSigningPublicKey'
+        jwtSigningPublicKeyExpiryTime:
+          $ref: '#/components/schemas/jwtSigningPublicKeyExpiryTime'
+    
+    verifySesionUnauthorisedResponse:
+      $ref: '#/components/schemas/unauthorisedMessageResponse'
+    
+    verifySessionTryRefreshTokeResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/tryRefreshTokenResponse'
+        jwtSigningPublicKey:
+          $ref: '#/components/schemas/jwtSigningPublicKey'
+        jwtSigningPublicKeyExpiryTime:
+          $ref: '#/components/schemas/jwtSigningPublicKeyExpiryTime'
+        message:
+          $ref: '#/components/schemas/message'
+    
+    refreshSessionResponse:
+      type: object
+      properties:
+        status: 
+          $ref: '#/components/schemas/statusOK'
+        session:
+          $ref: '#/components/schemas/session'
+        accessToken:
+          $ref: '#/components/schemas/cookieInfo'
+        refreshToken:
+          $ref: '#/components/schemas/cookieInfo'
+        idRefreshToken: 
+          $ref: '#/components/schemas/cookieInfo'
+        antiCsrfToken: 
+          $ref: '#/components/schemas/token'
+    
+    refreshSessionTokenTheftDetectedResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/tokenTheftResponse'
+        session:
+          type: object
+          properties:
+            handle:
+              $ref: '#/components/schemas/handle'
+            userId:
+              $ref: '#/components/schemas/userId'
+              
+    refreshSessionUnauthorisedResponse:
+      $ref: '#/components/schemas/unauthorisedMessageResponse'
+    
+    getUserSessionResponse:
+      type: object
+      properties: 
+        status: 
+          $ref: '#/components/schemas/statusOK'
+        sessionHandles:
+          $ref: '#/components/schemas/sessionHandles'
+    
+    regenerateSessionResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        session:  
+          $ref: '#/components/schemas/session'
+        accessToken:
+          $ref: '#/components/schemas/cookieInfo'
+    
+    regenerateSessionUnauthorisedResponse:
+      $ref: '#/components/schemas/unauthorisedMessageResponse'
+    
+    getSessionDataResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        userDataInDatabase:
+          $ref: '#/components/schemas/userDataInDatabase'
+    
+    getSessionDataUnauthorisedResponse:
+      $ref: '#/components/schemas/unauthorisedMessageResponse'
+    
+    getJWTDataResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        userDataInJWT:
+          $ref: '#/components/schemas/userDataInJWT'
+    
+    getJWTDataUnauthorisedResponse:
+      $ref: '#/components/schemas/unauthorisedMessageResponse'
+      
+    unauthorisedMessageResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/unauthorisedResponse'
+        message:
+          $ref: '#/components/schemas/message'
+    
+    telemetryResponse:
+      type: object
+      properties:
+        exists:
+          type: boolean
+          enum: [true]
+        telemetryId:
+          type: string
+          example: 99c87c72-1807-22d-9b39-7a88f95re56c
+          
+          
+    existsFalseResponse:
+      type: object
+      properties:
+        exists:
+          type: boolean
+          example: [false]
+            
+        
+    getApiVersionResponse:
+      type: object
+      properties:
+        versions:
+          type: array
+          items:
+            type: string
+            example: ['2.8']
+    
+    usersResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        users:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/user'
+              - $ref: '#/components/schemas/thirdPartyUser'
+        nextPaginationToken: 
+          $ref: '#/components/schemas/paginationToken'
+    
+    getConfigResponse:
+      type: object
+      properties:
+        status: 
+          $ref: '#/components/schemas/statusOK'
+        path: 
+          type: string
+          example: /usr/lib/supertokens/config.yaml
+    
+    getSessionInfoResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        userDataInDatabase:
+          $ref: '#/components/schemas/userDataInDatabase'
+        userDataInJWT:
+          $ref: '#/components/schemas/userDataInJWT'
+        userId:
+          $ref: '#/components/schemas/userId'
+        expiry:
+          $ref: '#/components/schemas/expiry'
+        timeCreated: 
+          $ref: '#/components/schemas/timeCreated'
+        sessionHandle:
+          $ref: '#/components/schemas/handle'
+    
+         
+    
+    helloResponse:
+      type: string
+      enum: ['Hello']
+    
+    usersCountResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        count:
+          type: number
+          example: 10
+  
+    
+    statusOKResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ['OK']
+          
+    notAllowedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ['NOT_ALLOWED']
+        
+    wrongCredentialsResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ['WRONG_CREDENTIALS_ERROR']
+    
+    emailExistsResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ['EMAIL_ALREADY_EXISTS_ERROR']
+    
+    
+    unknownUserIdResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ['UNKNOWN_USER_ID_ERROR']
+          
+    resetPasswordInvalidTokenResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ['RESET_PASSWORD_INVALID_TOKEN_ERROR']
+          
+    emailAlreadyVerifiedResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ['EMAIL_ALREADY_VERIFIED_ERROR']
+    
+    emailVerificationInvalidTokenResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ['EMAIL_VERIFICATION_INVALID_TOKEN_ERROR']
+          
+    tokenTheftResponse:
+        type: string
+        enum: ['TOKEN_THEFT_DETECTED']
+    
+    unauthorisedResponse:
+        type: string
+        enum: ['UNAUTHORISED']
+    
+    tryRefreshTokenResponse:
+        type: string
+        enum: ['TRY_REFRESH_TOKEN']
+    
+      
+    unknownEmailOrUserIdResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ['UNKNOWN_USER_ID_ERROR', 'UNKNOWN_EMAIL_ERROR']
+
+    createJWTResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        jwt:
+          type: string
+
+    createJWTErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ['UNSUPPORTED_ALGORITHM_ERROR', 'JWT_CREATION_ERROR']
+
+    getJWKSResponse:
+      type: object
+      properties:
+        keys:
+          type: array
+          items: 
+            $ref: '#/components/schemas/jwk'
+    
+    
+    
+    internalError:
+      type: string
+      enum: 
+        - Internal Error
+    
+    notFound:
+      type: string
+      enum:
+        - Not Found
+        
+    methodNotSupported:
+      type: string
+      enum:
+        - Method not supported
+
+    invalidJSON:
+      type: string
+
+    requestUnauthorised:
+      type: string
+      enum:
+        - Invalid API key
