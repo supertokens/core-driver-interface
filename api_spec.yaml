@@ -510,6 +510,45 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+
+  /recipe/user/email/verify/token/remove:
+    post:
+      tags:
+        - EmailVerification Recipe
+      operationId: emailVerificationVerifyTokenRemove
+      description: |
+        Remove all unused email verification tokens for this user
+      parameters:
+        - $ref: '#/components/parameters/emailVerificationRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emailVerificationVerifyTokenRequest'
+      responses:
+        '200':
+          description: OK response
+          content:
+            application/json:
+                schema: 
+                  properties:
+                    status:
+                      type: string
+                      enum: ['OK']
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
   
   /recipe/user/email/verify:
     post:
@@ -570,6 +609,46 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+  
+  /recipe/user/email/verify/remove:
+    post:
+      tags:
+        - EmailVerification Recipe
+      operationId: emailVerificationVerifyRemove
+      description: |
+        Unverify an email
+      parameters:
+        - $ref: '#/components/parameters/emailVerificationRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emailVerificationVerifyTokenRequest'
+      
+      responses:
+        '200':
+          description: OK response
+          content:
+            application/json:
+                schema:
+                  properties:
+                    status:
+                      type: string
+                      enum: ['OK']
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'  
   
   /recipe/handshake:
     post:
