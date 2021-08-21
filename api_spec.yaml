@@ -113,6 +113,37 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+    put:
+      tags:
+        - EmailPassword Recipe
+      operationId: emailPasswordPutUser
+      description: |
+        Update a user's information
+      parameters:
+        - $ref: '#/components/parameters/rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emailPasswordUserPutRequest'
+      
+      responses:
+        '200':
+          $ref: '#/components/responses/emailPasswordPutUser'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
         
   /recipe/user/password/reset/token:
     post:
@@ -1132,30 +1163,30 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /user/remove:
-    post:
-      tags:
-        - Core
-      operationId: deleteUser
-      description: |
-        Delete user
-      parameters:
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/deleteUserRequest'
-      responses:
-        '200':
-          $ref: '#/components/responses/deleteUser'
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '500':
-          $ref: '#/components/responses/500'
+  # /user/remove:
+  #   post:
+  #     tags:
+  #       - Core
+  #     operationId: deleteUser
+  #     description: |
+  #       Delete user
+  #     parameters:
+  #       - $ref: '#/components/parameters/api-key'
+  #       - $ref: '#/components/parameters/cdi-version'
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/deleteUserRequest'
+  #     responses:
+  #       '200':
+  #         $ref: '#/components/responses/deleteUser'
+  #       '400':
+  #         $ref: '#/components/responses/400'
+  #       '401':
+  #         $ref: '#/components/responses/401'
+  #       '500':
+  #         $ref: '#/components/responses/500'
           
       
         
@@ -1317,6 +1348,16 @@ components:
               oneOf:
               - $ref: '#/components/schemas/emailPasswordGetUserResponse'
               - $ref: '#/components/schemas/unknownEmailOrUserIdResponse'
+              
+    emailPasswordPutUser:
+      description: update user's information
+      content:
+        application/json:
+            schema: 
+              properties:
+                status:
+                  type: string
+                  enum: ['OK', 'UNKNOWN_USER_ID_ERROR']
     
     emailPasswordGetUserCount:
       description: Get number of users
@@ -1586,6 +1627,16 @@ components:
     emailPasswordSigninRequest:
       type: object
       properties:
+        email:
+          $ref: '#/components/schemas/email'
+        password:
+          $ref: '#/components/schemas/password'
+          
+    emailPasswordUserPutRequest:
+      type: object
+      properties:
+        userId:
+          $ref: '#/components/schemas/userId'
         email:
           $ref: '#/components/schemas/email'
         password:
@@ -1867,9 +1918,6 @@ components:
       items:
         $ref: '#/components/schemas/handle'
         
-      
-        
-    
     emailPasswordUserResponse:
       type: object
       properties:
