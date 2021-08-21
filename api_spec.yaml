@@ -127,11 +127,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/emailPasswordUserPutRequest'
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+                email:
+                  $ref: '#/components/schemas/email'
+                password:
+                  $ref: '#/components/schemas/password'
       
       responses:
         '200':
-          $ref: '#/components/responses/emailPasswordPutUser'
+          description: update user's information
+          content:
+            application/json:
+                schema: 
+                  properties:
+                    status:
+                      type: string
+                      enum: ['OK', 'UNKNOWN_USER_ID_ERROR']
           
         '400':
           $ref: '#/components/responses/400'
@@ -1348,16 +1361,6 @@ components:
               oneOf:
               - $ref: '#/components/schemas/emailPasswordGetUserResponse'
               - $ref: '#/components/schemas/unknownEmailOrUserIdResponse'
-              
-    emailPasswordPutUser:
-      description: update user's information
-      content:
-        application/json:
-            schema: 
-              properties:
-                status:
-                  type: string
-                  enum: ['OK', 'UNKNOWN_USER_ID_ERROR']
     
     emailPasswordGetUserCount:
       description: Get number of users
@@ -1627,16 +1630,6 @@ components:
     emailPasswordSigninRequest:
       type: object
       properties:
-        email:
-          $ref: '#/components/schemas/email'
-        password:
-          $ref: '#/components/schemas/password'
-          
-    emailPasswordUserPutRequest:
-      type: object
-      properties:
-        userId:
-          $ref: '#/components/schemas/userId'
         email:
           $ref: '#/components/schemas/email'
         password:
