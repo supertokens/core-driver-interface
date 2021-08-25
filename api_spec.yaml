@@ -113,6 +113,50 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+    put:
+      tags:
+        - EmailPassword Recipe
+      operationId: emailPasswordPutUser
+      description: |
+        Update a user's information
+      parameters:
+        - $ref: '#/components/parameters/rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+                email:
+                  $ref: '#/components/schemas/email'
+                password:
+                  $ref: '#/components/schemas/password'
+      
+      responses:
+        '200':
+          description: update user's information
+          content:
+            application/json:
+                schema: 
+                  properties:
+                    status:
+                      type: string
+                      enum: ['OK', 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR']
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
         
   /recipe/user/password/reset/token:
     post:
@@ -466,6 +510,45 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+
+  /recipe/user/email/verify/token/remove:
+    post:
+      tags:
+        - EmailVerification Recipe
+      operationId: emailVerificationVerifyTokenRemove
+      description: |
+        Remove all unused email verification tokens for this user
+      parameters:
+        - $ref: '#/components/parameters/emailVerificationRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emailVerificationVerifyTokenRequest'
+      responses:
+        '200':
+          description: OK response
+          content:
+            application/json:
+                schema: 
+                  properties:
+                    status:
+                      type: string
+                      enum: ['OK']
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
   
   /recipe/user/email/verify:
     post:
@@ -526,6 +609,46 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+  
+  /recipe/user/email/verify/remove:
+    post:
+      tags:
+        - EmailVerification Recipe
+      operationId: emailVerificationVerifyRemove
+      description: |
+        Unverify an email
+      parameters:
+        - $ref: '#/components/parameters/emailVerificationRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/emailVerificationVerifyTokenRequest'
+      
+      responses:
+        '200':
+          description: OK response
+          content:
+            application/json:
+                schema:
+                  properties:
+                    status:
+                      type: string
+                      enum: ['OK']
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'  
   
   /recipe/handshake:
     post:
@@ -1184,30 +1307,30 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /user/remove:
-    post:
-      tags:
-        - Core
-      operationId: deleteUser
-      description: |
-        Delete user
-      parameters:
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/deleteUserRequest'
-      responses:
-        '200':
-          $ref: '#/components/responses/deleteUser'
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '500':
-          $ref: '#/components/responses/500'
+  # /user/remove:
+  #   post:
+  #     tags:
+  #       - Core
+  #     operationId: deleteUser
+  #     description: |
+  #       Delete user
+  #     parameters:
+  #       - $ref: '#/components/parameters/api-key'
+  #       - $ref: '#/components/parameters/cdi-version'
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/deleteUserRequest'
+  #     responses:
+  #       '200':
+  #         $ref: '#/components/responses/deleteUser'
+  #       '400':
+  #         $ref: '#/components/responses/400'
+  #       '401':
+  #         $ref: '#/components/responses/401'
+  #       '500':
+  #         $ref: '#/components/responses/500'
           
       
         
@@ -1989,9 +2112,6 @@ components:
           items:
             type: string
         
-      
-        
-    
     emailPasswordUserResponse:
       type: object
       properties:
