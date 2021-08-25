@@ -1920,6 +1920,9 @@ components:
           $ref: '#/components/schemas/createJWTAlgorithm'
         jwksDomain:
           $ref: '#/components/schemas/jwksDomain'
+        validity:
+          $ref: '#/components/schemas/jwtValidity'
+
 
     
     emailVerificationVerifyGetResponse:
@@ -2090,6 +2093,10 @@ components:
       type: string
       description: This is used as the value for the issuer claim in the JWT payload.
       example: https://api.test.com/
+    jwtValidity:
+      type: number
+      description: Duration in seconds, used to calculate JWT expiry
+      example: 86400
 
     jwk:
       type: object
