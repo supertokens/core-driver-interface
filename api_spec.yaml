@@ -2570,7 +2570,7 @@ components:
       properties:
         status:
           type: string
-          enum: ['UNSUPPORTED_ALGORITHM_ERROR', 'JWT_CREATION_ERROR']
+          enum: ['UNSUPPORTED_ALGORITHM_ERROR']
 
     getJWKSResponse:
       type: object
