@@ -2006,6 +2006,16 @@ components:
       type: number
       example: 1624345236945
     
+    jwtSigningPublicKeyList:
+      type: array
+      items:
+        type: object
+        properties: 
+          publicKey:
+            $ref: '#/components/schemas/jwtSigningPublicKey'
+          expiryTime:
+            $ref: '#/components/schemas/jwtSigningPublicKeyExpiryTime'
+
     accessTokenBlacklistingEnabled:
       type: boolean
       example: true
@@ -2247,6 +2257,8 @@ components:
           $ref: '#/components/schemas/jwtSigningPublicKey'
         jwtSigningPublicKeyExpiryTime:
           $ref: '#/components/schemas/jwtSigningPublicKeyExpiryTime'
+        jwtSigningPublicKeyList:
+          $ref: '#/components/schemas/jwtSigningPublicKeyList'
         accessTokenBlacklistingEnabled:
           $ref: '#/components/schemas/accessTokenBlacklistingEnabled'
         accessTokenValidity:
@@ -2273,6 +2285,8 @@ components:
           $ref: '#/components/schemas/jwtSigningPublicKey'
         jwtSigningPublicKeyExpiryTime:
           $ref: '#/components/schemas/jwtSigningPublicKeyExpiryTime'
+        jwtSigningPublicKeyList:
+          $ref: '#/components/schemas/jwtSigningPublicKeyList'
     
     deleteSessionResponse:
       type: object
@@ -2295,6 +2309,8 @@ components:
           $ref: '#/components/schemas/jwtSigningPublicKey'
         jwtSigningPublicKeyExpiryTime:
           $ref: '#/components/schemas/jwtSigningPublicKeyExpiryTime'
+        jwtSigningPublicKeyList:
+          $ref: '#/components/schemas/jwtSigningPublicKeyList'
     
     verifySesionUnauthorisedResponse:
       $ref: '#/components/schemas/unauthorisedMessageResponse'
@@ -2308,6 +2324,8 @@ components:
           $ref: '#/components/schemas/jwtSigningPublicKey'
         jwtSigningPublicKeyExpiryTime:
           $ref: '#/components/schemas/jwtSigningPublicKeyExpiryTime'
+        jwtSigningPublicKeyList:
+          $ref: '#/components/schemas/jwtSigningPublicKeyList'
         message:
           $ref: '#/components/schemas/message'
     
