@@ -2002,6 +2002,10 @@ components:
       type: string
       example: MIIBIjANBgkq...nKH0QIDAQAB
     
+    jwtSigningPublicKeyCreatedAt:
+      type: number
+      example: 1624344236945
+
     jwtSigningPublicKeyExpiryTime:
       type: number
       example: 1624345236945
@@ -2013,6 +2017,8 @@ components:
         properties: 
           publicKey:
             $ref: '#/components/schemas/jwtSigningPublicKey'
+          createdAt:
+            $ref: '#/components/schemas/jwtSigningPublicKeyCreatedAt'
           expiryTime:
             $ref: '#/components/schemas/jwtSigningPublicKeyExpiryTime'
 
