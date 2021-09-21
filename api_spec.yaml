@@ -1472,6 +1472,9 @@ paths:
               schema:
                 type: object
                 properties:
+                  status:
+                    type: string
+                    enum: ["OK"]
                   keys:
                     type: array
                     items: 
@@ -2232,7 +2235,7 @@ components:
     createJWTAlgorithm:
       type: string
       description: The algorithm to use when creating the JWT.
-      enum: ["RSA256"]
+      enum: ["RS256"]
 
     jwksDomain:
       type: string
