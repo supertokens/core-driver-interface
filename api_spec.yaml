@@ -1854,9 +1854,17 @@ paths:
                   users:
                     type: array
                     items:
-                      anyOf:
-                        - $ref: '#/components/schemas/user'
-                        - $ref: '#/components/schemas/thirdPartyUser'
+                      type: object
+                      properties:
+                        recipeId:
+                          type: string
+                          enum: ['emailpassword', 'thirdparty']
+                        user:
+                          anyOf:
+                            - $ref: '#/components/schemas/user'
+                            - $ref: '#/components/schemas/thirdPartyUser'
+                      required: [recipeId, user]
+                      additionalProperties: false
                   nextPaginationToken: 
                     $ref: '#/components/schemas/paginationToken'
           
