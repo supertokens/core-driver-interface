@@ -1,17 +1,160 @@
 openapi: 3.0.0
 info:
   description: This version has not been released yet. Core Driver Interface http requests-responses
-  version: 2.9.1
+  version: 2.10.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
 tags:
   - name: EmailPassword Recipe
   - name: ThirdParty Recipe
+  - name: Passwordless Recipe
   - name: EmailVerification Recipe
   - name: Session Recipe
   - name: Core
 paths:
+  /recipe/signinup/token/consume:
+    post:
+      tags:
+        - Passwordless Recipe
+      operationId: passwordlessTryUseToken
+      description: |
+        Tries to consume the token to sign the user in
+      parameters:
+        - $ref: '#/components/parameters/passwordlessRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/passwordlessTryUseTokenRequest'
+                - $ref: '#/components/schemas/passwordlessTryUseCodeRequest'
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/passwordlessConsumeResponse'
+                  - $ref: '#/components/schemas/wrongCredentialsWithTryCountResponse'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/signinup/tokens:
+    post:
+      tags:
+        - Passwordless Recipe
+      operationId: passwordlessStartSignIn
+      description: |
+        Starts a sign in process by requesting a token and an id + code combination the user can use to sign in.
+      parameters:
+        - $ref: '#/components/parameters/passwordlessRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/passwordlessStartSignInRequest'
+      responses:
+        '200':
+          description: Starts the passwordless login process
+          content:
+            application/json:
+                schema: 
+                  $ref: '#/components/schemas/passwordlessStartSignInResponse'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+          
+  /recipe/signinup/tokens/{userId}:
+    get:
+      tags:
+          - Passwordless Recipe
+      operationId: passwordlessListTokens
+      description: |
+        Lists all active passwordless tokens of the user
+      parameters:
+        - $ref: '#/components/parameters/passwordlessRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of all active passwordless tokens of the user
+          content:
+            application/json:
+                schema: 
+                  $ref: '#/components/schemas/passwordlessListTokensOfUserResponse'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags:
+          - Passwordless Recipe
+      operationId: passwordlessRevokeAllTokensOfUser
+      description: |
+        Revokes all tokens by issued for the user
+      parameters:
+        - $ref: '#/components/parameters/passwordlessRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'The operation was successful'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
   /recipe/signin:
     post:
       tags:
@@ -59,7 +202,7 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
-          
+
   /recipe/signup:
     post:
       tags:
@@ -1932,6 +2075,14 @@ components:
       schema:
         type: string
     
+    passwordlessRid:
+      name: rid
+      in: header
+      example: passwordless
+      required: true
+      schema:
+        type: string
+
     emailVerificationRid:
       name: rid
       in: header
@@ -2053,7 +2204,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/helloResponse'
-            
+
       
 
   schemas:
@@ -2070,7 +2221,7 @@ components:
           $ref: '#/components/schemas/userId'
         email:
           $ref: '#/components/schemas/email'
-    
+
     
   
     thirdPartyId:
@@ -2080,7 +2231,7 @@ components:
     thirdPartyUserId:
       type: string
       example: 106347997792363865062
-    
+
     thirdPartyEmail:
       type: object
       properties:
@@ -2110,7 +2261,41 @@ components:
     paginationToken:
       type: string
       example: ZmE3YTA4ND...OzE2MjM5MTgwMzIyMzE=
-    
+
+    passwordlessStartSignInRequest:
+      type: object
+      properties:
+        userIdentifier: 
+          type: string
+          example: test@test.com
+        userInputCode:
+          type: string
+          example: 432123
+      required:
+        - userIdentifier
+
+    passwordlessTryUseTokenRequest: 
+      type: object
+      properties:
+        urlCode:
+          type: string
+          example: b10lbT_SnDC4flA6Fn7pE5TtG5k5NfigLef4QMBeGA8
+      required:
+        - urlCode
+
+    passwordlessTryUseCodeRequest: 
+      type: object
+      properties:
+        deviceId:
+          type: string
+          example: TU/52WOcktSv99zqaAZuWJG9BSoS0aRLfCbep8rFEwk=
+        userInputCode:
+          type: string
+          example: 432123
+      required:
+        - deviceId
+        - userInputCode
+
     user:
       type: object
       properties:
@@ -2120,7 +2305,17 @@ components:
           $ref: '#/components/schemas/email'
         timeJoined:
           $ref: '#/components/schemas/timeJoined'
-    
+
+    passwordlessUser:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/userId'
+        userIdentifier:
+          $ref: '#/components/schemas/email'
+        timeJoined:
+          $ref: '#/components/schemas/timeJoined'
+
     thirdPartyUser:
       type: object
       properties:
@@ -2137,7 +2332,43 @@ components:
               $ref: '#/components/schemas/thirdPartyId'
             userId:
               $ref: '#/components/schemas/thirdPartyUserId'
-      
+
+    deviceInfo: 
+      type: string
+      description: Info about the device that started the sign in process. This is customizable through the backend SDK, Supertokens handles it as a black box.
+      example: '{ "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36" }'
+
+    passwordlessSigninSession:
+      type: object
+      properties:
+        userInputCode: 
+          type: object
+          properties:
+            deviceId:
+              type: string
+              description: This should be stored on the device that started the sign in process to enable code based authentication
+              example: TU/52WOcktSv99zqaAZuWJG9BSoS0aRLfCbep8rFEwk=
+            code:
+              type: string
+              description: This can be used to authenticate the user when paired with the deviceId
+              example: 456123
+
+        urlCode:
+          type: string
+          description: URL-safe string that can be used to authenticate the user, without the deviceId
+          example: b10lbT_SnDC4flA6Fn7pE5TtG5k5NfigLef4QMBeGA8
+
+        timeCreated:
+          $ref: '#/components/schemas/timeCreated'
+
+    passwordlessSigninSessionInfo:
+      type: object
+      properties:
+        # deviceInfo:
+          # $ref: '#/components/schemas/deviceInfo'
+        timeCreated:
+          $ref: '#/components/schemas/timeCreated'
+
     jwtSigningPublicKey:
       type: string
       example: MIIBIjANBgkq...nKH0QIDAQAB
@@ -2275,6 +2506,33 @@ components:
           items:
             type: string
         
+    passwordlessStartSignInResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        token:
+          $ref: '#/components/schemas/passwordlessSigninSession'
+
+    passwordlessConsumeResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/statusOK'
+        createdNewUser:
+          type: boolean
+          example: true
+        user:
+          $ref: '#/components/schemas/passwordlessUser'
+
+    passwordlessListTokensOfUserResponse:
+      type: object
+      properties:
+        tokens:
+          type: array
+          items:
+            $ref: '#/components/schemas/passwordlessSigninSessionInfo'
+
     unauthorisedMessageResponse:
       type: object
       properties:
@@ -2302,6 +2560,17 @@ components:
         status:
           type: string
           enum: ['WRONG_CREDENTIALS_ERROR']
+
+    wrongCredentialsWithTryCountResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ['WRONG_CREDENTIALS_ERROR']
+
+        triesLeft:
+          type: number
+          example: 2
     
 
     
