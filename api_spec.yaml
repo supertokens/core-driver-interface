@@ -19,7 +19,7 @@ paths:
         - Passwordless Recipe
       operationId: passwordlessTryUseToken
       description: |
-        Tries to consume the token to sign the user in
+        Tries to consume the passed userInputCode+deviceId combo or the linkCode to sign the user in
       parameters:
         - $ref: '#/components/parameters/passwordlessRid'
         - $ref: '#/components/parameters/api-key'
@@ -29,8 +29,24 @@ paths:
           application/json:
             schema:
               oneOf:
-                - $ref: '#/components/schemas/passwordlessTryUseTokenRequest'
-                - $ref: '#/components/schemas/passwordlessTryUseCodeRequest'
+                - type: object
+                  properties:
+                    linkCode:
+                      type: string
+                      example: b10lbT_SnDC4flA6Fn7pE5TtG5k5NfigLef4QMBeGA8
+                  required:
+                    - linkCode
+                - type: object
+                  properties:
+                    deviceId:
+                      type: string
+                      example: TU/52WOcktSv99zqaAZuWJG9BSoS0aRLfCbep8rFEwk=
+                    userInputCode:
+                      type: string
+                      example: 432123
+                  required:
+                    - deviceId
+                    - userInputCode
       responses:
         '200':
           description: Indicates success with the status property
@@ -38,9 +54,30 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/passwordlessConsumeResponse'
-                  - $ref: '#/components/schemas/wrongCredentialsWithTryCountResponse'
-          
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      createdNewUser:
+                        type: boolean
+                        example: true
+                      user:
+                        $ref: '#/components/schemas/passwordlessUser'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['INCORRECT_USER_INPUT_CODE_ERROR']
+
+                      triesLeft:
+                        type: number
+                        example: 2
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['RESTART_FLOW_ERROR']
+
         '400':
           $ref: '#/components/responses/400'
         
@@ -59,7 +96,7 @@ paths:
         - Passwordless Recipe
       operationId: passwordlessStartSignIn
       description: |
-        Starts a sign in process by requesting a token and an id + code combination the user can use to sign in.
+        Starts a sign in process by requesting a linkCode and a deviceId + userInputCode combination the user can use to sign in.
       parameters:
         - $ref: '#/components/parameters/passwordlessRid'
         - $ref: '#/components/parameters/api-key'
@@ -75,7 +112,34 @@ paths:
           content:
             application/json:
                 schema: 
-                  $ref: '#/components/schemas/passwordlessStartSignInResponse'
+                  type: object
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+                    token:
+                      type: object
+                      properties:
+                        tokenId:
+                          $ref: '#/components/schemas/tokenId'
+                        userInputCode: 
+                          type: object
+                          properties:
+                            deviceId:
+                              type: string
+                              description: This should be stored on the device that started the sign in process to enable code based authentication
+                              example: TU/52WOcktSv99zqaAZuWJG9BSoS0aRLfCbep8rFEwk=
+                            code:
+                              type: string
+                              description: This can be used to authenticate the user when paired with the deviceId
+                              example: 456123
+
+                        linkCode:
+                          type: string
+                          description: URL-safe string that can be used to authenticate the user, without the deviceId
+                          example: b10lbT_SnDC4flA6Fn7pE5TtG5k5NfigLef4QMBeGA8
+
+                        timeCreated:
+                          $ref: '#/components/schemas/timeCreated'
           
         '400':
           $ref: '#/components/responses/400'
@@ -88,8 +152,6 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
-          
-  /recipe/signinup/tokens/{userId}:
     get:
       tags:
           - Passwordless Recipe
@@ -100,7 +162,7 @@ paths:
         - $ref: '#/components/parameters/passwordlessRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - in: path
+        - in: query
           name: userId
           required: true
           schema:
@@ -111,7 +173,17 @@ paths:
           content:
             application/json:
                 schema: 
-                  $ref: '#/components/schemas/passwordlessListTokensOfUserResponse'
+                  type: object
+                  properties:
+                    tokens:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          tokenId:
+                            $ref: '#/components/schemas/tokenId'
+                          timeCreated:
+                            $ref: '#/components/schemas/timeCreated'
           
         '400':
           $ref: '#/components/responses/400'
@@ -124,7 +196,9 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
-    delete:
+
+  /recipe/signinup/tokens/removeAll:
+    post:
       tags:
           - Passwordless Recipe
       operationId: passwordlessRevokeAllTokensOfUser
@@ -134,7 +208,7 @@ paths:
         - $ref: '#/components/parameters/passwordlessRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - in: path
+        - in: query
           name: userId
           required: true
           schema:
@@ -2274,28 +2348,6 @@ components:
       required:
         - userIdentifier
 
-    passwordlessTryUseTokenRequest: 
-      type: object
-      properties:
-        urlCode:
-          type: string
-          example: b10lbT_SnDC4flA6Fn7pE5TtG5k5NfigLef4QMBeGA8
-      required:
-        - urlCode
-
-    passwordlessTryUseCodeRequest: 
-      type: object
-      properties:
-        deviceId:
-          type: string
-          example: TU/52WOcktSv99zqaAZuWJG9BSoS0aRLfCbep8rFEwk=
-        userInputCode:
-          type: string
-          example: 432123
-      required:
-        - deviceId
-        - userInputCode
-
     user:
       type: object
       properties:
@@ -2333,41 +2385,10 @@ components:
             userId:
               $ref: '#/components/schemas/thirdPartyUserId'
 
-    deviceInfo: 
+    tokenId:
       type: string
-      description: Info about the device that started the sign in process. This is customizable through the backend SDK, Supertokens handles it as a black box.
-      example: '{ "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36" }'
-
-    passwordlessSigninSession:
-      type: object
-      properties:
-        userInputCode: 
-          type: object
-          properties:
-            deviceId:
-              type: string
-              description: This should be stored on the device that started the sign in process to enable code based authentication
-              example: TU/52WOcktSv99zqaAZuWJG9BSoS0aRLfCbep8rFEwk=
-            code:
-              type: string
-              description: This can be used to authenticate the user when paired with the deviceId
-              example: 456123
-
-        urlCode:
-          type: string
-          description: URL-safe string that can be used to authenticate the user, without the deviceId
-          example: b10lbT_SnDC4flA6Fn7pE5TtG5k5NfigLef4QMBeGA8
-
-        timeCreated:
-          $ref: '#/components/schemas/timeCreated'
-
-    passwordlessSigninSessionInfo:
-      type: object
-      properties:
-        # deviceInfo:
-          # $ref: '#/components/schemas/deviceInfo'
-        timeCreated:
-          $ref: '#/components/schemas/timeCreated'
+      description: Uniquely identifies a token
+      example: 9e79bc8f-8daa-4148-a73d-e32a4486dde3 
 
     jwtSigningPublicKey:
       type: string
@@ -2505,33 +2526,6 @@ components:
           description: X.509 Certificate Chain
           items:
             type: string
-        
-    passwordlessStartSignInResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/statusOK'
-        token:
-          $ref: '#/components/schemas/passwordlessSigninSession'
-
-    passwordlessConsumeResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/statusOK'
-        createdNewUser:
-          type: boolean
-          example: true
-        user:
-          $ref: '#/components/schemas/passwordlessUser'
-
-    passwordlessListTokensOfUserResponse:
-      type: object
-      properties:
-        tokens:
-          type: array
-          items:
-            $ref: '#/components/schemas/passwordlessSigninSessionInfo'
 
     unauthorisedMessageResponse:
       type: object
@@ -2561,19 +2555,6 @@ components:
           type: string
           enum: ['WRONG_CREDENTIALS_ERROR']
 
-    wrongCredentialsWithTryCountResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          enum: ['WRONG_CREDENTIALS_ERROR']
-
-        triesLeft:
-          type: number
-          example: 2
-    
-
-    
     unknownUserIdResponse:
       type: object
       properties:
