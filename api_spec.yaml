@@ -13,11 +13,11 @@ tags:
   - name: Session Recipe
   - name: Core
 paths:
-  /recipe/signinup/token/consume:
+  /recipe/signinup/code/consume:
     post:
       tags:
         - Passwordless Recipe
-      operationId: passwordlessTryUseToken
+      operationId: passwordlessTryUseCode
       description: |
         Tries to consume the passed userInputCode+deviceId combo or the linkCode to sign the user in
       parameters:
@@ -32,18 +32,15 @@ paths:
                 - type: object
                   properties:
                     linkCode:
-                      type: string
-                      example: b10lbT_SnDC4flA6Fn7pE5TtG5k5NfigLef4QMBeGA8
+                      $ref: '#/components/schemas/linkCode'
                   required:
                     - linkCode
                 - type: object
                   properties:
                     deviceId:
-                      type: string
-                      example: TU/52WOcktSv99zqaAZuWJG9BSoS0aRLfCbep8rFEwk=
+                      $ref: '#/components/schemas/deviceId'
                     userInputCode:
-                      type: string
-                      example: 432123
+                      $ref: '#/components/schemas/userInputCode'
                   required:
                     - deviceId
                     - userInputCode
@@ -90,7 +87,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /recipe/signinup/tokens:
+  /recipe/signinup/codes:
     post:
       tags:
         - Passwordless Recipe
@@ -105,7 +102,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/passwordlessStartSignInRequest'
+              oneOf:
+                - type: object
+                  properties:
+                    email: 
+                      $ref: '#/components/schemas/email'
+                    userInputCode:
+                      $ref: '#/components/schemas/userInputCode'
+                  required:
+                    - email
+                - type: object
+                  properties:
+                    phoneNumber:
+                      $ref: '#/components/schemas/phoneNumber'
+                    userInputCode:
+                      $ref: '#/components/schemas/userInputCode'
+                  required:
+                    - phoneNumber
       responses:
         '200':
           description: Starts the passwordless login process
@@ -116,30 +129,23 @@ paths:
                   properties:
                     status:
                       $ref: '#/components/schemas/statusOK'
-                    token:
+
+                    codeId:
+                      $ref: '#/components/schemas/codeId'
+
+                    userInputCode: 
                       type: object
                       properties:
-                        tokenId:
-                          $ref: '#/components/schemas/tokenId'
-                        userInputCode: 
-                          type: object
-                          properties:
-                            deviceId:
-                              type: string
-                              description: This should be stored on the device that started the sign in process to enable code based authentication
-                              example: TU/52WOcktSv99zqaAZuWJG9BSoS0aRLfCbep8rFEwk=
-                            code:
-                              type: string
-                              description: This can be used to authenticate the user when paired with the deviceId
-                              example: 456123
+                        deviceId:
+                          $ref: '#/components/schemas/deviceId'
+                        code:
+                          $ref: '#/components/schemas/userInputCode'
 
-                        linkCode:
-                          type: string
-                          description: URL-safe string that can be used to authenticate the user, without the deviceId
-                          example: b10lbT_SnDC4flA6Fn7pE5TtG5k5NfigLef4QMBeGA8
+                    linkCode:
+                      $ref: '#/components/schemas/linkCode'
 
-                        timeCreated:
-                          $ref: '#/components/schemas/timeCreated'
+                    timeCreated:
+                      $ref: '#/components/schemas/timeCreated'
           
         '400':
           $ref: '#/components/responses/400'
@@ -155,33 +161,38 @@ paths:
     get:
       tags:
           - Passwordless Recipe
-      operationId: passwordlessListTokens
+      operationId: passwordlessListCodes
       description: |
-        Lists all active passwordless tokens of the user
+        Lists all active passwordless codes of the user
       parameters:
         - $ref: '#/components/parameters/passwordlessRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
         - in: query
-          name: userId
-          required: true
+          name: email
+          description: Either this or phoneNumber is required to identify the user
           schema:
             type: string
+        - in: query
+          name: phoneNumber
+          description: Either this or email is required to identify the user
+          schema:
+            $ref: '#/components/schemas/phoneNumber'
       responses:
         '200':
-          description: List of all active passwordless tokens of the user
+          description: List of all active passwordless codes of the user
           content:
             application/json:
                 schema: 
                   type: object
                   properties:
-                    tokens:
+                    codes:
                       type: array
                       items:
                         type: object
                         properties:
-                          tokenId:
-                            $ref: '#/components/schemas/tokenId'
+                          codeId:
+                            $ref: '#/components/schemas/codeId'
                           timeCreated:
                             $ref: '#/components/schemas/timeCreated'
           
@@ -197,25 +208,44 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /recipe/signinup/tokens/removeAll:
+  /recipe/signinup/codes/remove:
     post:
       tags:
           - Passwordless Recipe
-      operationId: passwordlessRevokeAllTokensOfUser
+      operationId: passwordlessRevokeAllCodesOfUser
       description: |
-        Revokes all tokens by issued for the user
+        Revokes all codes issued for the user
       parameters:
         - $ref: '#/components/parameters/passwordlessRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - in: query
-          name: userId
-          required: true
-          schema:
-            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    email: 
+                      $ref: '#/components/schemas/email'
+                  required:
+                    - email
+                - type: object
+                  properties:
+                    phoneNumber:
+                      $ref: '#/components/schemas/phoneNumber'
+                  required:
+                    - phoneNumber
       responses:
-        '204':
+        '200':
           description: 'The operation was successful'
+          content:
+            application/json:
+                schema: 
+                  type: object
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
           
         '400':
           $ref: '#/components/responses/400'
@@ -2336,17 +2366,9 @@ components:
       type: string
       example: ZmE3YTA4ND...OzE2MjM5MTgwMzIyMzE=
 
-    passwordlessStartSignInRequest:
-      type: object
-      properties:
-        userIdentifier: 
-          type: string
-          example: test@test.com
-        userInputCode:
-          type: string
-          example: 432123
-      required:
-        - userIdentifier
+    phoneNumber:
+      type: string
+      example: '0036701234567'
 
     user:
       type: object
@@ -2363,8 +2385,10 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/userId'
-        userIdentifier:
+        email:
           $ref: '#/components/schemas/email'
+        phoneNumber:
+          $ref: '#/components/schemas/phoneNumber'
         timeJoined:
           $ref: '#/components/schemas/timeJoined'
 
@@ -2385,10 +2409,25 @@ components:
             userId:
               $ref: '#/components/schemas/thirdPartyUserId'
 
-    tokenId:
+    codeId:
       type: string
       description: Uniquely identifies a token
-      example: 9e79bc8f-8daa-4148-a73d-e32a4486dde3 
+      example: QZ0Mx9zG9cfqNXmPI0I/67r9bpKghUBDQZeMMbayi+I=
+
+    deviceId:
+      type: string
+      description: A random identifier that should be stored on the device that started the sign in process.
+      example: TU/52WOcktSv99zqaAZuWJG9BSoS0aRLfCbep8rFEwk=
+
+    userInputCode:
+      type: string
+      description: This can be used to authenticate the user when paired with the deviceId
+      example: 456123
+
+    linkCode:
+      type: string
+      description: URL-safe string that can be used to authenticate the user, without the deviceId
+      example: b10lbT_SnDC4flA6Fn7pE5TtG5k5NfigLef4QMBeGA8
 
     jwtSigningPublicKey:
       type: string
