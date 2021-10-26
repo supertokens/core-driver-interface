@@ -55,6 +55,8 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
+                      codeId:
+                        $ref: '#/components/schemas/codeId'
                       createdNewUser:
                         type: boolean
                         example: true
@@ -87,7 +89,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /recipe/signinup/codes:
+  /recipe/signinup/code:
     post:
       tags:
         - Passwordless Recipe
@@ -158,6 +160,7 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+  /recipe/signinup/codes:
     get:
       tags:
           - Passwordless Recipe
@@ -186,6 +189,8 @@ paths:
                 schema: 
                   type: object
                   properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
                     codes:
                       type: array
                       items:
@@ -246,6 +251,117 @@ paths:
                   properties:
                     status:
                       $ref: '#/components/schemas/statusOK'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/user⠀⠀:
+    get:
+      tags:
+        - Passwordless Recipe
+      operationId: passwordlessGetUser
+      description: |
+        Get a user's information.
+        Note that there is an invisible character at the end of the path, this was to avoid a conflict with the OpenAPI spec. 
+        
+      parameters:
+        - $ref: '#/components/parameters/thirdPartyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/userId'
+        - in: query
+          name: email
+          description: Use exactly one of phoneNumber, email or userId
+          schema:
+            $ref: '#/components/schemas/email'
+        - in: query
+          name: phoneNumber
+          description: Use exactly one of phoneNumber, email or userId
+          schema:
+            $ref: '#/components/schemas/phoneNumber'
+      responses:
+        '200':
+          description: Get a user's information.
+          content:
+            application/json:
+                schema:
+                  oneOf:
+                    - type: object
+                      properties:
+                        status:
+                          $ref: '#/components/schemas/statusOK'
+                        user:
+                          $ref: '#/components/schemas/passwordlessUser'
+                    - type: object
+                      properties:
+                        status:
+                          type: string
+                          enum: ["UNKNOWN_USER_ID_ERROR", "UNKNOWN_EMAIL_ERROR", "UNKNOWN_PHONE_NUMBER_ERROR"]
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - Passwordless Recipe
+      operationId: passwordlessPutUser
+      description: |
+        Update a user's information. If an email is set phoneNumber will be cleared and vice versa.
+      parameters:
+        - $ref: '#/components/parameters/rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    userId:
+                      $ref: '#/components/schemas/userId'
+                    phoneNumber:
+                      $ref: '#/components/schemas/phoneNumber'
+                  required:
+                    - userId
+                    - phoneNumber
+                - type: object
+                  properties:
+                    userId:
+                      $ref: '#/components/schemas/userId'
+                    email:
+                      $ref: '#/components/schemas/email'
+                  required:
+                    - userId
+                    - phoneNumber
+      
+      responses:
+        '200':
+          description: update user's information
+          content:
+            application/json:
+                schema: 
+                  properties:
+                    status:
+                      type: string
+                      enum: ['OK', 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR', 'PHONE_NUMBER_ALREADY_EXISTS_ERROR']
           
         '400':
           $ref: '#/components/responses/400'
