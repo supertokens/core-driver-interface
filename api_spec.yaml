@@ -323,7 +323,7 @@ paths:
         - Passwordless Recipe
       operationId: passwordlessPutUser
       description: |
-        Update a user's information. If an email is set phoneNumber will be cleared and vice versa.
+        Update a user's information. If a email or phoneNumber is set to null the previous value will be deleted.
       parameters:
         - $ref: '#/components/parameters/passwordlessRid'
         - $ref: '#/components/parameters/api-key'
@@ -336,9 +336,13 @@ paths:
                 userId:
                   $ref: '#/components/schemas/userId'
                 email:
-                  $ref: '#/components/schemas/email'
+                  allOf:
+                    - $ref: '#/components/schemas/email'
+                    - nullable: true
                 phoneNumber:
-                  $ref: '#/components/schemas/phoneNumber'
+                  allOf:
+                    - $ref: '#/components/schemas/phoneNumber'
+                    - nullable: true
               required:
                 - userId
       
