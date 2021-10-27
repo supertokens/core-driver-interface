@@ -332,25 +332,15 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
-                - type: object
-                  properties:
-                    userId:
-                      $ref: '#/components/schemas/userId'
-                    phoneNumber:
-                      $ref: '#/components/schemas/phoneNumber'
-                  required:
-                    - userId
-                    - phoneNumber
-                - type: object
-                  properties:
-                    userId:
-                      $ref: '#/components/schemas/userId'
-                    email:
-                      $ref: '#/components/schemas/email'
-                  required:
-                    - userId
-                    - phoneNumber
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+                email:
+                  $ref: '#/components/schemas/email'
+                phoneNumber:
+                  $ref: '#/components/schemas/phoneNumber'
+              required:
+                - userId
       
       responses:
         '200':
