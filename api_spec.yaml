@@ -68,7 +68,7 @@ paths:
                         type: string
                         enum: ['INCORRECT_USER_INPUT_CODE_ERROR']
 
-                      triesLeft:
+                      failedAttempts:
                         type: number
                         example: 2
                   - type: object
@@ -96,6 +96,7 @@ paths:
       operationId: passwordlessStartSignIn
       description: |
         Starts a sign in process by requesting a linkCode and a deviceId + userInputCode combination the user can use to sign in.
+        Passing the optional deviceId signifies a resend code flow.
       parameters:
         - $ref: '#/components/parameters/passwordlessRid'
         - $ref: '#/components/parameters/api-key'
@@ -109,6 +110,8 @@ paths:
                   properties:
                     email: 
                       $ref: '#/components/schemas/email'
+                    deviceId:
+                      $ref: '#/components/schemas/deviceId'
                     userInputCode:
                       $ref: '#/components/schemas/userInputCode'
                   required:
@@ -117,6 +120,8 @@ paths:
                   properties:
                     phoneNumber:
                       $ref: '#/components/schemas/phoneNumber'
+                    deviceId:
+                      $ref: '#/components/schemas/deviceId'
                     userInputCode:
                       $ref: '#/components/schemas/userInputCode'
                   required:
@@ -126,28 +131,34 @@ paths:
           description: Starts the passwordless login process
           content:
             application/json:
-                schema: 
-                  type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-
-                    codeId:
-                      $ref: '#/components/schemas/codeId'
-
-                    userInputCode: 
-                      type: object
+                schema:
+                  oneOf:
+                    - type: object
                       properties:
-                        deviceId:
-                          $ref: '#/components/schemas/deviceId'
-                        code:
-                          $ref: '#/components/schemas/userInputCode'
+                        status:
+                          $ref: '#/components/schemas/statusOK'
 
-                    linkCode:
-                      $ref: '#/components/schemas/linkCode'
+                        codeId:
+                          $ref: '#/components/schemas/codeId'
 
-                    timeCreated:
-                      $ref: '#/components/schemas/timeCreated'
+                        userInputCode: 
+                          type: object
+                          properties:
+                            deviceId:
+                              $ref: '#/components/schemas/deviceId'
+                            code:
+                              $ref: '#/components/schemas/userInputCode'
+
+                        linkCode:
+                          $ref: '#/components/schemas/linkCode'
+
+                        timeCreated:
+                          $ref: '#/components/schemas/timeCreated'
+                    - type: object
+                      properties:
+                        status:
+                          type: string
+                          enum: ["UNKNOWN_DEVICE_ERROR", "USER_INPUT_CODE_ALREADY_USED_ERROR"]
           
         '400':
           $ref: '#/components/responses/400'
@@ -191,15 +202,27 @@ paths:
                   properties:
                     status:
                       $ref: '#/components/schemas/statusOK'
-                    codes:
+                    devices:
                       type: array
                       items:
                         type: object
                         properties:
-                          codeId:
-                            $ref: '#/components/schemas/codeId'
-                          timeCreated:
-                            $ref: '#/components/schemas/timeCreated'
+                          deviceIdHash:
+                            description: B64 hash
+                            example: Yr0R9dUpQa/SD8xi5r/WVKZy0/6pDkWUe8EgT9aEcEQ=
+                            type: string
+                          failedAttempts:
+                            type: number
+                            example: 2
+                          codes:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                codeId:
+                                  $ref: '#/components/schemas/codeId'
+                                timeCreated:
+                                  $ref: '#/components/schemas/timeCreated'
           
         '400':
           $ref: '#/components/responses/400'
