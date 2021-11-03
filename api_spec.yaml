@@ -55,8 +55,8 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      codeId:
-                        $ref: '#/components/schemas/codeId'
+                      loginAttemptId:
+                        $ref: '#/components/schemas/loginAttemptId'
                       createdNewUser:
                         type: boolean
                         example: true
@@ -68,7 +68,7 @@ paths:
                         type: string
                         enum: ['INCORRECT_USER_INPUT_CODE_ERROR']
 
-                      failedAttempts:
+                      failedCodeInputs:
                         type: number
                         example: 2
                   - type: object
@@ -137,6 +137,9 @@ paths:
                       properties:
                         status:
                           $ref: '#/components/schemas/statusOK'
+
+                        loginAttemptId:
+                          $ref: '#/components/schemas/loginAttemptId'
 
                         codeId:
                           $ref: '#/components/schemas/codeId'
@@ -207,11 +210,11 @@ paths:
                       items:
                         type: object
                         properties:
-                          deviceIdHash:
+                          loginAttemptId:
                             description: B64 hash
                             example: Yr0R9dUpQa/SD8xi5r/WVKZy0/6pDkWUe8EgT9aEcEQ=
                             type: string
-                          failedAttempts:
+                          failedCodeInputs:
                             type: number
                             example: 2
                           codes:
@@ -2546,13 +2549,18 @@ components:
 
     codeId:
       type: string
-      description: Uniquely identifies a token
+      description: Uniquely identifies a code
       example: QZ0Mx9zG9cfqNXmPI0I/67r9bpKghUBDQZeMMbayi+I=
 
     deviceId:
       type: string
       description: A random identifier that should be stored on the device that started the sign in process.
       example: TU/52WOcktSv99zqaAZuWJG9BSoS0aRLfCbep8rFEwk=
+
+    loginAttemptId:
+      type: string
+      description: A random identifier that can be used to identify the login attempt/device.
+      example: kFmkPQEAJtACiT2w/K8fndEuNm+XozJXSZSlWEr+iGs=
 
     userInputCode:
       type: string
