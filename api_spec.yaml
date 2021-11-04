@@ -110,8 +110,6 @@ paths:
                   properties:
                     email: 
                       $ref: '#/components/schemas/email'
-                    deviceId:
-                      $ref: '#/components/schemas/deviceId'
                     userInputCode:
                       $ref: '#/components/schemas/userInputCode'
                   required:
@@ -120,12 +118,18 @@ paths:
                   properties:
                     phoneNumber:
                       $ref: '#/components/schemas/phoneNumber'
+                    userInputCode:
+                      $ref: '#/components/schemas/userInputCode'
+                  required:
+                    - phoneNumber
+                - type: object
+                  properties:
                     deviceId:
                       $ref: '#/components/schemas/deviceId'
                     userInputCode:
                       $ref: '#/components/schemas/userInputCode'
                   required:
-                    - phoneNumber
+                    - deviceId
       responses:
         '200':
           description: Starts the passwordless login process
@@ -144,13 +148,11 @@ paths:
                         codeId:
                           $ref: '#/components/schemas/codeId'
 
-                        userInputCode: 
-                          type: object
-                          properties:
-                            deviceId:
-                              $ref: '#/components/schemas/deviceId'
-                            code:
-                              $ref: '#/components/schemas/userInputCode'
+                        deviceId:
+                          $ref: '#/components/schemas/deviceId'
+
+                        code:
+                          $ref: '#/components/schemas/userInputCode'
 
                         linkCode:
                           $ref: '#/components/schemas/linkCode'
@@ -187,14 +189,24 @@ paths:
         - $ref: '#/components/parameters/cdi-version'
         - in: query
           name: email
-          description: Either this or phoneNumber is required to identify the user
+          description: Use this parameter to get information about all devices associated with an email (without the other query params)
           schema:
             type: string
         - in: query
           name: phoneNumber
-          description: Either this or email is required to identify the user
+          description: Use this parameter to get information about all devices associated with a phoneNumber (without the other query params)
           schema:
             $ref: '#/components/schemas/phoneNumber'
+        - in: query
+          name: deviceId
+          description: Use this parameter to get information about a single device (without the other query params)
+          schema:
+            $ref: '#/components/schemas/deviceId'
+        - in: query
+          name: loginAttemptId
+          description:  Use this parameter to get information about a single device (without the other query params)
+          schema:
+            $ref: '#/components/schemas/loginAttemptId'
       responses:
         '200':
           description: List of all active passwordless codes of the user
@@ -211,12 +223,14 @@ paths:
                         type: object
                         properties:
                           loginAttemptId:
-                            description: B64 hash
-                            example: Yr0R9dUpQa/SD8xi5r/WVKZy0/6pDkWUe8EgT9aEcEQ=
-                            type: string
+                            $ref: '#/components/schemas/loginAttemptId'
                           failedCodeInputs:
                             type: number
                             example: 2
+                          email:
+                            $ref: '#/components/schemas/email'
+                          phoneNumber:
+                            $ref: '#/components/schemas/phoneNumber'
                           codes:
                             type: array
                             items:
@@ -2506,7 +2520,7 @@ components:
 
     phoneNumber:
       type: string
-      example: '0036701234567'
+      example: '+14155552671'
 
     user:
       type: object
