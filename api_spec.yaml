@@ -179,6 +179,51 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+
+  /recipe/signinup/code/remove:
+    post:
+      tags:
+          - Passwordless Recipe
+      operationId: passwordlessRevokeCode
+      description: |
+        Revokes a code by id
+      parameters:
+        - $ref: '#/components/parameters/passwordlessRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                codeId: 
+                  $ref: '#/components/schemas/codeId'
+              required:
+                - codeId
+      responses:
+        '200':
+          description: 'The operation was successful'
+          content:
+            application/json:
+                schema: 
+                  type: object
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
   /recipe/signinup/codes:
     get:
       tags:
