@@ -154,7 +154,7 @@ paths:
                         deviceId:
                           $ref: '#/components/schemas/deviceId'
 
-                        code:
+                        userInputCode:
                           $ref: '#/components/schemas/userInputCode'
 
                         linkCode:
