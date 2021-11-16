@@ -67,7 +67,7 @@ paths:
                       status:
                         type: string
                         enum: ['INCORRECT_USER_INPUT_CODE_ERROR']
-                      failedCodeInputs:
+                      failedCodeInputAttemptCount:
                         type: number
                         example: 2
                       maximumCodeInputAttempts:
@@ -162,6 +162,9 @@ paths:
 
                         timeCreated:
                           $ref: '#/components/schemas/timeCreated'
+
+                        codeLifetime:
+                          $ref: '#/components/schemas/codeLifetime'
                     - type: object
                       properties:
                         status:
@@ -272,7 +275,7 @@ paths:
                         properties:
                           loginAttemptId:
                             $ref: '#/components/schemas/loginAttemptId'
-                          failedCodeInputs:
+                          failedCodeInputAttemptCount:
                             type: number
                             example: 2
                           email:
@@ -288,6 +291,8 @@ paths:
                                   $ref: '#/components/schemas/codeId'
                                 timeCreated:
                                   $ref: '#/components/schemas/timeCreated'
+                                codeLifetime:
+                                  $ref: '#/components/schemas/codeLifetime'
           
         '400':
           $ref: '#/components/responses/400'
@@ -2633,6 +2638,11 @@ components:
       type: string
       description: URL-safe string that can be used to authenticate the user, without the deviceId
       example: b10lbT_SnDC4flA6Fn7pE5TtG5k5NfigLef4QMBeGA8
+
+    codeLifetime:
+      type: number
+      description: The maximum lifetime of the code in milliseconds
+      example: 900000
 
     jwtSigningPublicKey:
       type: string
