@@ -55,8 +55,8 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      loginAttemptId:
-                        $ref: '#/components/schemas/loginAttemptId'
+                      preAuthSessionId:
+                        $ref: '#/components/schemas/preAuthSessionId'
                       createdNewUser:
                         type: boolean
                         example: true
@@ -145,8 +145,8 @@ paths:
                         status:
                           $ref: '#/components/schemas/statusOK'
 
-                        loginAttemptId:
-                          $ref: '#/components/schemas/loginAttemptId'
+                        preAuthSessionId:
+                          $ref: '#/components/schemas/preAuthSessionId'
 
                         codeId:
                           $ref: '#/components/schemas/codeId'
@@ -254,10 +254,10 @@ paths:
           schema:
             $ref: '#/components/schemas/deviceId'
         - in: query
-          name: loginAttemptId
+          name: preAuthSessionId
           description:  Use this parameter to get information about a single device (without the other query params)
           schema:
-            $ref: '#/components/schemas/loginAttemptId'
+            $ref: '#/components/schemas/preAuthSessionId'
       responses:
         '200':
           description: List of all active passwordless codes of the user
@@ -273,8 +273,8 @@ paths:
                       items:
                         type: object
                         properties:
-                          loginAttemptId:
-                            $ref: '#/components/schemas/loginAttemptId'
+                          preAuthSessionId:
+                            $ref: '#/components/schemas/preAuthSessionId'
                           failedCodeInputAttemptCount:
                             type: number
                             example: 2
@@ -2624,7 +2624,7 @@ components:
       description: A random identifier that should be stored on the device that started the sign in process.
       example: TU/52WOcktSv99zqaAZuWJG9BSoS0aRLfCbep8rFEwk=
 
-    loginAttemptId:
+    preAuthSessionId:
       type: string
       description: A random identifier that can be used to identify the login attempt/device.
       example: kFmkPQEAJtACiT2w/K8fndEuNm+XozJXSZSlWEr+iGs=
