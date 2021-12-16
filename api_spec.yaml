@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This version has not been released yet. Core Driver Interface http requests-responses
-  version: 2.9.1
+  version: 2.10.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -1880,30 +1880,40 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  # /user/remove:
-  #   post:
-  #     tags:
-  #       - Core
-  #     operationId: deleteUser
-  #     description: |
-  #       Delete user
-  #     parameters:
-  #       - $ref: '#/components/parameters/api-key'
-  #       - $ref: '#/components/parameters/cdi-version'
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/deleteUserRequest'
-  #     responses:
-  #       '200':
-  #         $ref: '#/components/responses/deleteUser'
-  #       '400':
-  #         $ref: '#/components/responses/400'
-  #       '401':
-  #         $ref: '#/components/responses/401'
-  #       '500':
-  #         $ref: '#/components/responses/500'
+  /user/remove:
+    post:
+      tags:
+        - Core
+      operationId: deleteUser
+      description: |
+        Delete user
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+      responses:
+        '200':
+          description:  Returns OK if the operation succeeded (even if the user didn't exist before the call)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
           
       
         
