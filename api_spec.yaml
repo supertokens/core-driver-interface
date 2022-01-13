@@ -2348,10 +2348,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/deleteUserRequest'
+              type: object
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
       responses:
         '200':
-          $ref: '#/components/responses/deleteUser'
+          description:  Returns OK if the operation succeeded (even if the user didn't exist before the call)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
         '400':
           $ref: '#/components/responses/400'
         '401':
