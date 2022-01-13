@@ -2334,30 +2334,30 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  # /user/remove:
-  #   post:
-  #     tags:
-  #       - Core
-  #     operationId: deleteUser
-  #     description: |
-  #       Delete user
-  #     parameters:
-  #       - $ref: '#/components/parameters/api-key'
-  #       - $ref: '#/components/parameters/cdi-version'
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/deleteUserRequest'
-  #     responses:
-  #       '200':
-  #         $ref: '#/components/responses/deleteUser'
-  #       '400':
-  #         $ref: '#/components/responses/400'
-  #       '401':
-  #         $ref: '#/components/responses/401'
-  #       '500':
-  #         $ref: '#/components/responses/500'
+  /user/remove:
+    post:
+      tags:
+        - Core
+      operationId: deleteUser
+      description: |
+        Delete user
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/deleteUserRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/deleteUser'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
           
       
         
