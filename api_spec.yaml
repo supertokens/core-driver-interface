@@ -1,17 +1,470 @@
 openapi: 3.0.0
 info:
   description: This version has not been released yet. Core Driver Interface http requests-responses
-  version: 2.10.1
+  version: 2.11.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
 tags:
   - name: EmailPassword Recipe
   - name: ThirdParty Recipe
+  - name: Passwordless Recipe
   - name: EmailVerification Recipe
   - name: Session Recipe
   - name: Core
 paths:
+  /recipe/signinup/code/consume:
+    post:
+      tags:
+        - Passwordless Recipe
+      operationId: passwordlessTryUseCode
+      description: |
+        Tries to consume the passed userInputCode+deviceId combo or the linkCode to sign the user in
+      parameters:
+        - $ref: '#/components/parameters/passwordlessRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    preAuthSessionId:
+                      $ref: '#/components/schemas/preAuthSessionId'
+                    linkCode:
+                      $ref: '#/components/schemas/linkCode'
+                  required:
+                    - linkCode
+                - type: object
+                  properties:
+                    preAuthSessionId:
+                      $ref: '#/components/schemas/preAuthSessionId'
+                    deviceId:
+                      $ref: '#/components/schemas/deviceId'
+                    userInputCode:
+                      $ref: '#/components/schemas/userInputCode'
+                  required:
+                    - deviceId
+                    - userInputCode
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      createdNewUser:
+                        type: boolean
+                        example: true
+                      user:
+                        $ref: '#/components/schemas/passwordlessUser'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['INCORRECT_USER_INPUT_CODE_ERROR', 'EXPIRED_USER_INPUT_CODE_ERROR']
+                      failedCodeInputAttemptCount:
+                        type: number
+                        example: 2
+                      maximumCodeInputAttempts:
+                        type: number
+                        example: 5
+
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['RESTART_FLOW_ERROR']
+
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/signinup/code:
+    post:
+      tags:
+        - Passwordless Recipe
+      operationId: passwordlessStartSignIn
+      description: |
+        Starts a sign in process by requesting a linkCode and a deviceId + userInputCode combination the user can use to sign in.
+        Passing the optional deviceId signifies a resend code flow.
+      parameters:
+        - $ref: '#/components/parameters/passwordlessRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    email: 
+                      $ref: '#/components/schemas/email'
+                    userInputCode:
+                      $ref: '#/components/schemas/userInputCode'
+                  required:
+                    - email
+                - type: object
+                  properties:
+                    phoneNumber:
+                      $ref: '#/components/schemas/phoneNumber'
+                    userInputCode:
+                      $ref: '#/components/schemas/userInputCode'
+                  required:
+                    - phoneNumber
+                - type: object
+                  properties:
+                    deviceId:
+                      $ref: '#/components/schemas/deviceId'
+                    userInputCode:
+                      $ref: '#/components/schemas/userInputCode'
+                  required:
+                    - deviceId
+      responses:
+        '200':
+          description: Starts the passwordless login process
+          content:
+            application/json:
+                schema:
+                  oneOf:
+                    - type: object
+                      properties:
+                        status:
+                          $ref: '#/components/schemas/statusOK'
+
+                        preAuthSessionId:
+                          $ref: '#/components/schemas/preAuthSessionId'
+
+                        codeId:
+                          $ref: '#/components/schemas/codeId'
+
+                        deviceId:
+                          $ref: '#/components/schemas/deviceId'
+
+                        userInputCode:
+                          $ref: '#/components/schemas/userInputCode'
+
+                        linkCode:
+                          $ref: '#/components/schemas/linkCode'
+
+                        timeCreated:
+                          $ref: '#/components/schemas/timeCreated'
+
+                        codeLifetime:
+                          $ref: '#/components/schemas/codeLifetime'
+                    - type: object
+                      properties:
+                        status:
+                          type: string
+                          enum: ["RESTART_FLOW_ERROR", "USER_INPUT_CODE_ALREADY_USED_ERROR"]
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/signinup/code/remove:
+    post:
+      tags:
+          - Passwordless Recipe
+      operationId: passwordlessRevokeCode
+      description: |
+        Revokes a code by id
+      parameters:
+        - $ref: '#/components/parameters/passwordlessRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                codeId: 
+                  $ref: '#/components/schemas/codeId'
+              required:
+                - codeId
+      responses:
+        '200':
+          description: 'The operation was successful'
+          content:
+            application/json:
+                schema: 
+                  type: object
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/signinup/codes:
+    get:
+      tags:
+          - Passwordless Recipe
+      operationId: passwordlessListCodes
+      description: |
+        Lists all active passwordless codes of the user
+      parameters:
+        - $ref: '#/components/parameters/passwordlessRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: email
+          description: Use this parameter to get information about all devices associated with an email (without the other query params)
+          schema:
+            type: string
+        - in: query
+          name: phoneNumber
+          description: Use this parameter to get information about all devices associated with a phoneNumber (without the other query params)
+          schema:
+            $ref: '#/components/schemas/phoneNumber'
+        - in: query
+          name: deviceId
+          description: Use this parameter to get information about a single device (without the other query params)
+          schema:
+            $ref: '#/components/schemas/deviceId'
+        - in: query
+          name: preAuthSessionId
+          description:  Use this parameter to get information about a single device (without the other query params)
+          schema:
+            $ref: '#/components/schemas/preAuthSessionId'
+      responses:
+        '200':
+          description: List of all active passwordless codes of the user
+          content:
+            application/json:
+                schema: 
+                  type: object
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+                    devices:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          preAuthSessionId:
+                            $ref: '#/components/schemas/preAuthSessionId'
+                          failedCodeInputAttemptCount:
+                            type: number
+                            example: 2
+                          email:
+                            $ref: '#/components/schemas/email'
+                          phoneNumber:
+                            $ref: '#/components/schemas/phoneNumber'
+                          codes:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                codeId:
+                                  $ref: '#/components/schemas/codeId'
+                                timeCreated:
+                                  $ref: '#/components/schemas/timeCreated'
+                                codeLifetime:
+                                  $ref: '#/components/schemas/codeLifetime'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/signinup/codes/remove:
+    post:
+      tags:
+          - Passwordless Recipe
+      operationId: passwordlessRevokeAllCodesOfUser
+      description: |
+        Revokes all codes issued for the user
+      parameters:
+        - $ref: '#/components/parameters/passwordlessRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    email: 
+                      $ref: '#/components/schemas/email'
+                  required:
+                    - email
+                - type: object
+                  properties:
+                    phoneNumber:
+                      $ref: '#/components/schemas/phoneNumber'
+                  required:
+                    - phoneNumber
+      responses:
+        '200':
+          description: 'The operation was successful'
+          content:
+            application/json:
+                schema: 
+                  type: object
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/user⠀⠀:
+    get:
+      tags:
+        - Passwordless Recipe
+      operationId: passwordlessGetUser
+      description: |
+        Get a user's information.
+        Note that there is an invisible character at the end of the path, this was to avoid a conflict with the OpenAPI spec. 
+        
+      parameters:
+        - $ref: '#/components/parameters/passwordlessRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/userId'
+        - in: query
+          name: email
+          description: Use exactly one of phoneNumber, email or userId
+          schema:
+            $ref: '#/components/schemas/email'
+        - in: query
+          name: phoneNumber
+          description: Use exactly one of phoneNumber, email or userId
+          schema:
+            $ref: '#/components/schemas/phoneNumber'
+      responses:
+        '200':
+          description: Get a user's information.
+          content:
+            application/json:
+                schema:
+                  oneOf:
+                    - type: object
+                      properties:
+                        status:
+                          $ref: '#/components/schemas/statusOK'
+                        user:
+                          $ref: '#/components/schemas/passwordlessUser'
+                    - type: object
+                      properties:
+                        status:
+                          type: string
+                          enum: ["UNKNOWN_USER_ID_ERROR", "UNKNOWN_EMAIL_ERROR", "UNKNOWN_PHONE_NUMBER_ERROR"]
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - Passwordless Recipe
+      operationId: passwordlessPutUser
+      description: |
+        Update a user's information. 
+        If the email or phoneNumber is set to null the previous value will be deleted. If they are not set (i.e., undefined/missing from the request), they are left as-is.
+      parameters:
+        - $ref: '#/components/parameters/passwordlessRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+                email:
+                  allOf:
+                    - $ref: '#/components/schemas/email'
+                    - nullable: true
+                phoneNumber:
+                  allOf:
+                    - $ref: '#/components/schemas/phoneNumber'
+                    - nullable: true
+              required:
+                - userId
+      
+      responses:
+        '200':
+          description: update user's information
+          content:
+            application/json:
+                schema: 
+                  properties:
+                    status:
+                      type: string
+                      enum: ['OK', 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR', 'PHONE_NUMBER_ALREADY_EXISTS_ERROR']
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
   /recipe/signin:
     post:
       tags:
@@ -1858,11 +2311,12 @@ paths:
                       properties:
                         recipeId:
                           type: string
-                          enum: ['emailpassword', 'thirdparty']
+                          enum: ['emailpassword', 'thirdparty', 'passwordless']
                         user:
                           anyOf:
                             - $ref: '#/components/schemas/user'
                             - $ref: '#/components/schemas/thirdPartyUser'
+                            - $ref: '#/components/schemas/passwordlessUser'
                       required: [recipeId, user]
                       additionalProperties: false
                   nextPaginationToken: 
@@ -1938,6 +2392,14 @@ components:
       name: rid
       in: header
       example: thirdparty
+      required: true
+      schema:
+        type: string
+    
+    passwordlessRid:
+      name: rid
+      in: header
+      example: passwordless
       required: true
       schema:
         type: string
@@ -2123,7 +2585,7 @@ components:
 
     phoneNumber:
       type: string
-      example: '0036701234567'
+      example: '+14155552671'
 
     user:
       type: object
@@ -2132,6 +2594,18 @@ components:
           $ref: '#/components/schemas/userId'
         email:
           $ref: '#/components/schemas/email'
+        timeJoined:
+          $ref: '#/components/schemas/timeJoined'
+
+    passwordlessUser:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/userId'
+        email:
+          $ref: '#/components/schemas/email'
+        phoneNumber:
+          $ref: '#/components/schemas/phoneNumber'
         timeJoined:
           $ref: '#/components/schemas/timeJoined'
 
@@ -2154,13 +2628,18 @@ components:
 
     codeId:
       type: string
-      description: Uniquely identifies a token
+      description: Uniquely identifies a code
       example: QZ0Mx9zG9cfqNXmPI0I/67r9bpKghUBDQZeMMbayi+I=
 
     deviceId:
       type: string
       description: A random identifier that should be stored on the device that started the sign in process.
       example: TU/52WOcktSv99zqaAZuWJG9BSoS0aRLfCbep8rFEwk=
+
+    preAuthSessionId:
+      type: string
+      description: A random identifier that can be used to identify the login attempt/device.
+      example: kFmkPQEAJtACiT2w/K8fndEuNm+XozJXSZSlWEr+iGs=
 
     userInputCode:
       type: string
@@ -2171,6 +2650,11 @@ components:
       type: string
       description: URL-safe string that can be used to authenticate the user, without the deviceId
       example: b10lbT_SnDC4flA6Fn7pE5TtG5k5NfigLef4QMBeGA8
+
+    codeLifetime:
+      type: number
+      description: The maximum lifetime of the code in milliseconds
+      example: 900000
 
     jwtSigningPublicKey:
       type: string
