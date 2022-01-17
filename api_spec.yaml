@@ -787,7 +787,12 @@ paths:
             application/json:
                 schema: 
                   oneOf:
-                  - $ref: '#/components/schemas/statusOKResponse'
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      userId:
+                        $ref: '#/components/schemas/userId'
                   - type: object
                     properties:
                       status:
