@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ## [2.12.0]
+
+### Added 
 - Adds `userId` in response of `/recipe/user/password/reset API`
 
 ## [2.11.0]
@@ -13,23 +15,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added 
 
 - Passwordless recipe
-  - `/signinup/code/consume` POST
-  - `/signinup/code/remove`  POST
-  - `/signinup/code`         POST
-  - `/signinup/codes`        GET
-  - `/signinup/codes/remove` POST
+  - adds `/signinup/code/consume` POST
+  - adds `/signinup/code/remove`  POST
+  - adds `/signinup/code`         POST
+  - adds `/signinup/codes`        GET
+  - adds `/signinup/codes/remove` POST
 
 ### Updated
 - Core APIs
-  - `/user`  GET with `passwordless` rid
-  - `/users` GET with `rid` and new `user` type
+  - updates `/user`  GET with `passwordless` rid
+  - updates `/users` GET with `rid` and new `user` type
 
 ## [2.10.0]
 
 ### Added 
-- /user/remove POST
+- adds /user/remove POST
 
 ## [2.9.0]
+
+### Added
+- JWT recipe
+  - adds JWT validity to `/recipe/jwt` POST
+  - adds a new property `jwtSigningPublicKeyList` which lists valid JWT signing keys to the following API responses:
+    - `/recipe/handshake`      POST
+    - `/recipe/session`        POST
+    - `/recipe/session/verify` POST 
+
+### Updates
+- Fixs response for `/users` GET
+
+### Removed
+- JWT recipe
+  - removes `JWT_CREATION_ERROR` from `/recipe/jwt` POST response
 
 ## [2.8.0]
 
@@ -47,24 +64,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `/recipe/jwt/data`      GET
 
 ### Removed 
-- `isVerified` `boolean` from `/recipe/signinup` POST
+- removes `isVerified` `boolean` from `/recipe/signinup` POST
 
 ### Added
 - Core APIs
-  - `/users/count` GET
-  - `/users`       GET
+  - adds `/users/count` GET
+  - adds `/users`       GET
   
 - Session Recipe
-  - `/recipe/session` GET
+  - adds `/recipe/session` GET
 
 ## [2.7.0]
 
 ### Added
 - Third party recipe
-  - `/recipe/signinup`    POST
-  - `/recipe/user`        GET
-  - `/recipe/users`       GET
-  - `/recipe/users/count` GET
+  - adds `/recipe/signinup`    POST
+  - adds `/recipe/user`        GET
+  - adds `/recipe/users`       GET
+  - adds`/recipe/users/count` GET
 
 ### Changed
 - Email verification
@@ -113,11 +130,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `/jwt/data` => `/recipe/jwt/data`
 
 ### Added 
-- New API: /recipe/signin
-- New API: /recipe/signup
-- New API: /recipe/user
-- New API: /recipe/user/password/reset/token
-- New API: /recipe/user/password/reset
+- adds `/recipe/signin`
+- adds `/recipe/signup`
+- adds `/recipe/user`
+- adds `/recipe/user/password/reset/token`
+- adds `/recipe/user/password/reset`
 
 ### Removed
 - Remove support code for older CDI versions:
