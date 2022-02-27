@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
-  version: 2.12.1
+  version: 2.13.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -1401,6 +1401,8 @@ paths:
                   $ref: '#/components/schemas/userDataInJWT'
                 userDataInDatabase:
                   $ref: '#/components/schemas/userDataInDatabase'
+                grants:
+                  $ref: '#/components/schemas/grantPayload'
                 enableAntiCsrf:
                   $ref: '#/components/schemas/enableAntiCsrf'
       responses:
@@ -1470,6 +1472,8 @@ paths:
                         $ref: '#/components/schemas/userDataInDatabase'
                       userDataInJWT:
                         $ref: '#/components/schemas/userDataInJWT'
+                      grants:
+                        $ref: '#/components/schemas/grantPayload'
                       userId:
                         $ref: '#/components/schemas/userId'
                       expiry:
@@ -1743,6 +1747,8 @@ paths:
                   $ref: '#/components/schemas/token'
                 userDataInJWT:
                   $ref: '#/components/schemas/userDataInJWT'
+                grants:
+                  $ref: '#/components/schemas/grantPayload'
       responses:
         '200':
           description: Regenerate user session
@@ -2711,7 +2717,12 @@ components:
       type: object
       description: should be a JSON object (not a JSON literal nor an array)
       example: {"test":123}
-      
+
+    grantPayload:
+      type: object
+      description: should be a JSON object (not a JSON literal nor an array)
+      example: { "email-verified": { v: true, t: 1645998687930 } }
+  
     enableAntiCsrf:
       type: boolean
       example: false
@@ -2733,6 +2744,8 @@ components:
           $ref: '#/components/schemas/userId'
         userDataInJWT:
           $ref: '#/components/schemas/userDataInJWT'
+        grants:
+          $ref: '#/components/schemas/grantPayload'
     
     cookieInfo:
       type: object
