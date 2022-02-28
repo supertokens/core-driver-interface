@@ -1863,7 +1863,49 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+
+  /recipe/session/grant:
+      tags:
+        - Session Recipe
+      operationId: grantUpdate
+      description: |
+        Update grants stored in a session
+      parameters:
+        - $ref: '#/components/parameters/sessionRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sessionHandle:  
+                  $ref: '#/components/schemas/handle'
+                grants:
+                  $ref: '#/components/schemas/grantPayload'
+      responses:
+        '200':
+          description: The operation was successful
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/statusOKResponse'
+                  - $ref: '#/components/schemas/unauthorisedMessageResponse'
           
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
   /recipe/jwt:
     post:
       tags:
