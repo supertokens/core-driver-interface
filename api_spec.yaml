@@ -1865,7 +1865,7 @@ paths:
           $ref: '#/components/responses/500'
 
   /recipe/session/grant:
-    post:
+    put:
       tags:
         - Session Recipe
       operationId: grantUpdate
