@@ -1468,7 +1468,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /recipe/user/metadata/delete:
+  /recipe/user/metadata/remove:
     post:
       tags:
         - User Metadata Recipe
