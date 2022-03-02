@@ -9,11 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Added
 
-- Endpoint to set session grants based on session handle
+- Session recipe:
+  - `/recipe/session/grant` PUT
 
-## Changed
+## Updated
 
-- Updated session endpoint to support grants
+- Session recipe:
+  - `/recipe/session` POST: added grants to both request and response (as part of the session)
+  - `/recipe/session` GET: added grants to the response
+  - `/recipe/session/verify` POST: added grants to the response (as part of the session)
+  - `/recipe/session/refresh` POST: added grants to the response (as part of the session)
+  - `/recipe/session/regenerate` POST: added grants to both request and response (as part of the session)
 
 ## [2.12.0]
 
