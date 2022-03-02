@@ -9,7 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Added
 
-- Endpoints to support basic operations on user metadata
+- User Metadata recipe
+  - adds `/recipe/user/metadata` GET
+  - adds `/recipe/user/metadata` PUT
+  - adds `/recipe/user/metadata/remove` POST
 
 ## [2.12.0]
 
