@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
-  version: 2.12.1
+  version: 2.13.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -10,6 +10,7 @@ tags:
   - name: ThirdParty Recipe
   - name: Passwordless Recipe
   - name: EmailVerification Recipe
+  - name: User Metadata Recipe
   - name: Session Recipe
   - name: Core
 paths:
@@ -1377,7 +1378,140 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
-  
+
+  /recipe/user/metadata:
+    get:
+      tags:
+        - User Metadata Recipe
+      operationId: userMetadataRead
+      description: |
+        Gets the stored metadata object of the user
+      parameters:
+        - $ref: '#/components/parameters/userMetadataRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/userId'
+      responses:
+        '200':
+          description: 'The operation was successful'
+          content:
+            application/json:
+                schema: 
+                  type: object
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+                    metadata:
+                      $ref: '#/components/schemas/userMetadata'
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+    put:
+      tags:
+        - User Metadata Recipe
+      operationId: userMetadataUpdate
+      description: |
+        Updates the metadata object stored about the user by doing a shallow merge of the stored and the update JSONs
+        and removing properties set to null on the root level of the update object. The merged object is then reserialized and stored.
+
+        e.g.:
+          - stored: `{ "preferences": { "theme":"dark" }, "notifications": { "email": true }, "todos": ["example"] }`
+
+          - update: `{ "notifications": { "sms": true }, "todos": null }`
+
+          - result: `{ "preferences": { "theme":"dark" }, "notifications": { "sms": true } }`
+
+      parameters:
+        - $ref: '#/components/parameters/userMetadataRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+                metadataUpdate:
+                  $ref: '#/components/schemas/userMetadataUpdate'
+      responses:
+        '200':
+          description: 'The operation was successful'
+          content:
+            application/json:
+                schema: 
+                  type: object
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+                    metadata:
+                      $ref: '#/components/schemas/userMetadata'
+
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/user/metadata/remove:
+    post:
+      tags:
+        - User Metadata Recipe
+      operationId: userMetadataDelete
+      description: |
+        Removes the entire metadata JSON stored about the user.
+
+      parameters:
+        - $ref: '#/components/parameters/userMetadataRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+
+      responses:
+        '200':
+          description: 'The operation was successful'
+          content:
+            application/json:
+                schema: 
+                  type: object
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
   /recipe/session:
     post:
       tags:
@@ -2416,6 +2550,14 @@ components:
       required: true
       schema:
         type: string
+
+    userMetadataRid:
+      name: rid
+      in: header
+      example: usermetadata
+      required: true
+      schema:
+        type: string
         
     sessionRid:
       name: rid
@@ -2702,6 +2844,16 @@ components:
       enum:
         - OK
     
+    userMetadata:
+      type: object
+      description: should be a JSON object (not a JSON literal nor an array)
+      example: { "preferences": { "theme":"dark" }, "notifications": { "email": true }, "todos": ["example"] }
+
+    userMetadataUpdate:
+      type: object
+      description: should be a JSON object (not a JSON literal nor an array)
+      example: { "notifications": { "sms": true }, "todos": null }
+
     userDataInJWT:
       type: object
       description: should be a JSON object (not a JSON literal nor an array)
