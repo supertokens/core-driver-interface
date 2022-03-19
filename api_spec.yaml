@@ -1401,8 +1401,8 @@ paths:
                   $ref: '#/components/schemas/userDataInJWT'
                 userDataInDatabase:
                   $ref: '#/components/schemas/userDataInDatabase'
-                grants:
-                  $ref: '#/components/schemas/grantPayload'
+                claims:
+                  $ref: '#/components/schemas/sessionClaims'
                 enableAntiCsrf:
                   $ref: '#/components/schemas/enableAntiCsrf'
       responses:
@@ -1472,8 +1472,8 @@ paths:
                         $ref: '#/components/schemas/userDataInDatabase'
                       userDataInJWT:
                         $ref: '#/components/schemas/userDataInJWT'
-                      grants:
-                        $ref: '#/components/schemas/grantPayload'
+                      claims:
+                        $ref: '#/components/schemas/sessionClaims'
                       userId:
                         $ref: '#/components/schemas/userId'
                       expiry:
@@ -1747,8 +1747,8 @@ paths:
                   $ref: '#/components/schemas/token'
                 userDataInJWT:
                   $ref: '#/components/schemas/userDataInJWT'
-                grants:
-                  $ref: '#/components/schemas/grantPayload'
+                claims:
+                  $ref: '#/components/schemas/sessionClaims'
       responses:
         '200':
           description: Regenerate user session
@@ -1864,13 +1864,13 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /recipe/session/grant:
+  /recipe/session/claims:
     put:
       tags:
         - Session Recipe
-      operationId: grantUpdate
+      operationId: claimUpdate
       description: |
-        Update grants stored in a session
+        Update claims stored in a session
       parameters:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
@@ -1883,8 +1883,8 @@ paths:
               properties:
                 sessionHandle:  
                   $ref: '#/components/schemas/handle'
-                grants:
-                  $ref: '#/components/schemas/grantPayload'
+                claims:
+                  $ref: '#/components/schemas/sessionClaims'
       responses:
         '200':
           description: The operation was successful
@@ -2761,7 +2761,7 @@ components:
       description: should be a JSON object (not a JSON literal nor an array)
       example: {"test":123}
 
-    grantPayload:
+    sessionClaims:
       type: object
       description: should be a JSON object (not a JSON literal nor an array)
       example: { "email-verified": { v: true, t: 1645998687930 } }
@@ -2787,8 +2787,8 @@ components:
           $ref: '#/components/schemas/userId'
         userDataInJWT:
           $ref: '#/components/schemas/userDataInJWT'
-        grants:
-          $ref: '#/components/schemas/grantPayload'
+        claims:
+          $ref: '#/components/schemas/sessionClaims'
     
     cookieInfo:
       type: object
