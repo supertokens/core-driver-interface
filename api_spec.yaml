@@ -1390,7 +1390,7 @@ paths:
         - $ref: '#/components/parameters/userMetadataRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/userIdRequired'
       responses:
         '200':
           description: 'The operation was successful'
@@ -2189,7 +2189,7 @@ paths:
                     type: array
                     items:
                       type: string
-                      example: ['2.9']
+                      example: ['2.13']
           
         '400':
           $ref: '#/components/responses/400'
@@ -2516,7 +2516,7 @@ components:
       name: rid
       in: header
       example: emailpassword
-      required: true
+      required: false
       schema:
         type: string
     api-key:
@@ -2531,7 +2531,7 @@ components:
       name: rid
       in: header
       example: thirdparty
-      required: true
+      required: false
       schema:
         type: string
     
@@ -2539,7 +2539,7 @@ components:
       name: rid
       in: header
       example: passwordless
-      required: true
+      required: false
       schema:
         type: string
 
@@ -2547,7 +2547,7 @@ components:
       name: rid
       in: header
       example: emailverification
-      required: true
+      required: false
       schema:
         type: string
 
@@ -2555,7 +2555,7 @@ components:
       name: rid
       in: header
       example: usermetadata
-      required: true
+      required: false
       schema:
         type: string
         
@@ -2563,7 +2563,7 @@ components:
       name: rid
       in: header
       example: session
-      required: true
+      required: false
       schema:
         type: string
 
@@ -2571,7 +2571,7 @@ components:
       name: rid
       in: header
       example: jwt
-      required: true
+      required: false
       schema:
         type: string
         
@@ -2580,7 +2580,7 @@ components:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version. 
-      example: 2.9
+      example: 2.13
       required: true
       schema:
         type: string
@@ -2620,6 +2620,14 @@ components:
       name: userId
       in: query
       required: false
+      schema:
+         type: string
+         example: fa7a0841-b533-4478-9253-0fde890c576
+
+    userIdRequired:
+      name: userId
+      in: query
+      required: true
       schema:
          type: string
          example: fa7a0841-b533-4478-9253-0fde890c576
