@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
-  version: 2.13.1
+  version: 2.14.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -3129,6 +3129,7 @@ components:
     
     permissionRequired:
       name: permission
+      in: query
       required: true
       schema:
         type: string
