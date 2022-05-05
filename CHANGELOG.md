@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [2.14.0]
+
+### Added
+
+- User Roles recipe:
+- adds `/recipe/user/role` PUT
+- adds `/recipe/user/role/remove` POST 
+- adds `/recipe/user/roles` GET 
+- adds `/recipe/role/users` GET
+- adds `/recipe/role ` PUT 
+- adds `/recipe/role/permissions`GET 
+- adds `/recipe/role/permissions/remove` POST 
+- adds `/recipe/permission/roles` GET 
+- adds `/recipe/role/remove` POST 
+- adds `/recipe/roles` GET 
 
 ## [2.13.1]
 ### Fixed
