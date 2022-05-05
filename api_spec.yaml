@@ -11,6 +11,7 @@ tags:
   - name: Passwordless Recipe
   - name: EmailVerification Recipe
   - name: User Metadata Recipe
+  - name: User Roles Recipe
   - name: Session Recipe
   - name: Core
 paths:
@@ -1511,6 +1512,484 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+  
+  /recipe/user/role:
+    put:
+      tags:
+        - User Roles Recipe
+      operationId: addUserRole
+      description: |
+        Creates a User Role mapping
+
+      parameters:
+        - $ref: '#/components/parameters/userRolesRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+                role:
+                  $ref: '#/components/schemas/role'
+              required: [userId, role]
+
+      responses:
+        '200':
+          description: 'The operation was successful'
+          content:
+            application/json:
+                schema: 
+                  oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      didUserAlreadyHaveRole:
+                        type: boolean
+                        example: true
+                  - $ref: '#/components/schemas/unknownRoleResponse'
+
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/user/role/remove:
+    post:
+      tags:
+        - User Roles Recipe
+      operationId: removeUserRole
+      description: |
+        Removes a User Role mapping
+
+      parameters:
+        - $ref: '#/components/parameters/userRolesRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+                role:
+                  $ref: '#/components/schemas/role'
+              required: [userId, role]
+
+      responses:
+        '200':
+          description: 'The operation was successful'
+          content:
+            application/json:
+                schema: 
+                  oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      didUserHaveRole:
+                        type: boolean
+                        example: true
+                  - $ref: '#/components/schemas/unknownRoleResponse'
+
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/user/roles:
+    get:
+      tags:
+        - User Roles Recipe
+      operationId: getUserRoles
+      description: |
+        Retrive the roles associated with the user.
+      parameters:
+        - $ref: '#/components/parameters/userRolesRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/userIdRequired'
+      responses:
+        '200':
+          description: 'The operation was successful'
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  roles:
+                    type: array
+                    items: 
+                      $ref: '#/components/schemas/role'
+
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/role/users:
+    get:
+      tags:
+        - User Roles Recipe
+      operationId: getRoleUsers
+      description: |
+        Retrive the users associated with the role.
+      parameters:
+        - $ref: '#/components/parameters/userRolesRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/userIdRequired'
+      responses:
+        '200':
+          description: 'The operation was successful'
+          content:
+            application/json:
+              schema: 
+                  oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      users:
+                        type: array
+                        items: 
+                          $ref: '#/components/schemas/userId'
+                  - $ref: '#/components/schemas/unknownRoleResponse'
+
+                    
+
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/role:
+    put:
+      tags:
+        - User Roles Recipe
+      operationId: putRole
+      description: |
+        Creates a role with permissions, can also be used to add permissions to a role
+
+      parameters:
+        - $ref: '#/components/parameters/userRolesRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                role:
+                  $ref: '#/components/schemas/role'
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                    example: permission
+              required: [role]
+
+      responses:
+        '200':
+          description: 'The operation was successful'
+          content:
+            application/json:
+                schema: 
+                  oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      createdNewRole:
+                        type: boolean
+                        example: true
+                      
+                        
+                  - $ref: '#/components/schemas/unknownRoleResponse'
+
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/role/permissions:
+    get:
+      tags:
+        - User Roles Recipe
+      operationId: getRolePermissions
+      description: |
+        Retrive the permissions associated with a role
+      parameters:
+        - $ref: '#/components/parameters/userRolesRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/roleRequired'
+      responses:
+        '200':
+          description: 'The operation was successful'
+          content:
+            application/json:
+              schema: 
+                  oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      permissions:
+                        type: array
+                        items: 
+                          type: string
+                          example: permission
+                  - $ref: '#/components/schemas/unknownRoleResponse'
+
+                    
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/role/permissions/remove:
+    post:
+      tags:
+        - User Roles Recipe
+      operationId: removeRolePermissions
+      description: |
+        Removes permissions mapped to a role
+
+      parameters:
+        - $ref: '#/components/parameters/userRolesRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                role:
+                  $ref: '#/components/schemas/role'
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                    example: permission
+              required: [role]
+
+      responses:
+        '200':
+          description: 'The operation was successful'
+          content:
+            application/json:
+                schema: 
+                  oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      didUserHaveRole:
+                        type: boolean
+                        example: true
+                  - $ref: '#/components/schemas/unknownRoleResponse'
+
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/permission/roles:
+    get:
+      tags:
+        - User Roles Recipe
+      operationId: getPermissionRoles
+      description: |
+        Retrive the permissions associated with a role
+      parameters:
+        - $ref: '#/components/parameters/userRolesRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/permissionRequired'
+      responses:
+        '200':
+          description: 'The operation was successful'
+          content:
+            application/json:
+              schema: 
+                  oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      roles:
+                        type: array
+                        items: 
+                          type: string
+                          example: admin
+                    
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+          
+  /recipe/role/remove:
+    post:
+      tags:
+        - User Roles Recipe
+      operationId: removeRole
+      description: |
+        Deletes a role
+
+      parameters:
+        - $ref: '#/components/parameters/userRolesRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                role:
+                  $ref: '#/components/schemas/role'
+              required: [role]
+
+      responses:
+        '200':
+          description: 'The operation was successful'
+          content:
+            application/json:
+                schema: 
+                  oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      didUserHaveRole:
+                        type: boolean
+                        example: true
+                  - $ref: '#/components/schemas/unknownRoleResponse'
+
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/roles:
+    get:
+      tags:
+        - User Roles Recipe
+      operationId: getRoles
+      description: |
+        Retrive all created roles
+      parameters:
+        - $ref: '#/components/parameters/userRolesRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        '200':
+          description: 'The operation was successful'
+          content:
+            application/json:
+              schema: 
+                  oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      roles:
+                        type: array
+                        items: 
+                          type: string
+                          example: admin
+                    
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
 
   /recipe/session:
     post:
@@ -2558,6 +3037,14 @@ components:
       required: false
       schema:
         type: string
+    
+    userRolesRid:
+      name: rid
+      in: header
+      example: userroles
+      required: false
+      schema:
+        type: string
         
     sessionRid:
       name: rid
@@ -2631,6 +3118,21 @@ components:
       schema:
          type: string
          example: fa7a0841-b533-4478-9253-0fde890c576
+    
+    roleRequired:
+      name: role
+      in: query
+      required: true
+      schema:
+         type: string
+         example: admin
+    
+    permissionRequired:
+      name: permission
+      required: true
+      schema:
+        type: string
+        example: permission
     
     includeRecipeIds:
       name: includeRecipeIds
@@ -2729,6 +3231,10 @@ components:
     userId:
       type: string
       example: fa7a0841-b533-4478-95533-0fde890c3483
+    
+    role:
+      type: string
+      example: admin
     
     timeJoined:
       type: number
@@ -2992,6 +3498,13 @@ components:
         status:
           type: string
           enum: ['UNKNOWN_USER_ID_ERROR']
+    
+    unknownRoleResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: ['UNKNOWN_ROLE_ERROR']
           
           
           
