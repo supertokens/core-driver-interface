@@ -1643,8 +1643,6 @@ paths:
                     type: array
                     items: 
                       $ref: '#/components/schemas/role'
-
-          
         '400':
           $ref: '#/components/responses/400'
         
@@ -1685,10 +1683,7 @@ paths:
                         items: 
                           $ref: '#/components/schemas/userId'
                   - $ref: '#/components/schemas/unknownRoleResponse'
-
-                    
-
-          
+                  
         '400':
           $ref: '#/components/responses/400'
         
@@ -1734,17 +1729,14 @@ paths:
           content:
             application/json:
                 schema: 
-                  oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      createdNewRole:
-                        type: boolean
-                        example: true
-                      
-                        
-                  - $ref: '#/components/schemas/unknownRoleResponse'
+                  type: object
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+                    createdNewRole:
+                      type: boolean
+                      example: true
+
 
         '400':
           $ref: '#/components/responses/400'
@@ -1788,8 +1780,6 @@ paths:
                           example: permission
                   - $ref: '#/components/schemas/unknownRoleResponse'
 
-                    
-          
         '400':
           $ref: '#/components/responses/400'
         
@@ -1808,7 +1798,7 @@ paths:
         - User Roles Recipe
       operationId: removeRolePermissions
       description: |
-        Removes permissions mapped to a role
+        Removes permissions mapped to a role, if no permissions are passed all permissions mapped to the role are removed
 
       parameters:
         - $ref: '#/components/parameters/userRolesRid'
@@ -1840,9 +1830,6 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      didUserHaveRole:
-                        type: boolean
-                        example: true
                   - $ref: '#/components/schemas/unknownRoleResponse'
 
         '400':
@@ -1875,18 +1862,16 @@ paths:
           content:
             application/json:
               schema: 
-                  oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      roles:
-                        type: array
-                        items: 
-                          type: string
-                          example: admin
-                    
-          
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  roles:
+                    type: array
+                    items: 
+                      type: string
+                      example: admin
+                  
         '400':
           $ref: '#/components/responses/400'
         
@@ -1927,15 +1912,13 @@ paths:
           content:
             application/json:
                 schema: 
-                  oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      didUserHaveRole:
-                        type: boolean
-                        example: true
-                  - $ref: '#/components/schemas/unknownRoleResponse'
+                  type: object
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+                    didRoleExist:
+                      type: boolean
+                      example: true
 
         '400':
           $ref: '#/components/responses/400'
@@ -1966,18 +1949,16 @@ paths:
           content:
             application/json:
               schema: 
-                  oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      roles:
-                        type: array
-                        items: 
-                          type: string
-                          example: admin
+                  type: object
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+                    roles:
+                      type: array
+                      items: 
+                        type: string
+                        example: admin
                     
-          
         '400':
           $ref: '#/components/responses/400'
         
@@ -3067,7 +3048,7 @@ components:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version. 
-      example: 2.13
+      example: 2.14
       required: true
       schema:
         type: string
