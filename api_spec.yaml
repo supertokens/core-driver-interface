@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
-  version: 2.14.0
+  version: 2.15.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -12,9 +12,251 @@ tags:
   - name: EmailVerification Recipe
   - name: User Metadata Recipe
   - name: User Roles Recipe
+  - name: UserIdMapping Recipe
   - name: Session Recipe
   - name: Core
 paths:
+  
+  /recipe/userid/map:
+    post:
+      tags:
+         - UserIdMapping Recipe
+      operationId: userIdMappingCreateMapping
+      description: |
+        Create a mapping between a SuperTokens userId and an external userId.
+      parameters:
+        - $ref: '#/components/parameters/userIdMappingRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                superTokensUserId:
+                  $ref: '#/components/schemas/userId'
+                externalUserId:
+                  type: string
+                  example: "externalId"
+                externalUserIdInfo:
+                  type: string
+                  example: "Info about external userId"
+              required:
+                - superTokensUserId
+                - externalUserId
+                    
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['UNKNOWN_SUPERTOKENS_USER_ID_ERROR']
+
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['USER_ID_MAPPING_ALREADY_EXISTS_ERROR']
+                      doesSuperTokensUserIdExist:
+                        type: boolean
+                      doesExternalUserIdExist:
+                        type: boolean
+                        
+
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    get:
+      tags:
+          - UserIdMapping Recipe
+      operationId: userIdMappingGetMapping
+      description: |
+        Retrieve a UserIdMapping
+      parameters:
+        - $ref: '#/components/parameters/userIdMappingRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: userId
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: userIdType
+          schema:
+            type: string
+            enum: ["SUPERTOKENS", "EXTERNAL", "ANY"]
+
+      responses:
+        '200':
+          description: Retrives a userId mapping
+          content:
+            application/json:
+                schema: 
+                  oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      superTokensUserId:
+                        $ref: '#/components/schemas/userId'
+                      externalUserId:
+                        type: string
+                        example: "externalId"
+                      externalUserIdInfo:
+                        type: string 
+                        example: "Info about external userId"
+                    required:
+                      - status
+                      - superTokensUserId
+                      - externalUserId
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["UNKNOWN_MAPPING_ERROR"]
+                  
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/userid/map/remove:
+    post:
+      tags:
+         - UserIdMapping Recipe
+      operationId: userIdMappingRemoveMapping
+      description: |
+        Delete a mapping between a SuperTokens userId and an external userId.
+      parameters:
+        - $ref: '#/components/parameters/userIdMappingRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+                userIdType:
+                  type: string
+                  enum: ["SUPERTOKENS", "EXTERNAL", "ANY"]
+              required:
+                - userId
+                    
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  didMappingExist:
+                    type: boolean
+                        
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/userid/external-user-id-info:
+    put:
+      tags:
+         - UserIdMapping Recipe
+      operationId: userIdMappingUpateExternalUserIdInfo
+      description: |
+        Update or delete externalUserIdInfo
+      parameters:
+        - $ref: '#/components/parameters/userIdMappingRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+                userIdType:
+                  type: string
+                  enum: ["SUPERTOKENS", "EXTERNAL", "ANY"]
+                externalUserIdInfo:
+                  type: string
+                  example: "new external userId info"
+                  nullable: true
+              required:
+                - userId
+                - externalUserIdInfo
+                    
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["UNKNOWN_MAPPING_ERROR"]
+                        
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
   /recipe/signinup/code/consume:
     post:
       tags:
@@ -3042,13 +3284,20 @@ components:
       required: false
       schema:
         type: string
-        
+    
+    userIdMappingRid:
+      name: rid
+      in: header
+      example: useridmapping
+      required: false
+      schema:
+        type: string
         
     cdi-version:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version. 
-      example: 2.14
+      example: 2.15
       required: true
       schema:
         type: string
