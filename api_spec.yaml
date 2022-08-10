@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
-  version: 2.15.0
+  version: 2.16.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -42,6 +42,8 @@ paths:
                 externalUserIdInfo:
                   type: string
                   example: "Info about external userId"
+                force:
+                  type: boolean
               required:
                 - superTokensUserId
                 - externalUserId
@@ -170,6 +172,9 @@ paths:
                 userIdType:
                   type: string
                   enum: ["SUPERTOKENS", "EXTERNAL", "ANY"]
+                force:
+                  type: boolean
+                  
               required:
                 - userId
                     
@@ -3297,7 +3302,7 @@ components:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version. 
-      example: 2.15
+      example: 2.16
       required: true
       schema:
         type: string
