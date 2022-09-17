@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
-  version: 2.15.1
+  version: 2.16.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -2957,6 +2957,19 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+  
+  /:
+    get:
+      tags:
+        - Core
+      operationId: getHelloOnRootPath
+      description: |
+        Return a simple hello message
+      responses:
+        '200':
+          $ref: '#/components/responses/hello'
+        '500':
+          $ref: '#/components/responses/500'
     
   /hello:
     get:
@@ -2968,16 +2981,6 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/hello'
-          
-        '400':
-          $ref: '#/components/responses/400'
-        
-        '401':
-          $ref: '#/components/responses/401'
-        
-        '404':
-          $ref: '#/components/responses/404'
-        
         '500':
           $ref: '#/components/responses/500'
     put:
@@ -2989,16 +2992,6 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/hello'
-          
-        '400':
-          $ref: '#/components/responses/400'
-        
-        '401':
-          $ref: '#/components/responses/401'
-        
-        '404':
-          $ref: '#/components/responses/404'
-        
         '500':
           $ref: '#/components/responses/500'
     
@@ -3011,16 +3004,6 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/hello'
-          
-        '400':
-          $ref: '#/components/responses/400'
-        
-        '401':
-          $ref: '#/components/responses/401'
-        
-        '404':
-          $ref: '#/components/responses/404'
-        
         '500':
           $ref: '#/components/responses/500'
           
@@ -3033,16 +3016,6 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/hello'
-          
-        '400':
-          $ref: '#/components/responses/400'
-        
-        '401':
-          $ref: '#/components/responses/401'
-        
-        '404':
-          $ref: '#/components/responses/404'
-        
         '500':
           $ref: '#/components/responses/500'
   
