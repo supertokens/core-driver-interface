@@ -1099,6 +1099,62 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
+  /recipe/user/passwordhash/import:
+    post:
+      tags:
+        - EmailPassword Recipe
+      operationId: userImport
+      description: |
+        Import a user with email ID and password hash
+      parameters:
+        - $ref: '#/components/parameters/rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  $ref: '#/components/schemas/email'
+                passwordHash:
+                  type: string
+                  example: "passwordHash"
+                hashingAlgorithm:
+                  type: string
+                  enum: ["argon2", "bcrypt", "firebase_scrypt"]
+                  
+                  
+      responses:
+        '200':
+          description: import user response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  user:
+                    $ref: '#/components/schemas/user'
+                  didUserAlreadyexist:
+                    type: boolean
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  
+  
   /recipe/signinup:
     post:
       tags:
