@@ -1138,7 +1138,7 @@ paths:
                     $ref: '#/components/schemas/statusOK'
                   user:
                     $ref: '#/components/schemas/user'
-                  didUserAlreadyexist:
+                  didUserAlreadyExist:
                     type: boolean
           
         '400':
