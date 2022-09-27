@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
-  version: 2.16.0
+  version: 2.16.1
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -285,6 +285,7 @@ paths:
                     linkCode:
                       $ref: '#/components/schemas/linkCode'
                   required:
+                    - preAuthSessionId
                     - linkCode
                 - type: object
                   properties:
@@ -295,6 +296,7 @@ paths:
                     userInputCode:
                       $ref: '#/components/schemas/userInputCode'
                   required:
+                    - preAuthSessionId
                     - deviceId
                     - userInputCode
       responses:
