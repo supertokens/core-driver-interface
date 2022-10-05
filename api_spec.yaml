@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
-  version: 2.16.1
+  version: 2.16.2
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -2535,9 +2535,10 @@ paths:
                 refreshToken:
                   $ref: '#/components/schemas/token'
                 enableAntiCsrf:
-                  $ref: '#/components/schemas/token'
+                  $ref: '#/components/schemas/enableAntiCsrf'
                 antiCsrfToken:
                   $ref: '#/components/schemas/token'
+              required: [refreshToken, enableAntiCsrf]
       responses:
         '200':
           description: Refresh a session
