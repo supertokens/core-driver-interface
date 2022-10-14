@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
-  version: 2.16.2
+  version: 2.17.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -137,7 +137,7 @@ paths:
                       status:
                         type: string
                         enum: ["UNKNOWN_MAPPING_ERROR"]
-                  
+
         '400':
           $ref: '#/components/responses/400'
         
@@ -3247,8 +3247,199 @@ paths:
         '500':
           $ref: '#/components/responses/500'
           
-      
+
+  /recipe/thirdparty/tenant/config:
+    post:
+      tags:
+        - ThirdParty Recipe
+      description: |
+        Create or update ThirdParty Tenant Config
+      operationId: createOrUpdateTenantConfigPOST
+      parameters:
+        - $ref: '#/components/parameters/thirdPartyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                thirdPartyId:
+                  $ref: '#/components/schemas/thirdPartyId'
+                supertokensTenantId:
+                  $ref: '#/components/schemas/supertokensTenantId'
+                config:
+                  $ref: '#/components/schemas/thirdPartyTenantConfig'
+
+      responses:
+        200:
+          description: Create or Update result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  created:
+                    type: boolean
+                  update:
+                    type: boolean
+        '400':
+          $ref: '#/components/responses/400'
         
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    get:
+      tags:
+        - ThirdParty Recipe
+      description: |
+        Get ThirdParty Tenant Config
+      operationId: tenantConfigGET
+      parameters:
+        - $ref: '#/components/parameters/thirdPartyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - name: thirdPartyId
+          in: query
+          schema:
+            type: string
+        - name: supertokensTenantId
+          in: query
+          schema:
+            type: string
+      responses:
+        200:
+          description: Config
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      config:
+                        $ref: '#/components/schemas/thirdPartyTenantConfig'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['CONFIG_NOT_FOUND']
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/thirdparty/tenant/config/remove:
+    post:
+      tags:
+        - ThirdParty Recipe
+      description: |
+        Delete ThirdParty Tenant Config
+      operationId: deleteTenantConfigPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                thirdPartyId:
+                  $ref: '#/components/schemas/thirdPartyId'
+                supertokensTenantId:
+                  $ref: '#/components/schemas/supertokensTenantId'
+
+      responses:
+        200:
+          description: Redirect URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  didConfigExist:
+                    type: boolean
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/thirdparty/tenant/config/list:
+    get:
+      tags:
+        - ThirdParty Recipe
+      description: |
+        List all ThirdParty Tenant Configs or list ThirdParty Tenant Configs filtered by ThirdPartyId or TenantId
+      operationId: listConfigsGET
+      parameters:
+        - name: thirdPartyId
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/thirdPartyId'
+        - name: supertokensTenantId
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/supertokensTenantId'
+      responses:
+        200:
+          description: ConfigList
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: OK
+                  configs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        thirdPartyId:
+                          $ref: '#/components/schemas/thirdPartyId'
+                        supertokensTenantId:
+                          $ref: '#/components/schemas/supertokensTenantId'
+                        config:
+                          $ref: '#/components/schemas/thirdPartyTenantConfig'
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
 components:
   parameters:
     rid:
@@ -3334,7 +3525,7 @@ components:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version. 
-      example: 2.16
+      example: 2.17
       required: true
       schema:
         type: string
@@ -3812,3 +4003,11 @@ components:
       type: string
       enum:
         - Invalid API key
+
+    supertokensTenantId:
+      type: string
+      example: 'supertokens'
+
+    thirdPartyTenantConfig:
+      type: object
+      example: { client_id: "...", client_secret: "..." }
