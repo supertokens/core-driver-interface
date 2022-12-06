@@ -3246,17 +3246,16 @@ paths:
           $ref: '#/components/responses/401'
         '500':
           $ref: '#/components/responses/500'
-          
 
-  /recipe/thirdparty/tenant/config:
+  /recipe/multitenancy/config/thirdparty/provider:
     post:
       tags:
-        - ThirdParty Recipe
+        - Multitenancy Recipe
       description: |
-        Create or update ThirdParty Tenant Config
+        Create or update ThirdParty Provider Config
       operationId: createOrUpdateTenantConfigPOST
       parameters:
-        - $ref: '#/components/parameters/thirdPartyRid'
+        - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
       requestBody:
@@ -3265,12 +3264,12 @@ paths:
             schema:
               type: object
               properties:
-                thirdPartyId:
-                  $ref: '#/components/schemas/thirdPartyId'
                 supertokensTenantId:
                   $ref: '#/components/schemas/supertokensTenantId'
+                thirdPartyId:
+                  $ref: '#/components/schemas/thirdPartyId'
                 config:
-                  $ref: '#/components/schemas/thirdPartyTenantConfig'
+                  $ref: '#/components/schemas/thirdPartyProviderConfig'
 
       responses:
         200:
@@ -3282,9 +3281,7 @@ paths:
                 properties:
                   status:
                     $ref: '#/components/schemas/statusOK'
-                  created:
-                    type: boolean
-                  update:
+                  createdNew:
                     type: boolean
         '400':
           $ref: '#/components/responses/400'
@@ -3299,19 +3296,19 @@ paths:
           $ref: '#/components/responses/500'
     get:
       tags:
-        - ThirdParty Recipe
+        - Multitenancy Recipe
       description: |
-        Get ThirdParty Tenant Config
+        Get ThirdParty Provider Config
       operationId: tenantConfigGET
       parameters:
-        - $ref: '#/components/parameters/thirdPartyRid'
+        - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - name: thirdPartyId
+        - name: supertokensTenantId
           in: query
           schema:
             type: string
-        - name: supertokensTenantId
+        - name: thirdPartyId
           in: query
           schema:
             type: string
@@ -3327,7 +3324,7 @@ paths:
                       status:
                         $ref: '#/components/schemas/statusOK'
                       config:
-                        $ref: '#/components/schemas/thirdPartyTenantConfig'
+                        $ref: '#/components/schemas/thirdPartyProviderConfig'
                   - type: object
                     properties:
                       status:
@@ -3345,13 +3342,17 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /recipe/thirdparty/tenant/config/remove:
+  /recipe/multitenancy/config/thirdparty/provider/remove:
     post:
       tags:
-        - ThirdParty Recipe
+        - Multitenancy Recipe
       description: |
         Delete ThirdParty Tenant Config
       operationId: deleteTenantConfigPOST
+      parameters:
+        - $ref: '#/components/parameters/multitenancyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
       requestBody:
         content:
           application/json:
@@ -3388,14 +3389,17 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /recipe/thirdparty/tenant/config/list:
+  /recipe/multitenancy/config/thirdparty/provider/list:
     get:
       tags:
-        - ThirdParty Recipe
+        - Multitenancy Recipe
       description: |
-        List all ThirdParty Tenant Configs or list ThirdParty Tenant Configs filtered by ThirdPartyId or TenantId
+        List all ThirdParty Provider Configs or list ThirdParty Provider Configs filtered by ThirdPartyId or TenantId
       operationId: listConfigsGET
       parameters:
+        - $ref: '#/components/parameters/multitenancyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
         - name: thirdPartyId
           in: query
           required: false
@@ -3427,7 +3431,7 @@ paths:
                         supertokensTenantId:
                           $ref: '#/components/schemas/supertokensTenantId'
                         config:
-                          $ref: '#/components/schemas/thirdPartyTenantConfig'
+                          $ref: '#/components/schemas/thirdPartyProviderConfig'
         '400':
           $ref: '#/components/responses/400'
         
@@ -3481,6 +3485,14 @@ components:
       schema:
         type: string
 
+    multitenancyRid:
+      name: rid
+      in: header
+      example: multitenancy
+      required: false
+      schema:
+        type: string
+    
     userMetadataRid:
       name: rid
       in: header
@@ -4008,6 +4020,67 @@ components:
       type: string
       example: 'supertokens'
 
-    thirdPartyTenantConfig:
+    thirdPartyProviderConfig:
       type: object
-      example: { client_id: "...", client_secret: "..." }
+      required:
+        - clients
+
+      properties:
+        clients:
+          type: array
+          items:
+            type: object
+            properties:
+              clientType:
+                type: string
+              clientId:
+                type: string
+              clientSecret:
+                type: string
+              scope:
+                type: array
+                items:
+                  type: string
+              additionalConfig:
+                type: object
+        authorizationEndpoint:
+          type: string
+        authorizationEndpointQueryParams:
+          type: object
+        tokenEndpoint:
+          type: string
+        tokenEndpointBodyParams:
+          type: object
+        forcePKCE:
+          type: boolean
+        userInfoEndpoint:
+          type: string
+        userInfoEndpointQueryParams:
+          type: object
+        userInfoEndpointHeaders:
+          type: object
+        jwksURI:
+          type: string
+        oidcDiscoveryEndpoint:
+          type: string
+        userInfoMap:
+          type: object
+          properties:
+            fromIdTokenPayload:
+              type: object
+              properties:
+                userId:
+                  type: string
+                email:
+                  type: string
+                emailVerified:
+                  type: string
+            fromUserInfoAPI:
+              type: object
+              properties:
+                userId:
+                  type: string
+                email:
+                  type: string
+                emailVerified:
+                  type: string
