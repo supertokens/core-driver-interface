@@ -4024,8 +4024,9 @@ components:
       type: object
       required:
         - clients
-
       properties:
+        name:
+          type: string
         clients:
           type: array
           items:
