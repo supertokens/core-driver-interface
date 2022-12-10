@@ -3246,14 +3246,16 @@ paths:
           $ref: '#/components/responses/401'
         '500':
           $ref: '#/components/responses/500'
-
-  /recipe/multitenancy/config/thirdparty/provider:
-    post:
+  
+  /recipe/multitenancy/tenant:
+    put:
       tags:
         - Multitenancy Recipe
       description: |
-        Create or update ThirdParty Provider Config
-      operationId: createOrUpdateTenantConfigPOST
+        Creates or updates a tenant
+
+        Optional `emailpasswordEnabled`, `thirdpartyEnabled`, `passwordlessEnabled` are `false` by default
+      operationId: createOrUpdateTenantPUT
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
@@ -3263,13 +3265,191 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - tenantId
               properties:
-                supertokensTenantId:
-                  $ref: '#/components/schemas/supertokensTenantId'
-                thirdPartyId:
-                  $ref: '#/components/schemas/thirdPartyId'
-                config:
-                  $ref: '#/components/schemas/thirdPartyProviderConfig'
+                tenantId:
+                  $ref: '#/components/schemas/tenantId'
+                emailpasswordEnabled:
+                  type: boolean
+                thirdpartyEnabled:
+                  type: boolean
+                passwordlessEnabled:
+                  type: boolean
+      responses:
+        200:
+          description: Create or Update result
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - createdNew
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  createdNew:
+                    type: boolean
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/multitenancy/tenant/remove:
+    post:
+      tags:
+        - Multitenancy Recipe
+      description: |
+        Delete a tenant
+      operationId: deleteTenantPOST
+      parameters:
+        - $ref: '#/components/parameters/multitenancyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - tenantId
+              properties:
+                tenantId:
+                  $ref: '#/components/schemas/tenantId'
+      responses:
+        200:
+          description: Create or Update result
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - tenantExisted
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  tenantExisted:
+                    type: boolean
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/multitenancy/tenant/config:
+    get:
+      tags:
+        - Multitenancy Recipe
+      description: |
+        Get a tenant config
+
+        Returns recipes with their enabled flag and recipe specific configs saved in core
+
+      operationId: tenantConfigGet
+      parameters:
+        - $ref: '#/components/parameters/multitenancyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - name: tenantId
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/tenantId'
+      responses:
+        200:
+          description: Create or Update result
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - emailPassword
+                  - thirdParty
+                  - passwordless
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  emailPassword:
+                    type: object
+                    required:
+                      - enabled
+                    properties:
+                      enabled:
+                        type: boolean
+                  thirdParty:
+                    type: object
+                    required:
+                      - enabled
+                    properties:
+                      enabled:
+                        type: boolean
+                      providers:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/thirdPartyProviderConfig'
+                  passwordless:
+                    type: object
+                    required:
+                      - enabled
+                    properties:
+                      enabled:
+                        type: boolean
+
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/multitenancy/config/thirdparty/provider:
+    put:
+      tags:
+        - Multitenancy Recipe
+      description: |
+        Creates or updates ThirdParty Provider Config for a tenant.
+
+        If `tenantId` is not provided, `defaultTenantId` will be used.
+      operationId: createOrUpdateTenantConfigPUT
+      parameters:
+        - $ref: '#/components/parameters/multitenancyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/thirdPartyProviderConfig'
 
       responses:
         200:
@@ -3289,53 +3469,9 @@ paths:
         '401':
           $ref: '#/components/responses/401'
         
-        '404':
-          $ref: '#/components/responses/404'
-        
-        '500':
-          $ref: '#/components/responses/500'
-    get:
-      tags:
-        - Multitenancy Recipe
-      description: |
-        Get ThirdParty Provider Config
-      operationId: tenantConfigGET
-      parameters:
-        - $ref: '#/components/parameters/multitenancyRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-        - name: supertokensTenantId
-          in: query
-          schema:
-            type: string
-        - name: thirdPartyId
-          in: query
-          schema:
-            type: string
-      responses:
-        200:
-          description: Config
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      config:
-                        $ref: '#/components/schemas/thirdPartyProviderConfig'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ['CONFIG_NOT_FOUND']
-        '400':
-          $ref: '#/components/responses/400'
-        
-        '401':
-          $ref: '#/components/responses/401'
-        
+        '402':
+          $ref: '#/components/responses/402'
+
         '404':
           $ref: '#/components/responses/404'
         
@@ -3348,6 +3484,8 @@ paths:
         - Multitenancy Recipe
       description: |
         Delete ThirdParty Tenant Config
+
+        If `tenantId` is not provided, `defaultTenantId` will be used.
       operationId: deleteTenantConfigPOST
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
@@ -3358,11 +3496,13 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - thirdPartyId
               properties:
                 thirdPartyId:
                   $ref: '#/components/schemas/thirdPartyId'
-                supertokensTenantId:
-                  $ref: '#/components/schemas/supertokensTenantId'
+                tenantId:
+                  $ref: '#/components/schemas/tenantId'
 
       responses:
         200:
@@ -3373,8 +3513,7 @@ paths:
                 type: object
                 properties:
                   status:
-                    type: string
-                    example: OK
+                    $ref: '#/components/schemas/statusOK'
                   didConfigExist:
                     type: boolean
         '400':
@@ -3383,6 +3522,9 @@ paths:
         '401':
           $ref: '#/components/responses/401'
         
+        '402':
+          $ref: '#/components/responses/402'
+
         '404':
           $ref: '#/components/responses/404'
         
@@ -3394,7 +3536,12 @@ paths:
       tags:
         - Multitenancy Recipe
       description: |
-        List all ThirdParty Provider Configs or list ThirdParty Provider Configs filtered by ThirdPartyId or TenantId
+        Returns the list of thirdparty providers for the given input
+
+        - if only `thirdPartyId` is provider: returns provider configs across all tenants for the `thirdPartyId`
+        - if only `tenantId` is provided: returns all thirdparty provider configs for that `tenantId`
+        - if both (`thirdPartyId`  & `tenantId`) are not provided: returns all thirdparty provider configs for the default tenant (`defaultTenantId`)
+        - if both (`thirdPartyId`  & `tenantId`) are provided: either returns an empty list if no config for that `thirdPartyId` & `tenantId`, or returns one element with the config for that `thirdPartyId` & `tenantId`
       operationId: listConfigsGET
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
@@ -3405,39 +3552,47 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/thirdPartyId'
-        - name: supertokensTenantId
+        - name: tenantId
           in: query
           required: false
           schema:
-            $ref: '#/components/schemas/supertokensTenantId'
+            $ref: '#/components/schemas/tenantId'
       responses:
         200:
-          description: ConfigList
+          description: Thirdparty Provider Config list
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: OK
-                  configs:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        thirdPartyId:
-                          $ref: '#/components/schemas/thirdPartyId'
-                        supertokensTenantId:
-                          $ref: '#/components/schemas/supertokensTenantId'
-                        config:
+                oneOf:
+                  - type: object
+                    required:
+                      - status
+                      - providers
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      providers:
+                        type: array
+                        items:
                           $ref: '#/components/schemas/thirdPartyProviderConfig'
+                  - type: object
+                    required:
+                      - status
+                    properties:
+                      status:
+                        type: string
+                        enum: 
+                          - TENANT_DOES_NOT_EXIST_ERROR
+
         '400':
           $ref: '#/components/responses/400'
         
         '401':
           $ref: '#/components/responses/401'
         
+        '402':
+          $ref: '#/components/responses/402'
+
         '404':
           $ref: '#/components/responses/404'
         
@@ -3646,6 +3801,13 @@ components:
         text/plain:
           schema:
             $ref: "#/components/schemas/requestUnauthorised"
+
+    402:
+      description: error code 402
+      content:
+        text/plain:
+          schema:
+            $ref: "#/components/schemas/licenseError"
 
     hello:
       description: return a simple hello message
@@ -4016,15 +4178,24 @@ components:
       enum:
         - Invalid API key
 
-    supertokensTenantId:
+    licenseError:
+      type: string
+      enum:
+        - License Error
+
+    tenantId:
       type: string
       example: 'supertokens'
 
     thirdPartyProviderConfig:
       type: object
       required:
-        - clients
+        - thirdPartyId
       properties:
+        tenantId:
+          type: string
+        thirdPartyId:
+          type: string
         name:
           type: string
         clients:
