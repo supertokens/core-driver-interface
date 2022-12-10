@@ -3452,6 +3452,53 @@ paths:
         Creates or updates ThirdParty Provider Config for a tenant.
 
         If `tenantId` is not provided, `defaultTenantId` will be used.
+
+        If `skipValidation` is set to true, the config will be saved without any validation.
+
+        **Validations done by the core:**
+
+        Common to all providers:
+          - `clients`
+            - `clientId` is not empty
+            - must be undefined or empty
+            - if contains 1 element, clientType can be empty or undefined
+            - if contains more than 1 element, clientType must be defined and unique
+
+        Apple:
+          - `clients`
+            - if it contains elements, each of them are validated as follows:
+              - `clientSecret` must be empty or undefined
+              - `additionalConfig` should contain the following keys - `keyId`, `teamId`, `privateKey`
+                - `keyId` must be a non empty string
+                - `teamId` must be a non empty string
+                - `privateKey` must be a non empty string
+
+        Active Directory:
+          - `clients`
+            - if it contains elements, each of them are validated as follows:
+              - `additionalConfig` should contain the key `directoryId`
+                - `directoryId` must be a non empty string
+
+        Okta:
+          - `clients`
+            - if it contains elements, each of them are validated as follows:
+              - `additionalConfig` should contain the key `oktaDomain`
+                - `oktaDomain` must be a non empty string
+
+        Google Workspaces:
+          - `clients`
+            - if it contains elements, each of them are validated as follows:
+              - `additionalConfig` may contain the key `hd`
+                - `hd` is optional
+                - if specified, it must be either `"*"`, or a valid domain
+
+        Discord:
+          - `clients`
+            - if it contains elements, each of them are validated as follows:
+              - `additionalConfig` may contain the key `requireEmail`
+                - `requireEmail` is optional and defaults to `false`
+                - if specified, it must be a `boolean`
+
       operationId: createOrUpdateTenantConfigPUT
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
@@ -3461,7 +3508,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/thirdPartyProviderConfig'
+              type: object
+              required:
+                - config
+              properties:
+                config:
+                  $ref: '#/components/schemas/thirdPartyProviderConfig'
+                skipValidation:
+                  type: boolean
+                  example: false
 
       responses:
         200:
@@ -3471,11 +3526,24 @@ paths:
               schema:
                 oneOf:
                 - type: object
+                  required:
+                    - status
+                    - createdNew
                   properties:
                     status:
                       $ref: '#/components/schemas/statusOK'
                     createdNew:
                       type: boolean
+                - type: object
+                  required:
+                  - status
+                  - reason
+                  properties:
+                    status:
+                      type: string
+                      enum: ["CONFIG_VALIDATION_ERROR"]
+                    reason:
+                      type: string
                 - type: object
                   required:
                     - status
