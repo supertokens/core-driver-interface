@@ -3252,9 +3252,11 @@ paths:
       tags:
         - Multitenancy Recipe
       description: |
-        Creates or updates a tenant
+        Creates or updates a tenant.
 
-        Optional `emailpasswordEnabled`, `thirdpartyEnabled`, `passwordlessEnabled` are `false` by default
+        If `tenantId` is not specified, `defaultTenantId` will be used.
+
+        The `emailpasswordEnabled`, `thirdpartyEnabled`, `passwordlessEnabled` will be treated as `false` by default, if not specified in the request body
       operationId: createOrUpdateTenantPUT
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
@@ -3265,8 +3267,6 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - tenantId
               properties:
                 tenantId:
                   $ref: '#/components/schemas/tenantId'
@@ -3311,7 +3311,9 @@ paths:
       tags:
         - Multitenancy Recipe
       description: |
-        Delete a tenant
+        Delete a tenant.
+
+        To delete the default tenant, `defaultTenantId` must be specified explicityly.
       operationId: deleteTenantPOST
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
@@ -3333,15 +3335,16 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - status
-                  - tenantExisted
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  tenantExisted:
-                    type: boolean
+                oneOf:
+                - type: object
+                  required:
+                    - status
+                    - tenantExisted
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+                    tenantExisted:
+                      type: boolean
         '400':
           $ref: '#/components/responses/400'
         
@@ -3362,7 +3365,9 @@ paths:
       tags:
         - Multitenancy Recipe
       description: |
-        Get a tenant config
+        Get a tenant config.
+
+        If `tenantId` is not specified, `defaultTenantId` will be used
 
         Returns recipes with their enabled flag and recipe specific configs saved in core
 
@@ -3382,40 +3387,47 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - status
-                  - emailPassword
-                  - thirdParty
-                  - passwordless
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  emailPassword:
-                    type: object
-                    required:
-                      - enabled
-                    properties:
-                      enabled:
-                        type: boolean
-                  thirdParty:
-                    type: object
-                    required:
-                      - enabled
-                    properties:
-                      enabled:
-                        type: boolean
-                      providers:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/thirdPartyProviderConfig'
-                  passwordless:
-                    type: object
-                    required:
-                      - enabled
-                    properties:
-                      enabled:
-                        type: boolean
+                oneOf:
+                - type: object
+                  required:
+                    - status
+                    - emailPassword
+                    - thirdParty
+                    - passwordless
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+                    emailPassword:
+                      type: object
+                      required:
+                        - enabled
+                      properties:
+                        enabled:
+                          type: boolean
+                    thirdParty:
+                      type: object
+                      required:
+                        - enabled
+                      properties:
+                        enabled:
+                          type: boolean
+                        providers:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/thirdPartyProviderConfig'
+                    passwordless:
+                      type: object
+                      required:
+                        - enabled
+                      properties:
+                        enabled:
+                          type: boolean
+                - type: object
+                  required:
+                    - status
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusTenantDoesNotExistError'
 
         '400':
           $ref: '#/components/responses/400'
@@ -3457,12 +3469,19 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  createdNew:
-                    type: boolean
+                oneOf:
+                - type: object
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+                    createdNew:
+                      type: boolean
+                - type: object
+                  required:
+                    - status
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusTenantDoesNotExistError'
         '400':
           $ref: '#/components/responses/400'
         
@@ -3483,7 +3502,7 @@ paths:
       tags:
         - Multitenancy Recipe
       description: |
-        Delete ThirdParty Tenant Config
+        Delete ThirdParty Provider config for a tenant.
 
         If `tenantId` is not provided, `defaultTenantId` will be used.
       operationId: deleteTenantConfigPOST
@@ -3510,12 +3529,19 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  didConfigExist:
-                    type: boolean
+                oneOf:
+                - type: object
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+                    didConfigExist:
+                      type: boolean
+                - type: object
+                  required:
+                    - status
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusTenantDoesNotExistError'
         '400':
           $ref: '#/components/responses/400'
         
@@ -3538,10 +3564,10 @@ paths:
       description: |
         Returns the list of thirdparty providers for the given input
 
-        - if only `thirdPartyId` is provider: returns provider configs across all tenants for the `thirdPartyId`
-        - if only `tenantId` is provided: returns all thirdparty provider configs for that `tenantId`
-        - if both (`thirdPartyId`  & `tenantId`) are not provided: returns all thirdparty provider configs for the default tenant (`defaultTenantId`)
-        - if both (`thirdPartyId`  & `tenantId`) are provided: either returns an empty list if no config for that `thirdPartyId` & `tenantId`, or returns one element with the config for that `thirdPartyId` & `tenantId`
+        - if only `thirdPartyId` is specified: returns provider configs across all tenants for the `thirdPartyId`
+        - if only `tenantId` is specified: returns all thirdparty provider configs for that `tenantId`
+        - if both (`thirdPartyId`  & `tenantId`) are not specified: returns all thirdparty provider configs for the default tenant (`defaultTenantId`)
+        - if both (`thirdPartyId`  & `tenantId`) are specified: either returns an empty list if no config for that `thirdPartyId` & `tenantId`, or returns one element with the config for that `thirdPartyId` & `tenantId`
       operationId: listConfigsGET
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
@@ -3564,25 +3590,23 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - type: object
-                    required:
-                      - status
-                      - providers
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      providers:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/thirdPartyProviderConfig'
-                  - type: object
-                    required:
-                      - status
-                    properties:
-                      status:
-                        type: string
-                        enum: 
-                          - TENANT_DOES_NOT_EXIST_ERROR
+                - type: object
+                  required:
+                    - status
+                    - providers
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+                    providers:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/thirdPartyProviderConfig'
+                - type: object
+                  required:
+                    - status
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusTenantDoesNotExistError'
 
         '400':
           $ref: '#/components/responses/400'
@@ -3991,6 +4015,10 @@ components:
       enum:
         - OK
     
+    statusTenantDoesNotExistError:
+      type: string
+      enum:
+        - TENANT_DOES_NOT_EXIST_ERROR
     userMetadata:
       type: object
       description: should be a JSON object (not a JSON literal nor an array)
