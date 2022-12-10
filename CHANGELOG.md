@@ -6,9 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 
-## [Unreleased]
-- Adds APIs for creating and managing Thirdparty Multitenant provider config
-
+## [unreleased]
+- Adds APIs for managing tenants
+  - adds `/recipe/multitenancy/tenant` PUT
+  - adds `/recipe/multitenancy/tenant/remove` POST
+  - adds `/recipe/multitenancy/tenant/config` GET
+- Adds APIs for creating and managing Thirdparty provider config for tenants
+  - adds `/recipe/multitenancy/config/thirdparty/provider` PUT
+  - adds `/recipe/multitenancy/config/thirdparty/provider/remove` POST
+  - adds `/recipe/multitenancy/config/thirdparty/provider/list` GET
 
 ## [2.16.2]
 
