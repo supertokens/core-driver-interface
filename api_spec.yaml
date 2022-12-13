@@ -3685,12 +3685,8 @@ paths:
       tags:
         - Multitenancy Recipe
       description: |
-        Returns the list of thirdparty providers for the given input
+        Returns the list of thirdparty provider config across all tenants for the given `thirdPartyId`
 
-        - if only `thirdPartyId` is specified: returns provider configs across all tenants for the `thirdPartyId`
-        - if only `tenantId` is specified: returns all thirdparty provider configs for that `tenantId`
-        - if both (`thirdPartyId`  & `tenantId`) are not specified: returns all thirdparty provider configs for the default tenant (`defaultTenantId`)
-        - if both (`thirdPartyId`  & `tenantId`) are specified: either returns an empty list if no config for that `thirdPartyId` & `tenantId`, or returns one element with the config for that `thirdPartyId` & `tenantId`
       operationId: listConfigsGET
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
@@ -3698,14 +3694,9 @@ paths:
         - $ref: '#/components/parameters/cdi-version'
         - name: thirdPartyId
           in: query
-          required: false
+          required: true
           schema:
             $ref: '#/components/schemas/thirdPartyId'
-        - name: tenantId
-          in: query
-          required: false
-          schema:
-            $ref: '#/components/schemas/tenantId'
       responses:
         200:
           description: Thirdparty Provider Config list
