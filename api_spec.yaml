@@ -3552,6 +3552,10 @@ paths:
                 - `requireEmail` is optional and defaults to `false`
                 - if specified, it must be a `boolean`
 
+        Boxy SAML
+          - `clients`
+            - `additionalConfig` in the each element must contain `boxyURL` and must be non-empty string
+
       operationId: createOrUpdateTenantConfigPUT
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
