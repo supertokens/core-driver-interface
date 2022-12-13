@@ -3317,7 +3317,7 @@ paths:
 
         If `tenantId` is not equal to `defaultTenantId`, SuperTokens subscription license key is required.
 
-        Deletion of `defaultTenantId` is not allowed. Instead use the createOrUpdateTenantPUT api to disable all the recipes.
+        Deletion of `defaultTenantId` is not allowed. Instead use the `/recipe/multitenancy/tenant PUT` api to disable all the recipes.
 
       operationId: deleteTenantPOST
       parameters:
