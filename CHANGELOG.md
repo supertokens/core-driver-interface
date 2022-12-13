@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - adds `/recipe/multitenancy/tenant` PUT
   - adds `/recipe/multitenancy/tenant/remove` POST
   - adds `/recipe/multitenancy/tenant/config` GET
+  - adds `/recipe/multitenancy/tenant/list` GET
 - Adds APIs for creating and managing Thirdparty provider config for tenants
   - adds `/recipe/multitenancy/config/thirdparty/provider` PUT
   - adds `/recipe/multitenancy/config/thirdparty/provider/remove` POST

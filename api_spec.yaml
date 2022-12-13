@@ -3457,8 +3457,6 @@ paths:
       description: |
         Get a list of all tenants
 
-        Supertokens Subscription license key is required.
-
       operationId: tenantListGET
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
@@ -3487,9 +3485,6 @@ paths:
 
         '401':
           $ref: '#/components/responses/401'
-
-        '402':
-          $ref: '#/components/responses/402'
 
         '404':
           $ref: '#/components/responses/404'
@@ -3665,6 +3660,12 @@ paths:
                       $ref: '#/components/schemas/statusOK'
                     didConfigExist:
                       type: boolean
+                - type: object
+                  required:
+                    - status
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusTenantDoesNotExistError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -3703,24 +3704,17 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                - type: object
-                  required:
-                    - status
-                    - providers
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    providers:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/thirdPartyProviderConfig'
-                - type: object
-                  required:
-                    - status
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusTenantDoesNotExistError'
+                type: object
+                required:
+                  - status
+                  - providers
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  providers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/thirdPartyProviderConfig'
 
         '400':
           $ref: '#/components/responses/400'
