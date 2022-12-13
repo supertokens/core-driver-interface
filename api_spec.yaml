@@ -3256,6 +3256,8 @@ paths:
 
         If `tenantId` is not specified, `defaultTenantId` will be used.
 
+        If `tenantId` is specified and is not equal to `defaultTenantId`, SuperTokens subscription license key is required.
+
         The `emailpasswordEnabled`, `thirdpartyEnabled`, `passwordlessEnabled` will be treated as `false` by default, if not specified in the request body
       operationId: createOrUpdateTenantPUT
       parameters:
@@ -3278,7 +3280,7 @@ paths:
                   type: boolean
       responses:
         200:
-          description: Create or Update result
+          description: Create or Update tenant result
           content:
             application/json:
               schema:
@@ -3313,7 +3315,10 @@ paths:
       description: |
         Delete a tenant.
 
-        To delete the default tenant, `defaultTenantId` must be specified explicityly.
+        If `tenantId` is not equal to `defaultTenantId`, SuperTokens subscription license key is required.
+
+        Deletion of `defaultTenantId` is not allowed. Instead use the createOrUpdateTenantPUT api to disable all the recipes.
+
       operationId: deleteTenantPOST
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
@@ -3331,20 +3336,19 @@ paths:
                   $ref: '#/components/schemas/tenantId'
       responses:
         200:
-          description: Create or Update result
+          description: Remove tenant result
           content:
             application/json:
               schema:
-                oneOf:
-                - type: object
-                  required:
-                    - status
-                    - tenantExisted
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    tenantExisted:
-                      type: boolean
+                type: object
+                required:
+                  - status
+                  - tenantExisted
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  tenantExisted:
+                    type: boolean
         '400':
           $ref: '#/components/responses/400'
         
@@ -3369,6 +3373,8 @@ paths:
 
         If `tenantId` is not specified, `defaultTenantId` will be used
 
+        If `tenantId` is specified and is not equal to `defaultTenantId`, SuperTokens subscription license key is required.
+
         Returns recipes with their enabled flag and recipe specific configs saved in core
 
       operationId: tenantConfigGet
@@ -3383,7 +3389,7 @@ paths:
             $ref: '#/components/schemas/tenantId'
       responses:
         200:
-          description: Create or Update result
+          description: Tenant config result
           content:
             application/json:
               schema:
@@ -3444,7 +3450,54 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /recipe/multitenancy/config/thirdparty/provider:
+  /recipe/multitenancy/tenant/list:
+    get:
+      tags:
+        - Multitenancy Recipe
+      description: |
+        Get a list of all tenants
+
+        Supertokens Subscription license key is required.
+
+      operationId: tenantListGET
+      parameters:
+        - $ref: '#/components/parameters/multitenancyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        200:
+          description: List of tenants
+
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - tenants
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  tenants:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/tenantId'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/multitenancy/config/thirdparty:
     put:
       tags:
         - Multitenancy Recipe
@@ -3453,16 +3506,21 @@ paths:
 
         If `tenantId` is not provided, `defaultTenantId` will be used.
 
+        If `tenantId` is specified and is not equal to `defaultTenantId`, SuperTokens subscription license key is required.
+
         If `skipValidation` is set to true, the config will be saved without any validation.
 
         **Validations done by the core:**
 
+        `thirdPartyId` and `name` are required
+
         Common to all providers:
-          - `clients`
-            - `clientId` is not empty
-            - must be undefined or empty
+          - `clients` list:
+            - can be undefined or empty
             - if contains 1 element, clientType can be empty or undefined
             - if contains more than 1 element, clientType must be defined and unique
+          - for each element in `clients`:
+            - `clientId` must not be empty
 
         Apple:
           - `clients`
@@ -3565,14 +3623,17 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /recipe/multitenancy/config/thirdparty/provider/remove:
+  /recipe/multitenancy/config/thirdparty/remove:
     post:
       tags:
         - Multitenancy Recipe
       description: |
         Delete ThirdParty Provider config for a tenant.
 
+        If `tenantId` is specified and is not equal to `defaultTenantId`, SuperTokens subscription license key is required.
+
         If `tenantId` is not provided, `defaultTenantId` will be used.
+
       operationId: deleteTenantConfigPOST
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
@@ -3593,7 +3654,7 @@ paths:
 
       responses:
         200:
-          description: Redirect URL
+          description: Remove thirdparty config result
           content:
             application/json:
               schema:
@@ -3604,28 +3665,22 @@ paths:
                       $ref: '#/components/schemas/statusOK'
                     didConfigExist:
                       type: boolean
-                - type: object
-                  required:
-                    - status
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusTenantDoesNotExistError'
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '402':
           $ref: '#/components/responses/402'
 
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
-  /recipe/multitenancy/config/thirdparty/provider/list:
+  /recipe/multitenancy/config/thirdparty/list:
     get:
       tags:
         - Multitenancy Recipe
