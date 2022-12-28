@@ -4353,6 +4353,8 @@ components:
                 type: array
                 items:
                   type: string
+              forcePKCE:
+                type: boolean
               additionalConfig:
                 type: object
         authorizationEndpoint:
@@ -4363,8 +4365,6 @@ components:
           type: string
         tokenEndpointBodyParams:
           type: object
-        forcePKCE:
-          type: boolean
         userInfoEndpoint:
           type: string
         userInfoEndpointQueryParams:
