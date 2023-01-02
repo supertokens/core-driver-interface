@@ -3260,7 +3260,7 @@ paths:
 
         The `emailpasswordEnabled`, `thirdpartyEnabled`, `passwordlessEnabled` will be treated as `false` by default, if not specified in the request body.
 
-        Note: `emailpasswordEnabled` and `passwordlessEnabled` cannot be set to true for tenants other than `defaultTenantId` as multitenancy is not supported in the core for those login methods as of now.
+        Note: `emailpasswordEnabled` and `passwordlessEnabled` cannot be set to true for tenants other than `defaultTenantId` as multitenancy is not supported in the core for those login methods yet.
       operationId: createOrUpdateTenantPUT
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
