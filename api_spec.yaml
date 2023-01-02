@@ -3258,7 +3258,9 @@ paths:
 
         If `tenantId` is specified and is not equal to `defaultTenantId`, SuperTokens subscription license key is required.
 
-        The `emailpasswordEnabled`, `thirdpartyEnabled`, `passwordlessEnabled` will be treated as `false` by default, if not specified in the request body
+        The `emailpasswordEnabled`, `thirdpartyEnabled`, `passwordlessEnabled` will be treated as `false` by default, if not specified in the request body.
+
+        Note: `emailpasswordEnabled` and `passwordlessEnabled` cannot be set to true for tenants other than `defaultTenantId` as multitenancy is not supported in the core for those login methods as of now.
       operationId: createOrUpdateTenantPUT
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
