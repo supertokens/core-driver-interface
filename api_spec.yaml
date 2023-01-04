@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
-  version: 2.16.2
+  version: 2.17.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -3246,7 +3246,165 @@ paths:
           $ref: '#/components/responses/401'
         '500':
           $ref: '#/components/responses/500'
+  
+  
+  /ee/featureflag:
+    get:
+      tags:
+        - Core
+      operationId: getFeatureFlag
+      description: |
+        Get a list of the enabled enterprise features
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        '200':
+          description: The operation was successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  features:
+                    type: array
+                    items:
+                      type: string
+                    example: ["feature_1", "feature_2"]
+                  usageStats:
+                    type: object
+                    
           
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /ee/license:
+    put:
+      tags:
+        - Core
+      operationId: setLicense
+      description: |
+        Set or sync license key
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                licenseKey:
+                  type: string
+                  example: "eyJhbGciOiJIUzI1NiIsIn..."
+      responses:
+        '200':
+          description:  The operation was successful
+          content:
+            application/json:
+              schema:
+                 oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['MISSING_EE_FOLDER_ERROR']
+                        
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['INVALID_LICENSE_KEY_ERROR']
+                    
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+    
+    delete:
+      tags:
+        - Core
+      operationId: deleteLicense
+      description: |
+        Delete license key
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        
+      responses:
+        '200':
+          description:  The operation was successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                    
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+    
+    get:
+      tags:
+        - Core
+      operationId: getLicense
+      description: |
+        Retrieve license key
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        
+      responses:
+        '200':
+          description:  The operation was successful
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      licenseKey:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsIn..."
+
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['NO_LICENSE_KEY_FOUND_ERROR']
+                    
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+    
       
         
 components:
@@ -3334,7 +3492,7 @@ components:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version. 
-      example: 2.16
+      example: 2.17
       required: true
       schema:
         type: string
