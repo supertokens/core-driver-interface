@@ -3252,9 +3252,9 @@ paths:
     get:
       tags:
         - Core
-      operationId: Get a list of the enabled enterprise features
+      operationId: getFeatureFlag
       description: |
-        User Pagination
+        Get a list of the enabled enterprise features
       parameters:
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
@@ -3492,7 +3492,7 @@ components:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version. 
-      example: 2.16
+      example: 2.17
       required: true
       schema:
         type: string
