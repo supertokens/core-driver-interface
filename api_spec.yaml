@@ -3551,13 +3551,6 @@ paths:
                 - `hd` is optional
                 - if specified, it must be either `"*"`, or a valid domain
 
-        Discord:
-          - `clients`
-            - if it contains elements, each of them are validated as follows:
-              - `additionalConfig` may contain the key `requireEmail`
-                - `requireEmail` is optional and defaults to `false`
-                - if specified, it must be a `boolean`
-
         Boxy SAML
           - `clients`
             - `additionalConfig` in the each element must contain `boxyURL` and must be non-empty string
@@ -4381,6 +4374,9 @@ components:
           type: string
         oidcDiscoveryEndpoint:
           type: string
+        requireEmail:
+          type: boolean
+          default: true
         userInfoMap:
           type: object
           properties:
