@@ -3523,7 +3523,9 @@ paths:
           - for each element in `clients`:
             - `clientId` must not be empty
 
-        Apple:
+        Built-in provider's specific validation is invoked if the `thirdPartyId` starts with the provider's id
+
+        Apple (id: apple):
           - `clients`
             - if it contains elements, each of them are validated as follows:
               - `clientSecret` must be empty or undefined
@@ -3532,26 +3534,26 @@ paths:
                 - `teamId` must be a non empty string
                 - `privateKey` must be a non empty string
 
-        Active Directory:
+        Active Directory (id: active-directory):
           - `clients`
             - if it contains elements, each of them are validated as follows:
               - `additionalConfig` should contain the key `directoryId`
                 - `directoryId` must be a non empty string
 
-        Okta:
+        Okta (id: okta):
           - `clients`
             - if it contains elements, each of them are validated as follows:
               - `additionalConfig` should contain the key `oktaDomain`
                 - `oktaDomain` must be a non empty string
 
-        Google Workspaces:
+        Google Workspaces (id: google-workspaces):
           - `clients`
             - if it contains elements, each of them are validated as follows:
               - `additionalConfig` may contain the key `hd`
                 - `hd` is optional
                 - if specified, it must be either `"*"`, or a valid domain
 
-        Boxy SAML
+        Boxy SAML (id: boxy-saml):
           - `clients`
             - `additionalConfig` in the each element must contain `boxyURL` and must be non-empty string
 
