@@ -3278,7 +3278,7 @@ paths:
                   $ref: '#/components/schemas/tenantId'
                 emailpasswordEnabled:
                   type: boolean
-                thirdpartyEnabled:
+                thirdPartyEnabled:
                   type: boolean
                 passwordlessEnabled:
                   type: boolean
@@ -3654,7 +3654,7 @@ paths:
 
       responses:
         200:
-          description: Remove thirdparty config result
+          description: Remove thirdParty config result
           content:
             application/json:
               schema:
@@ -3691,7 +3691,7 @@ paths:
       tags:
         - Multitenancy Recipe
       description: |
-        Returns the list of thirdparty provider config across all tenants for the given `thirdPartyId`
+        Returns the list of thirdParty provider config across all tenants for the given `thirdPartyId`
 
       operationId: listConfigsGET
       parameters:
@@ -3705,7 +3705,7 @@ paths:
             $ref: '#/components/schemas/thirdPartyId'
       responses:
         200:
-          description: Thirdparty Provider Config list
+          description: ThirdParty Provider Config list
           content:
             application/json:
               schema:
