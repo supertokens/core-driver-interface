@@ -3262,7 +3262,7 @@ paths:
 
         If updating an existing tenant, core will keep the existing state of login methods and only update the ones that are specified in the request body.
 
-        Note: `emailpasswordEnabled` and `passwordlessEnabled` cannot be set to true for tenants other than `defaultTenantId` as multitenancy is not supported in the core for those login methods yet.
+        Note: `emailPasswordEnabled` and `passwordlessEnabled` cannot be set to true for tenants other than `defaultTenantId` as multitenancy is not supported in the core for those login methods yet.
       operationId: createOrUpdateTenantPUT
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
@@ -3276,7 +3276,7 @@ paths:
               properties:
                 tenantId:
                   $ref: '#/components/schemas/tenantId'
-                emailpasswordEnabled:
+                emailPasswordEnabled:
                   type: boolean
                 thirdPartyEnabled:
                   type: boolean
