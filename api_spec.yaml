@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
-  version: 2.17.0
+  version: 2.18.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -1660,12 +1660,6 @@ paths:
                   properties:
                     status:
                       $ref: '#/components/schemas/statusOK'
-                    jwtSigningPublicKey:
-                      $ref: '#/components/schemas/jwtSigningPublicKey'
-                    jwtSigningPublicKeyExpiryTime:
-                      $ref: '#/components/schemas/jwtSigningPublicKeyExpiryTime'
-                    jwtSigningPublicKeyList:
-                      $ref: '#/components/schemas/jwtSigningPublicKeyList'
                     accessTokenBlacklistingEnabled:
                       $ref: '#/components/schemas/accessTokenBlacklistingEnabled'
                     accessTokenValidity:
@@ -2302,6 +2296,8 @@ paths:
                   $ref: '#/components/schemas/userDataInDatabase'
                 enableAntiCsrf:
                   $ref: '#/components/schemas/enableAntiCsrf'
+                useStaticSigningKey:
+                  $ref: '#/components/schemas/useStaticSigningKey'
       responses:
         '200':
           description: Create a new Session
@@ -2318,16 +2314,8 @@ paths:
                       $ref: '#/components/schemas/cookieInfo'
                     refreshToken:
                       $ref: '#/components/schemas/cookieInfo'
-                    idRefreshToken:
-                      $ref: '#/components/schemas/cookieInfo'
                     antiCsrfToken:
                       $ref: '#/components/schemas/token'
-                    jwtSigningPublicKey:
-                      $ref: '#/components/schemas/jwtSigningPublicKey'
-                    jwtSigningPublicKeyExpiryTime:
-                      $ref: '#/components/schemas/jwtSigningPublicKeyExpiryTime'
-                    jwtSigningPublicKeyList:
-                      $ref: '#/components/schemas/jwtSigningPublicKeyList'
           
         '400':
           $ref: '#/components/responses/400'
@@ -2482,23 +2470,11 @@ paths:
                           $ref: '#/components/schemas/session'
                         accessToken:
                           $ref: '#/components/schemas/cookieInfo'
-                        jwtSigningPublicKey:
-                          $ref: '#/components/schemas/jwtSigningPublicKey'
-                        jwtSigningPublicKeyExpiryTime:
-                          $ref: '#/components/schemas/jwtSigningPublicKeyExpiryTime'
-                        jwtSigningPublicKeyList:
-                          $ref: '#/components/schemas/jwtSigningPublicKeyList'
                     - $ref: '#/components/schemas/unauthorisedMessageResponse'
                     - type: object
                       properties:
                         status:
                           $ref: '#/components/schemas/tryRefreshTokenResponse'
-                        jwtSigningPublicKey:
-                          $ref: '#/components/schemas/jwtSigningPublicKey'
-                        jwtSigningPublicKeyExpiryTime:
-                          $ref: '#/components/schemas/jwtSigningPublicKeyExpiryTime'
-                        jwtSigningPublicKeyList:
-                          $ref: '#/components/schemas/jwtSigningPublicKeyList'
                         message:
                           $ref: '#/components/schemas/message'
           
@@ -2555,8 +2531,6 @@ paths:
                         accessToken:
                           $ref: '#/components/schemas/cookieInfo'
                         refreshToken:
-                          $ref: '#/components/schemas/cookieInfo'
-                        idRefreshToken: 
                           $ref: '#/components/schemas/cookieInfo'
                         antiCsrfToken: 
                           $ref: '#/components/schemas/token'
@@ -2783,6 +2757,9 @@ paths:
                   $ref: '#/components/schemas/jwksDomain'
                 validity:
                   $ref: '#/components/schemas/jwtValidity'
+                useDynamicSigningKey:
+                  $ref: '#/components/schemas/useDynamicSigningKey'
+                  
       responses:
         '200':
           description: Create a signed JWT
@@ -2812,16 +2789,12 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /recipe/jwt/jwks:
+  /.well-known/jwks.json:
     get:
       tags:
         - JWT Recipe
       description: |
         Retrieve JWKs for JWT verification
-      parameters:
-        - $ref: '#/components/parameters/jwtRID'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
       responses:
         '200':
           description: Retrieve JWKs for JWT verification
@@ -2830,9 +2803,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  status:
-                    type: string
-                    enum: ["OK"]
                   keys:
                     type: array
                     items: 
@@ -3743,30 +3713,6 @@ components:
       description: The maximum lifetime of the code in milliseconds
       example: 900000
 
-    jwtSigningPublicKey:
-      type: string
-      example: MIIBIjANBgkq...nKH0QIDAQAB
-    
-    jwtSigningPublicKeyCreatedAt:
-      type: number
-      example: 1624344236945
-
-    jwtSigningPublicKeyExpiryTime:
-      type: number
-      example: 1624345236945
-    
-    jwtSigningPublicKeyList:
-      type: array
-      items:
-        type: object
-        properties: 
-          publicKey:
-            $ref: '#/components/schemas/jwtSigningPublicKey'
-          createdAt:
-            $ref: '#/components/schemas/jwtSigningPublicKeyCreatedAt'
-          expiryTime:
-            $ref: '#/components/schemas/jwtSigningPublicKeyExpiryTime'
-
     accessTokenBlacklistingEnabled:
       type: boolean
       example: true
@@ -3868,7 +3814,14 @@ components:
       type: number
       description: Duration in seconds, used to calculate JWT expiry
       example: 86400
-
+    useDynamicSigningKey:
+      type: boolean
+      description: Decides if the token should be signed with a dynamic or static key
+      example: false
+    useStaticSigningKey:
+      type: boolean
+      description: Decides if the token should be signed with a dynamic or static key
+      example: false
     jwk:
       type: object
       description: A JWK that can be used to verify a JWT
