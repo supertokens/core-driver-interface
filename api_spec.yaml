@@ -2828,7 +2828,7 @@ paths:
   /.well-known/jwks.json:
     get:
       tags:
-        - JWT Recipe
+        - Core
       description: |
         Retrieve JWKs for JWT verification
       responses:
