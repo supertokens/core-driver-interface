@@ -3712,18 +3712,6 @@ components:
       type: number
       description: The maximum lifetime of the code in milliseconds
       example: 900000
-
-    accessTokenBlacklistingEnabled:
-      type: boolean
-      example: true
-      
-    accessTokenValidity:
-      type: number
-      example: 3600000
-    
-    refreshTokenValidity:
-      type: number
-      example: 8640000000
               
     statusOK:
       type: string
