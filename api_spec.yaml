@@ -1637,46 +1637,6 @@ paths:
           $ref: '#/components/responses/404'
         
         '500':
-          $ref: '#/components/responses/500'  
-  
-  /recipe/handshake:
-    post:
-      tags: 
-        - Session Recipe
-      operationId: sessionHandshake
-      description: |
-        Handshake for session
-      parameters:
-        - $ref: '#/components/parameters/sessionRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      responses:
-        '200':
-          description: Session Handshake
-          content:
-            application/json:
-                schema: 
-                  type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    accessTokenBlacklistingEnabled:
-                      $ref: '#/components/schemas/accessTokenBlacklistingEnabled'
-                    accessTokenValidity:
-                      $ref: '#/components/schemas/accessTokenValidity'
-                    refreshTokenValidity: 
-                      $ref: '#/components/schemas/refreshTokenValidity'
-          
-        '400':
-          $ref: '#/components/responses/400'
-        
-        '401':
-          $ref: '#/components/responses/401'
-        
-        '404':
-          $ref: '#/components/responses/404'
-        
-        '500':
           $ref: '#/components/responses/500'
 
   /recipe/user/metadata:
@@ -2297,7 +2257,9 @@ paths:
                 enableAntiCsrf:
                   $ref: '#/components/schemas/enableAntiCsrf'
                 useStaticSigningKey:
-                  $ref: '#/components/schemas/useStaticSigningKey'
+                  type: boolean
+                  description: Decides if the token should be signed with a dynamic or static key, defaults to false
+                  example: false
       responses:
         '200':
           description: Create a new Session
@@ -2757,8 +2719,10 @@ paths:
                   $ref: '#/components/schemas/jwksDomain'
                 validity:
                   $ref: '#/components/schemas/jwtValidity'
-                useDynamicSigningKey:
-                  $ref: '#/components/schemas/useDynamicSigningKey'
+                useStaticSigningKey:
+                  type: boolean
+                  description: Decides if the token should be signed with a dynamic or static key, defaults to true
+                  example: true
                   
       responses:
         '200':
@@ -2795,14 +2759,14 @@ paths:
       tags:
         - JWT Recipe
       description: |
-        Retrieve JWKs for JWT verification
+        Retrieve JWKs for JWT verification, containing both static and dynamic keys.
       parameters:
         - $ref: '#/components/parameters/jwtRID'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
       responses:
         '200':
-          description: Retrieve JWKs for JWT verification
+          description: Retrieve JWKs for JWT verification, containing both static and dynamic keys.
           content:
             application/json:
               schema:
@@ -2830,10 +2794,10 @@ paths:
       tags:
         - Core
       description: |
-        Retrieve JWKs for JWT verification
+        Retrieve JWKs for JWT verification, containing both static and dynamic keys.
       responses:
         '200':
-          description: Retrieve JWKs for JWT verification
+          description: Retrieve JWKs for JWT verification, containing both static and dynamic keys.
           content:
             application/json:
               schema:
@@ -3850,14 +3814,6 @@ components:
       type: number
       description: Duration in seconds, used to calculate JWT expiry
       example: 86400
-    useDynamicSigningKey:
-      type: boolean
-      description: Decides if the token should be signed with a dynamic or static key
-      example: false
-    useStaticSigningKey:
-      type: boolean
-      description: Decides if the token should be signed with a dynamic or static key
-      example: false
     jwk:
       type: object
       description: A JWK that can be used to verify a JWT
