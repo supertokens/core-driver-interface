@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
-  version: 2.17.0
+  version: 2.18.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -15,6 +15,7 @@ tags:
   - name: UserIdMapping Recipe
   - name: Session Recipe
   - name: Core
+  - name: Dashboard Recipe
 paths:
   
   /recipe/userid/map:
@@ -2933,6 +2934,92 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+  
+  /recipe/dashboard/user:
+    post:
+      tags:
+         - Dashboard Recipe
+      operationId: createDashboardUser
+      description: |
+        Delete a mapping between a SuperTokens userId and an external userId.
+      parameters:
+        - $ref: '#/components/parameters/dashboardRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: test@example.com
+                password:
+                  type: string
+                  example: password@123
+
+                    
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["OK"]
+                      user:
+                        type: object
+                        properties:
+                          userId:
+                            type: string
+                            example: "example-userid"
+                          email:
+                            type: string
+                            example: "test@example.com"
+                          timeCreated:
+                            type: number
+                            example: 1231321231
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["EMAIL_ALREADY_EXISTS_ERROR"]
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["PASSWORD_WEAK_ERROR"]
+                      message:
+                        type: string
+                        example: "Your password must have at least 8 characters"
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["USER_LIMIT_REACHED_ERROR"]
+                      message:
+                        type: string
+                        example: "You have reached the free limit for creating users, please purchase the dashboard feature to create new features"
+                  
+                  
+                        
+                        
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
     
   /apiversion:
     get:
@@ -3484,6 +3571,14 @@ components:
       name: rid
       in: header
       example: useridmapping
+      required: false
+      schema:
+        type: string
+    
+    dashboardRid:
+      name: rid
+      in: header
+      example: dashboard
       required: false
       schema:
         type: string
