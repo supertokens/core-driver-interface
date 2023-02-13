@@ -2958,8 +2958,6 @@ paths:
                 password:
                   type: string
                   example: password@123
-
-                    
       responses:
         '200':
           description: Indicates success with the status property
@@ -3004,11 +3002,8 @@ paths:
                         enum: ["USER_LIMIT_REACHED_ERROR"]
                       message:
                         type: string
-                        example: "You have reached the free limit for creating users, please purchase the dashboard feature to create new features"
+                        example: "You have reached the free limit for creating users, please purchase the dashboard feature to create new users"
                   
-                  
-                        
-                        
         '400':
           $ref: '#/components/responses/400'
         
@@ -3020,6 +3015,391 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+    put:
+      tags:
+         - Dashboard Recipe
+      operationId: updateDashboardUser
+      description: |
+        Update a user's email or password
+      parameters:
+        - $ref: '#/components/parameters/dashboardRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    email:
+                      type: string
+                      example: test@example.com
+                    newPassword: 
+                      type: string
+                      example: password@123
+                    newEmail:
+                      type: string
+                      example: test2@example.com
+                - type: object
+                  properties:
+                    userId:
+                      type: string
+                      example: "ue21r-fw32r3-d121-d1"
+                    newPassword:
+                      type: string
+                      example: "password@123"
+                    newEmail:
+                      type: string
+                      example: test2@example.com
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["OK"]
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["EMAIL_ALREADY_EXISTS_ERROR"]
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["PASSWORD_WEAK_ERROR"]
+                      message:
+                        type: string
+                        example: "Your password must have at least 8 characters"
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["INVALID_EMAIL_ERROR"]
+
+                  
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags:
+         - Dashboard Recipe
+      operationId: deleteDashboardUser
+      description: |
+        Delete a dashboard user with their userId or email
+      parameters:
+        - $ref: '#/components/parameters/dashboardRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: email
+          schema:
+            type: string
+            example: "test@example.com"
+          required: false
+            
+        - in: query
+          name: userId
+          schema:
+            type: string
+            example: "ue1231-f32f290f2-f23r23f-323f2"
+          required: false
+    
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  didUserExist:
+                    type: boolean
+                    
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  
+  /recipe/dashboard/users:
+    get:
+      tags:
+        - Dashboard Recipe
+      operationId: getAllDashboardUsers
+      description: |
+        Get a list of call the dashboard users
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+      responses:
+        '200':
+          description: get a list of dashboard users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          example: "test@example.com"
+                        userId:
+                          $ref: '#/components/schemas/userId'
+                        timeCreated:
+                          type: number
+                          example: 16382348324
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/dashboard/session/verify:
+    post:
+      tags:
+         - Dashboard Recipe
+      operationId: verifyDashboardUserSession
+      description: |
+        Verify a Dashboard user's sessionId 
+      parameters:
+        - $ref: '#/components/parameters/dashboardRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sessionId:
+                  type: string
+                  example: "rf32f-f32342f-32f-323r2f3-23"
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["OK"]
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["USER_SUSPENDED_ERROR"]
+                      message:
+                        type: string
+                        example: "You have crossed the free dashboard user limit. Please purchase the dashboard feature or login with a valid user account"
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["INVAlID_SESSION_ERROR"]
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+                        
+  /recipe/dashboard/session/revoke:
+    post:
+      tags:
+         - Dashboard Recipe
+      operationId: RevokeDashboardUsersSession
+      description: |
+        Reokve a Dashboard user's session 
+      parameters:
+        - $ref: '#/components/parameters/dashboardRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sessionId:
+                  type: string
+                  example: "rf32f-f32342f-32f-323r2f3-23"
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    
+                    
+  /recipe/dashboard/signin:
+    post:
+      tags:
+         - Dashboard Recipe
+      operationId: signInDashboardUser
+      description: |
+        Verify a Dashboard user's sessionId 
+      parameters:
+        - $ref: '#/components/parameters/dashboardRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: 
+                  type: string
+                  example: test@example.com
+                password:
+                  type: string
+                  example: password@123
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["OK"]
+                      sessionId:
+                        type: string
+                        example: 
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["USER_SUSPENDED_ERROR"]
+                      message:
+                        type: string
+                        example: "You have crossed the free dashboard user limit. Please purchase the dashboard feature or login with a valid user account"
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["INVAlID_SESSION_ERROR"]
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /recipe/dashboard/user/sessions:
+    get:
+      tags:
+        - Dashboard Recipe
+      operationId: getAllSessionsForDashboardUser
+      description: |
+        Get a list of the sessions for the dashboard user 
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - in: query
+          name: userId
+          schema:
+            type: string
+            example: "ue1231-f32f290f2-f23r23f-323f2"
+          required: false
+      responses:
+        '200':
+          description: get a list of sessions for dashboard user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          example: "test@example.com"
+                        userId:
+                          $ref: '#/components/schemas/userId'
+                        timeCreated:
+                          type: number
+                          example: 16382348324
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  
     
   /apiversion:
     get:
