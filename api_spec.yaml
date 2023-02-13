@@ -2999,6 +2999,11 @@ paths:
                     properties:
                       status:
                         type: string
+                        enum: ["INVALID_EMAIL_ERROR"]
+                  - type: object
+                    properties:
+                      status:
+                        type: string
                         enum: ["USER_LIMIT_REACHED_ERROR"]
                       message:
                         type: string
@@ -3153,7 +3158,9 @@ paths:
       description: |
         Get a list of call the dashboard users
       parameters:
+        - $ref: '#/components/parameters/dashboardRid'
         - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
       responses:
         '200':
           description: get a list of dashboard users
@@ -3171,10 +3178,14 @@ paths:
                           type: string
                           example: "test@example.com"
                         userId:
-                          $ref: '#/components/schemas/userId'
+                          type: string
+                          example: "uf2323-f223r233-f23-f23-f2f32"
                         timeCreated:
                           type: number
                           example: 16382348324
+                        isSuspended:
+                          type: boolean
+                          example: false
           
         '400':
           $ref: '#/components/responses/400'
@@ -3246,25 +3257,22 @@ paths:
           $ref: '#/components/responses/500'
                         
   /recipe/dashboard/session/revoke:
-    post:
+    delete:
       tags:
          - Dashboard Recipe
       operationId: RevokeDashboardUsersSession
       description: |
-        Reokve a Dashboard user's session 
+        Revoke a Dashboard user's session 
       parameters:
         - $ref: '#/components/parameters/dashboardRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                sessionId:
-                  type: string
-                  example: "rf32f-f32342f-32f-323r2f3-23"
+        - in: query
+          name: sessionId
+          schema:
+            type: string
+            example: "ue1231-f32f290f2-f23r23f-323f2"
+
       responses:
         '200':
           description: Indicates success with the status property
@@ -3294,7 +3302,7 @@ paths:
          - Dashboard Recipe
       operationId: signInDashboardUser
       description: |
-        Verify a Dashboard user's sessionId 
+        Signin a Dashboard user 
       parameters:
         - $ref: '#/components/parameters/dashboardRid'
         - $ref: '#/components/parameters/api-key'
@@ -3338,7 +3346,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["INVAlID_SESSION_ERROR"]
+                        enum: ["INVAlID_CREDENTIALS_ERROR"]
         '400':
           $ref: '#/components/responses/400'
         
@@ -3359,7 +3367,9 @@ paths:
       description: |
         Get a list of the sessions for the dashboard user 
       parameters:
+        - $ref: '#/components/parameters/dashboardRid'
         - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
         - in: query
           name: userId
           schema:
@@ -3374,16 +3384,16 @@ paths:
               schema:
                 type: object
                 properties:
-                  users:
+                  sessions:
                     type: array
                     items:
                       type: object
                       properties:
-                        email:
-                          type: string
-                          example: "test@example.com"
                         userId:
                           $ref: '#/components/schemas/userId'
+                        sessionId:
+                          type: string
+                          example: "fni29f-f23f23-f2fq32qt-h35evf"
                         timeCreated:
                           type: number
                           example: 16382348324
@@ -3967,7 +3977,7 @@ components:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version. 
-      example: 2.17
+      example: 2.18
       required: true
       schema:
         type: string
