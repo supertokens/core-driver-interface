@@ -3069,6 +3069,18 @@ paths:
                       status:
                         type: string
                         enum: ["OK"]
+                      user:
+                        type: object
+                        properties:
+                          userId:
+                            type: string
+                            example: "r23r-f235th54-g3413gf-r32dr2"
+                          email:
+                            type: string
+                            example: "test@example.com"
+                          timeCreated:
+                            type: number
+                            example: 391238234792
                   - type: object
                     properties:
                       status:
