@@ -3256,7 +3256,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
                         
-  /recipe/dashboard/session/revoke:
+  /recipe/dashboard/session:
     delete:
       tags:
          - Dashboard Recipe
