@@ -3000,20 +3000,26 @@ paths:
                       status:
                         type: string
                         enum: ["INVALID_EMAIL_ERROR"]
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ["USER_LIMIT_REACHED_ERROR"]
-                      message:
-                        type: string
-                        example: "You have reached the free limit for creating users, please purchase the dashboard feature to create new users"
                   
         '400':
           $ref: '#/components/responses/400'
         
         '401':
           $ref: '#/components/responses/401'
+          
+        '402':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ["USER_LIMIT_REACHED_ERROR"]
+                  message:
+                    type: string
+                    example: "You have reached the free limit for creating users, please purchase the dashboard feature to create new users"
         
         '404':
           $ref: '#/components/responses/404'
