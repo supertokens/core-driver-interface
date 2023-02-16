@@ -3008,7 +3008,7 @@ paths:
           $ref: '#/components/responses/401'
           
         '402':
-          description: Indicates success with the status property
+          description: Indicates ayment required
           content:
             application/json:
               schema:
