@@ -3192,6 +3192,9 @@ paths:
               schema:
                 type: object
                 properties:
+                  status:
+                    type: string
+                    enum: ["OK"]
                   users:
                     type: array
                     items:
