@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [2.18.0] - 2023-02-21
+
+- Core APIs:
+  - `/recipe/dashboard/user` POST
+  - `/recipe/dashboard/user` PUT
+  - `/recipe/dashboard/user` DELETE
+  - `/recipe/dashboard/users` GET
+  - `/recipe/dashboard/session/verify` POST
+  - `/recipe/dashboard/session` DELETE
+  - `/recipe/dashboard/signin` POST
+  - `/recipe/dashboard/user/sessions` GET
+  
 ## [2.17.0] - 2023-01-04
 
 ### Added
