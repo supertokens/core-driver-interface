@@ -3423,6 +3423,9 @@ paths:
                         timeCreated:
                           type: number
                           example: 16382348324
+                        expiry:
+                          type: number
+                          example: 16382348324
           
         '400':
           $ref: '#/components/responses/400'
