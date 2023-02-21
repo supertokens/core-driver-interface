@@ -2941,7 +2941,7 @@ paths:
          - Dashboard Recipe
       operationId: createDashboardUser
       description: |
-        Delete a mapping between a SuperTokens userId and an external userId.
+        Create a dashboard user
       parameters:
         - $ref: '#/components/parameters/dashboardRid'
         - $ref: '#/components/parameters/api-key'
