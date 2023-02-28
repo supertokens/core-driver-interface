@@ -3678,6 +3678,30 @@ paths:
         - $ref: '#/components/parameters/paginationToken'
         - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/timeJoinedOrder'
+        - in: query
+          name: email
+          schema:
+            type: string
+            example: "test@example.com"
+          required: false
+        - in: query
+          name: phone
+          schema:
+            type: number
+            example: +911234567890
+          required: false
+        - in: query
+          name: recipe
+          schema:
+            type: string
+            example: "emailpassword"
+          required: false
+        - in: query
+          name: provider
+          schema:
+            type: string
+            example: "google"
+          required: false
       responses:
         '200':
           description: User Pagination
@@ -3750,6 +3774,49 @@ paths:
           $ref: '#/components/responses/400'
         '401':
           $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /user/search/tags:
+    get:
+      tags:
+        - Core
+      operationId: getSearchTags
+      description: |
+        User Pagination
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/includeRecipeIds'
+        - $ref: '#/components/parameters/paginationToken'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/timeJoinedOrder'
+        
+      responses:
+        '200':
+          description: User Pagination
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                      example: ['email', 'phone', 'recipe', 'provider']
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
         '500':
           $ref: '#/components/responses/500'
   
