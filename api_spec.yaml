@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
-  version: 2.18.0
+  version: 2.18.1
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -4007,7 +4007,6 @@ components:
       in: header
       description: X.Y of the X.Y.Z CDI version. 
       example: 2.18
-      required: true
       schema:
         type: string
     
