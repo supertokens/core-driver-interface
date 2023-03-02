@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
-  version: 2.18.1
+  version: 2.18.2
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -369,6 +369,8 @@ paths:
                       $ref: '#/components/schemas/email'
                     userInputCode:
                       $ref: '#/components/schemas/userInputCode'
+                  example:
+                    email: "test@example.com"
                   required:
                     - email
                 - type: object
