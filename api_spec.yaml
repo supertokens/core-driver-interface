@@ -3783,14 +3783,10 @@ paths:
         - Core
       operationId: getSearchTags
       description: |
-        User Pagination
+        Retrieve available tags for search
       parameters:
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/includeRecipeIds'
-        - $ref: '#/components/parameters/paginationToken'
-        - $ref: '#/components/parameters/limit'
-        - $ref: '#/components/parameters/timeJoinedOrder'
         
       responses:
         '200':
