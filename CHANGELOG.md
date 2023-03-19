@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+## [2.19.0] - XXX
+
+- deprecate jwks endpoint in the jwt recipe (GET `/recipe/jwt/jwks`)
+- add standard jwks endpoint (GET `/.well-known/jwks.json`)
+- add `useStaticSigningKey` into `createNewSession` (POST `/recipe/session`). This will be used instead of `access_token_signing_key_dynamic`
+- add `useStaticSigningKey` into `createSignedJWT` (POST `/recipe/jwt`).
+- removed handshake endpoint (POST `/recipe/handshake`)
+- add checkDatabase into `verifySession` (POST `/recipe/session/verify`)
+- removed old/unused props from responses related to signing keys & `id-refresh-token`
+
 ## [2.18.1] - 2023-03-1
 
 ### Fixed 
