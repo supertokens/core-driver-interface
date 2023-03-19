@@ -2418,6 +2418,10 @@ paths:
                 doAntiCsrfCheck:
                   type: boolean
                   example: false
+                checkDatabase:
+                  type: boolean
+                  description: Decides if we always check if the session exists in the DB or just do token validation, defaults to false.
+                  example: false
                 antiCsrfToken:
                   $ref: '#/components/schemas/token'
       responses:
