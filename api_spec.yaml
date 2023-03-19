@@ -2259,9 +2259,9 @@ paths:
                   $ref: '#/components/schemas/userDataInDatabase'
                 enableAntiCsrf:
                   $ref: '#/components/schemas/enableAntiCsrf'
-                useStaticSigningKey:
+                useDynamicSigningKey:
                   type: boolean
-                  description: Decides if the token should be signed with a dynamic or static key, defaults to false
+                  description: Decides if the token should be signed with a dynamic or static key, defaults to true
                   example: false
       responses:
         '200':
