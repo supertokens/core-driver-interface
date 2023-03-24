@@ -72,18 +72,6 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['TOTP_NOT_ENABLED_ERROR']
-
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ['UNKNOWN_DEVICE_ERROR']
-
-                  - type: object
-                    properties:
-                      status:
-                        type: string
                         enum: ['DEVICE_ALREADY_EXISTS_ERROR']
                         
 
