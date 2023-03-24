@@ -25,7 +25,7 @@ paths:
          - Totp Recipe
       operationId: createTotpDevice
       description: |
-        Registers a TOTP device for a user and enable TOTP if not already enabled.
+        Add a TOTP device for a user and enable TOTP if not already enabled.
       parameters:
         - $ref: '#/components/parameters/totpRid'
         - $ref: '#/components/parameters/api-key'
@@ -55,7 +55,7 @@ paths:
                     
       responses:
         '200':
-          description: Indicates success with the status property
+          description: Indicates success with the status and secret properties
           content:
             application/json:
               schema:
@@ -234,7 +234,7 @@ paths:
          - Totp Recipe
       operationId: removeTotpDevice
       description: |
-        De-registers a TOTP device for a user.
+        Remove a TOTP device for a user. If all devices are removed, TOTP is disabled for the user.
       parameters:
         - $ref: '#/components/parameters/totpRid'
         - $ref: '#/components/parameters/api-key'
@@ -294,7 +294,7 @@ paths:
          - Totp Recipe
       operationId: verifyTotpCode
       description: |
-        Verify a TOTP code for a user across all their devices.
+        Check if a TOTP code is valid against any of the TOTP devices for a user.
       parameters:
         - $ref: '#/components/parameters/totpRid'
         - $ref: '#/components/parameters/api-key'
@@ -370,7 +370,7 @@ paths:
          - Totp Recipe
       operationId: verifyTotpDevice
       description: |
-        Verify a TOTP device for a user.
+        Mark a TOTP device as verified if the given TOTP code is valid for that device.
       parameters:
         - $ref: '#/components/parameters/totpRid'
         - $ref: '#/components/parameters/api-key'
