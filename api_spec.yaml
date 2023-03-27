@@ -4073,7 +4073,44 @@ paths:
                     $ref: '#/components/schemas/statusOK'
                   count:
                     type: number
-                    example: 10
+                    example: 1000000
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /users/count/active:
+    get:
+      tags:
+        - Core
+      operationId: getActiveUsersCount
+      description: |
+        Get number of active users.
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/includeRecipeIds'
+      responses:
+        '200':
+          description: Get number of active users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  count:
+                    type: number
+                    example: 100000
           
         '400':
           $ref: '#/components/responses/400'
