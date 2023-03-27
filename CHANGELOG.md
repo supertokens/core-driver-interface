@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.19.0] - 2023-03-24
 
 - Core APIs:
+  - `/users/count/active` GET
   - `/recipe/totp/device` POST
   - `/recipe/totp/device` PUT
   - `/recipe/totp/device/list` GET
