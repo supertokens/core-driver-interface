@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
+
+## [2.19.0] - 2023-03-24
+
+- Core APIs:
+  - `/users/count/active` GET
+  - `/recipe/totp/device` POST
+  - `/recipe/totp/device` PUT
+  - `/recipe/totp/device/list` GET
+  - `/recipe/totp/device/remove` POST
+  - `/recipe/totp/verify` POST
+  - `/recipe/totp/device/verify` POST
+
 ## [2.18.1] - 2023-03-1
 
 ### Fixed 
