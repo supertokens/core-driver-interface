@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
-  version: 2.18.0
+  version: 2.19.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -16,8 +16,429 @@ tags:
   - name: Session Recipe
   - name: Core
   - name: Dashboard Recipe
+  - name: Totp Recipe
+
 paths:
-  
+  /recipe/totp/device:
+    post:
+      tags:
+         - Totp Recipe
+      operationId: createTotpDevice
+      description: |
+        Add a TOTP device for a user and enable TOTP if not already enabled.
+      parameters:
+        - $ref: '#/components/parameters/totpRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+                deviceName:
+                  type: string
+                  example: "My Authy App"
+                skew:
+                  type: number
+                  example: 0
+                period:
+                  type: number
+                  example: 30
+              required:
+                - userId
+                - deviceName
+                - skew
+                - period
+                    
+      responses:
+        '200':
+          description: Indicates success with the status and secret properties
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      secret:
+                        type: string
+                        example: "JBSWY3DPEHPK3PXP"
+
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['DEVICE_ALREADY_EXISTS_ERROR']
+                        
+
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+         - Totp Recipe
+      operationId: updateTotpDeviceName
+      description: |
+        Update the name of a TOTP device for a user.
+      parameters:
+        - $ref: '#/components/parameters/totpRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+                existingDeviceName:
+                  type: string
+                  example: "My Authy App"
+                newDeviceName:
+                  type: string
+                  example: "A better name for my TOTP device"
+              required:
+                - userId
+                - existingDeviceName
+                - newDeviceName
+                    
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["TOTP_NOT_ENABLED_ERROR"]
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["UNKNOWN_DEVICE_ERROR"]
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["DEVICE_ALREADY_EXISTS_ERROR"]
+
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+
+  /recipe/totp/device/list:
+    get:
+      tags:
+          - Totp Recipe
+      operationId: getTotpDevices
+      description: |
+        Retrieve a list of TOTP devices for a user.
+      parameters:
+        - $ref: '#/components/parameters/totpRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: userId
+          schema:
+            type: string
+          required: true
+
+      responses:
+        '200':
+          description: Retrives all TOTP devices
+          content:
+            application/json:
+                schema: 
+                  oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      devices:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            period:
+                              type: number
+                            skew:
+                              type: number
+                            verified:
+                              type: boolean
+                    required:
+                      - status
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["TOTP_NOT_ENABLED_ERROR"]
+                  
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/totp/device/remove:
+    post:
+      tags:
+         - Totp Recipe
+      operationId: removeTotpDevice
+      description: |
+        Remove a TOTP device for a user. If all devices are removed, TOTP is disabled for the user.
+      parameters:
+        - $ref: '#/components/parameters/totpRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+                deviceName:
+                  type: string
+                  example: "My Authy App"
+              required:
+                - userId
+                - deviceName
+                    
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      didDeviceExist:
+                        type: boolean
+                        example: true
+
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['TOTP_NOT_ENABLED_ERROR']
+
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+
+  /recipe/totp/verify:
+    post:
+      tags:
+         - Totp Recipe
+      operationId: verifyTotpCode
+      description: |
+        Check if a TOTP code is valid against any of the TOTP devices for a user.
+      parameters:
+        - $ref: '#/components/parameters/totpRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+                totp:
+                  type: string
+                  example: "123456"
+                allowUnverifiedDevices:
+                  type: boolean
+                  example: false
+              required:
+                - userId
+                - totp
+                - allowUnverifiedDevices
+                    
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['TOTP_NOT_ENABLED_ERROR']
+
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['INVALID_TOTP_ERROR']
+
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['LIMIT_REACHED_ERROR']
+                      retryAfterMs:
+                        type: number
+                        example: 90000
+
+
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/totp/device/verify:
+    post:
+      tags:
+         - Totp Recipe
+      operationId: verifyTotpDevice
+      description: |
+        Mark a TOTP device as verified if the given TOTP code is valid for that device.
+      parameters:
+        - $ref: '#/components/parameters/totpRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+                deviceName:
+                  type: string
+                  example: "My Authy App"
+                totp:
+                  type: string
+                  example: "123456"
+              required:
+                - userId
+                - deviceName
+                - totp
+                    
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      wasAlreadyVerified:
+                        type: boolean
+                        example: false
+
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['TOTP_NOT_ENABLED_ERROR']
+
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['UNKNOWN_DEVICE_ERROR']
+
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['INVALID_TOTP_ERROR']
+
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['LIMIT_REACHED_ERROR']
+                      retryAfterMs:
+                        type: number
+                        example: 90000
+
+
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+
+
   /recipe/userid/map:
     post:
       tags:
@@ -369,6 +790,8 @@ paths:
                       $ref: '#/components/schemas/email'
                     userInputCode:
                       $ref: '#/components/schemas/userInputCode'
+                  example:
+                    email: "test@example.com"
                   required:
                     - email
                 - type: object
@@ -3650,7 +4073,49 @@ paths:
                     $ref: '#/components/schemas/statusOK'
                   count:
                     type: number
-                    example: 10
+                    example: 1000000
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /users/count/active:
+    get:
+      tags:
+        - Core
+      operationId: getActiveUsersCount
+      description: |
+        Get number of active users.
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: since
+          schema:
+            type: number
+            example: 1679875200000
+          required: true
+      responses:
+        '200':
+          description: Get number of active users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  count:
+                    type: number
+                    example: 100000
           
         '400':
           $ref: '#/components/responses/400'
@@ -4064,13 +4529,20 @@ components:
       required: false
       schema:
         type: string
+
+    totpRid:
+      name: rid
+      in: header
+      example: totp
+      required: false
+      schema:
+        type: string
         
     cdi-version:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version. 
-      example: 2.18
-      required: true
+      example: 2.19
       schema:
         type: string
     
