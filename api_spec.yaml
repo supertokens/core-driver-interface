@@ -3790,7 +3790,7 @@ paths:
         
       responses:
         '200':
-          description: User Pagination
+          description: Returns available tags for search
           content:
             application/json:
               schema:
@@ -3802,7 +3802,7 @@ paths:
                     type: array
                     items:
                       type: string
-                      example: ['email', 'phone', 'recipe', 'provider']
+                      example: ['email', 'phone', 'provider']
           
         '400':
           $ref: '#/components/responses/400'
