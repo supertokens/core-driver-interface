@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
-  version: 2.19.0
+  version: 2.20.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -4143,6 +4143,30 @@ paths:
         - $ref: '#/components/parameters/paginationToken'
         - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/timeJoinedOrder'
+        - in: query
+          name: email
+          schema:
+            type: string
+            example: "test@example.com"
+          required: false
+        - in: query
+          name: phone
+          schema:
+            type: number
+            example: +911234567890
+          required: false
+        - in: query
+          name: recipe
+          schema:
+            type: string
+            example: "emailpassword"
+          required: false
+        - in: query
+          name: provider
+          schema:
+            type: string
+            example: "google"
+          required: false
       responses:
         '200':
           description: User Pagination
@@ -4215,6 +4239,45 @@ paths:
           $ref: '#/components/responses/400'
         '401':
           $ref: '#/components/responses/401'
+        '500':
+          $ref: '#/components/responses/500'
+  
+  /user/search/tags:
+    get:
+      tags:
+        - Core
+      operationId: getSearchTags
+      description: |
+        Retrieve available tags for search
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        
+      responses:
+        '200':
+          description: Returns available tags for search
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                      example: ['email', 'phone', 'provider']
+          
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
         '500':
           $ref: '#/components/responses/500'
   
