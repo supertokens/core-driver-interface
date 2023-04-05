@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
-## [2.19.0] - XXX
+## Unreleased 
 
 - deprecate jwks endpoint in the jwt recipe (GET `/recipe/jwt/jwks`)
 - add standard jwks endpoint (GET `/.well-known/jwks.json`)
@@ -14,6 +14,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - removed handshake endpoint (POST `/recipe/handshake`)
 - add checkDatabase into `verifySession` (POST `/recipe/session/verify`)
 - removed old/unused props from responses related to signing keys & `id-refresh-token`
+
+## [2.20.0] - 2023-03-30
+
+### Added
+- Core APIs:
+  - `/user/search/tags` GET
+
+### Updated
+- Core APIs:
+  - `/users` GET with the following query params:
+    - `email` string
+    - `phone` string
+    - `provider` string
+ 
+
+## [2.19.0] - 2023-03-24
+
+- Core APIs:
+  - `/users/count/active` GET
+  - `/recipe/totp/device` POST
+  - `/recipe/totp/device` PUT
+  - `/recipe/totp/device/list` GET
+  - `/recipe/totp/device/remove` POST
+  - `/recipe/totp/verify` POST
+  - `/recipe/totp/device/verify` POST
 
 ## [2.18.1] - 2023-03-1
 
