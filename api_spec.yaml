@@ -3503,10 +3503,6 @@ paths:
       description: |
         Creates or updates ThirdParty Provider Config for a tenant.
 
-        If `tenantId` is not provided, `public` will be used.
-
-        If `tenantId` is specified and is not equal to `public`, SuperTokens subscription license key is required.
-
         If `skipValidation` is set to true, the config will be saved without any validation.
 
         If the config already exists for the given `tenantId` and `thirdPartyId`, the config in the core will be completely replaced with the config provided in the request body.
@@ -3630,10 +3626,6 @@ paths:
       description: |
         Delete ThirdParty Provider config for a tenant.
 
-        If `tenantId` is specified and is not equal to `public`, SuperTokens subscription license key is required.
-
-        If `tenantId` is not provided, `public` will be used.
-
       operationId: deleteTenantConfigPOST
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
@@ -3691,7 +3683,7 @@ paths:
       tags:
         - Multitenancy Recipe
       description: |
-        Returns the list of thirdParty provider config across all tenants for the given `thirdPartyId`
+        Returns the list of thirdParty provider config across all tenants (in the app) for the given `thirdPartyId`
 
       operationId: listConfigsGET
       parameters:
@@ -3741,11 +3733,10 @@ paths:
       tags:
         - Multitenancy Recipe
       description: |
-        Add user's association with the tenant
+        Add user's association with the tenant.
 
-        If `tenantId` is specified and is not equal to `public`, SuperTokens subscription license key is required.
-
-        If `tenantId` is not provided, `public` will be used.
+        Note: To associate a user to a tenant, the tenant must belong to the same user pool
+        and user must already exist in the app
 
       operationId: addUserToTenant
       parameters:
@@ -3762,24 +3753,23 @@ paths:
               properties:
                 userId:
                   $ref: '#/components/schemas/userId'
-                tenantId:
-                  $ref: '#/components/schemas/tenantId'
-
       responses:
         200:
           description: Association result
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - status
-                  - wasAlreadyAssociated
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  wasAlreadyAssociated:
-                    type: boolean
+                oneOf:
+                - type: object
+                  required:
+                    - status
+                    - wasAlreadyAssociated
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+                    wasAlreadyAssociated:
+                      type: boolean
+                - $ref: '#/components/schemas/unknownUserIdResponse'
 
         '400':
           $ref: '#/components/responses/400'
@@ -3804,10 +3794,6 @@ paths:
       description: |
         Remove user's association with the tenant
 
-        If `tenantId` is specified and is not equal to `public`, SuperTokens subscription license key is required.
-
-        If `tenantId` is not provided, `public` will be used.
-
       operationId: removeUserFromTenant
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
@@ -3823,8 +3809,6 @@ paths:
               properties:
                 userId:
                   $ref: '#/components/schemas/userId'
-                tenantId:
-                  $ref: '#/components/schemas/tenantId'
 
       responses:
         200:
@@ -4455,8 +4439,6 @@ components:
       required:
         - thirdPartyId
       properties:
-        tenantId:
-          type: string
         thirdPartyId:
           type: string
         name:
