@@ -3282,6 +3282,8 @@ paths:
                   type: boolean
                 passwordlessEnabled:
                   type: boolean
+                coreConfig:
+                  type: object
       responses:
         200:
           description: Create or Update tenant result
