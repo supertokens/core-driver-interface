@@ -3641,8 +3641,6 @@ paths:
               properties:
                 thirdPartyId:
                   $ref: '#/components/schemas/thirdPartyId'
-                tenantId:
-                  $ref: '#/components/schemas/tenantId'
 
       responses:
         200:
