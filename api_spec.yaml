@@ -3256,6 +3256,8 @@ paths:
       description: |
         Create or update a connection uri domain.
 
+        SuperTokens subscription license key is required, if not using the base connection uri domain.
+
         This request must originate from public app and public tenant on the base
         connection uri domain.
 
@@ -3430,6 +3432,8 @@ paths:
       
       description: |
         Create or update an app.
+
+        SuperTokens subscription license key is required.
 
         If creating a new app, only the login methods set to true will be enabled and rest will be disabled by default.
 
@@ -4250,7 +4254,7 @@ paths:
       description: |
         Add user's association with the tenant.
 
-        Note: To associate a user to a tenant, the tenant must belong to the same user pool
+        Note: To associate a user to a tenant, the tenant must be in the same user pool
         and user must already exist in the app
 
       operationId: addUserToTenant
