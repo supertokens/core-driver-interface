@@ -3145,6 +3145,12 @@ paths:
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
         - $ref: '#/components/parameters/includeRecipeIds'
+        - name: includeAllTenants
+          description: if set to true, will count users across all tenants in the app
+          in: query
+          schema:
+            type: boolean
+            default: false
       responses:
         '200':
           description: Get number of users
