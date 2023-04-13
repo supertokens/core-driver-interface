@@ -648,6 +648,10 @@ paths:
                           $ref: '#/components/schemas/statusOK'
                         user:
                           $ref: '#/components/schemas/passwordlessUser'
+                        tenantIds:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/tenantId'
                     - type: object
                       properties:
                         status:
@@ -852,6 +856,10 @@ paths:
                         $ref: '#/components/schemas/statusOK'
                       user:
                         $ref: '#/components/schemas/user'
+                      tenantIds:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/tenantId'
                   - type: object
                     properties:
                       status:
@@ -1246,6 +1254,10 @@ paths:
                           $ref: '#/components/schemas/statusOK'
                         user:
                           $ref: '#/components/schemas/thirdPartyUser'
+                        tenantIds:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/tenantId'
                     - type: object
                       properties:
                         status:
@@ -3263,7 +3275,9 @@ paths:
 
         If creating a new connection uri domain, only the login methods set to true will be enabled and rest will be disabled by default.
 
-        If updating an existing connection uri domain, core will keep the existing state of login methods and only update the ones that are specified in the request body.
+        If updating an existing connection uri domain,
+        1. core will keep the existing state of login methods and only update the ones that are specified in the request body.
+        2. Core config will be merged into existing config. To delete a key in the config, use a null value
 
         Note: The core config must contain a unique connection to the storage layer, because sharing of database between 2 different connection uri domains is not allowed.
 
@@ -3328,11 +3342,11 @@ paths:
       description: |
         Delete a connection uri domain.
 
-        Deletion of base connection uri domain is not allowed. Instead use the `/recipe/multitenancy/connectionuridomain PUT` api to disable all the recipes.
+        Deletion of base connection uri domain is not allowed.
 
         The request must originate from base connection uri domain and public app and tenant.
 
-        Note: There should be no apps or tenants belonging to the connection uri domain to be able to delete it.
+        Note: There should be no apps or tenants (other than the public app and public tenant) belonging to the connection uri domain to be able to delete it.
 
       operationId: deleteConnectionUriDomainPOST
       parameters:
@@ -3359,11 +3373,11 @@ paths:
                 type: object
                 required:
                   - status
-                  - connectionUriDomainExisted
+                  - didExist
                 properties:
                   status:
                     $ref: '#/components/schemas/statusOK'
-                  tenantExisted:
+                  didExist:
                     type: boolean
         '400':
           $ref: '#/components/responses/400'
@@ -3411,8 +3425,24 @@ paths:
                   connectionUriDomains:
                     type: array
                     items:
-                      type: string
-                      example: core-1234.supertokens.io:3567
+                      type: object
+                      properties:
+                        connectionUriDomain:
+                          type: string
+                          example: core-1234.supertokens.io:3567
+                        apps:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              appId:
+                                type: string
+                                example: app1
+                              tenants:
+                                type: array
+                                items:
+                                  $ref: '#/components/schemas/tenantConfig'
+
         '400':
           $ref: '#/components/responses/400'
 
@@ -3437,7 +3467,9 @@ paths:
 
         If creating a new app, only the login methods set to true will be enabled and rest will be disabled by default.
 
-        If updating an existing app, core will keep the existing state of login methods and only update the ones that are specified in the request body.
+        If updating an existing app,
+        1. core will keep the existing state of login methods and only update the ones that are specified in the request body.
+        2. Core config will be merged into existing config. To delete a key in the config, use a null value
 
         Note: the newly created app will use the same connection uri domain from which
         this request originates and the request must originate from public app and public tenant.
@@ -3505,7 +3537,7 @@ paths:
 
         Request must originate from public app and tenant.
 
-        Note: No tenants must belong to the app to be able to delete it.
+        Note: No tenants (other than the public tenant) must belong to the app to be able to delete it.
 
       operationId: deleteAppPOST
       parameters:
@@ -3532,11 +3564,11 @@ paths:
                 type: object
                 required:
                   - status
-                  - appExisted
+                  - didExist
                 properties:
                   status:
                     $ref: '#/components/schemas/statusOK'
-                  appExisted:
+                  didExist:
                     type: boolean
         '400':
           $ref: '#/components/responses/400'
@@ -3584,8 +3616,15 @@ paths:
                   apps:
                     type: array
                     items:
-                      type: string
-                      example: app1
+                      type: object
+                      properties:
+                        appId:
+                          type: string
+                          example: app1
+                        tenants:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/tenantConfig'
         '400':
           $ref: '#/components/responses/400'
 
@@ -3609,7 +3648,9 @@ paths:
 
         If creating a new tenant, only the login methods set to true will be enabled and rest will be disabled by default.
 
-        If updating an existing tenant, core will keep the existing state of login methods and only update the ones that are specified in the request body.
+        If updating an existing tenant,
+        1. core will keep the existing state of login methods and only update the ones that are specified in the request body.
+        2. Core config will be merged into existing config. To delete a key in the config, use a null value
 
         The request must originate from public tenant, and the new tenant will use connectionUriDomain and app from which the request originates.
 
@@ -3666,281 +3707,13 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /recipe/multitenancy/tenant/remove:
-    post:
-      tags:
-        - Multitenancy Recipe
-      description: |
-        Delete a tenant.
-
-        Request must originate from public tenant.
-
-      operationId: deleteTenantPOST
-      parameters:
-        - $ref: '#/components/parameters/multitenancyRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - tenantId
-              properties:
-                tenantId:
-                  $ref: '#/components/schemas/tenantId'
-      responses:
-        200:
-          description: Remove tenant result
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                  - tenantExisted
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  tenantExisted:
-                    type: boolean
-        '400':
-          $ref: '#/components/responses/400'
-        
-        '401':
-          $ref: '#/components/responses/401'
-        
-        '402':
-          $ref: '#/components/responses/402'
-
-        '404':
-          $ref: '#/components/responses/404'
-        
-        '500':
-          $ref: '#/components/responses/500'
-
-  /recipe/multitenancy/tenant/list:
     get:
       tags:
         - Multitenancy Recipe
       description: |
-        Get a list of all tenants in an app.
+        Get a tenant config of the tenant specified by the url prefix.
 
-        Request must originate from public tenant.
-
-      operationId: tenantListGET
-      parameters:
-        - $ref: '#/components/parameters/multitenancyRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      responses:
-        200:
-          description: List of tenants
-
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                  - tenants
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  tenants:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/tenantId'
-        '400':
-          $ref: '#/components/responses/400'
-
-        '401':
-          $ref: '#/components/responses/401'
-
-        '404':
-          $ref: '#/components/responses/404'
-
-        '500':
-          $ref: '#/components/responses/500'
-
-  /recipe/multitenancy/connectionuridomain/config:
-    get:
-      tags:
-        - Multitenancy Recipe
-      description: |
-        Get a connection uri domain config.
-
-        SuperTokens subscription license key is required, if connection uri domain is not the base domain.
-
-        Returns recipes with their enabled flag and recipe specific configs saved in core
-
-      operationId: connectionUriDomainConfigGet
-      parameters:
-        - $ref: '#/components/parameters/multitenancyRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-        - name: connectionUriDomain
-          in: query
-          required: false
-          schema:
-            type: string
-            example: core-1234.supertokens.io:3567
-      responses:
-        200:
-          description: Connection URI domain config result
-          content:
-            application/json:
-              schema:
-                oneOf:
-                - type: object
-                  required:
-                    - status
-                    - emailPassword
-                    - thirdParty
-                    - passwordless
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    emailPassword:
-                      type: object
-                      required:
-                        - enabled
-                      properties:
-                        enabled:
-                          type: boolean
-                    thirdParty:
-                      type: object
-                      required:
-                        - enabled
-                      properties:
-                        enabled:
-                          type: boolean
-                        providers:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/thirdPartyProviderConfig'
-                    passwordless:
-                      type: object
-                      required:
-                        - enabled
-                      properties:
-                        enabled:
-                          type: boolean
-                - type: object
-                  required:
-                    - status
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusTenantDoesNotExistError'
-
-        '400':
-          $ref: '#/components/responses/400'
-        
-        '401':
-          $ref: '#/components/responses/401'
-        
-        '402':
-          $ref: '#/components/responses/402'
-
-        '404':
-          $ref: '#/components/responses/404'
-        
-        '500':
-          $ref: '#/components/responses/500'
-
-  /recipe/multitenancy/app/config:
-    get:
-      tags:
-        - Multitenancy Recipe
-      description: |
-        Get an app config.
-
-        SuperTokens subscription license key is required.
-
-        Returns recipes with their enabled flag and recipe specific configs saved in core
-
-      operationId: appConfigGET
-      parameters:
-        - $ref: '#/components/parameters/multitenancyRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-        - name: appId
-          in: query
-          required: true
-          schema:
-            $ref: '#/components/schemas/tenantId'
-      responses:
-        200:
-          description: App config result
-          content:
-            application/json:
-              schema:
-                oneOf:
-                - type: object
-                  required:
-                    - status
-                    - emailPassword
-                    - thirdParty
-                    - passwordless
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    emailPassword:
-                      type: object
-                      required:
-                        - enabled
-                      properties:
-                        enabled:
-                          type: boolean
-                    thirdParty:
-                      type: object
-                      required:
-                        - enabled
-                      properties:
-                        enabled:
-                          type: boolean
-                        providers:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/thirdPartyProviderConfig'
-                    passwordless:
-                      type: object
-                      required:
-                        - enabled
-                      properties:
-                        enabled:
-                          type: boolean
-                - type: object
-                  required:
-                    - status
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusTenantDoesNotExistError'
-
-        '400':
-          $ref: '#/components/responses/400'
-        
-        '401':
-          $ref: '#/components/responses/401'
-        
-        '402':
-          $ref: '#/components/responses/402'
-
-        '404':
-          $ref: '#/components/responses/404'
-        
-        '500':
-          $ref: '#/components/responses/500'
-
-  /recipe/multitenancy/tenant/config:
-    get:
-      tags:
-        - Multitenancy Recipe
-      description: |
-        Get a tenant config.
-
-        SuperTokens subscription license key is required.
+        SuperTokens subscription license key is required if querying any tenant other than the base tenant.
 
         Returns recipes with their enabled flag and recipe specific configs saved in core
 
@@ -3949,11 +3722,6 @@ paths:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - name: tenantId
-          in: query
-          required: true
-          schema:
-            $ref: '#/components/schemas/tenantId'
       responses:
         200:
           description: Tenant config result
@@ -4017,6 +3785,104 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
+  /recipe/multitenancy/tenant/remove:
+    post:
+      tags:
+        - Multitenancy Recipe
+      description: |
+        Delete a tenant.
+
+        Request must originate from public tenant.
+
+      operationId: deleteTenantPOST
+      parameters:
+        - $ref: '#/components/parameters/multitenancyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - tenantId
+              properties:
+                tenantId:
+                  $ref: '#/components/schemas/tenantId'
+      responses:
+        200:
+          description: Remove tenant result
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - didExist
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  didExist:
+                    type: boolean
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/multitenancy/tenant/list:
+    get:
+      tags:
+        - Multitenancy Recipe
+      description: |
+        Get a list of all tenants in an app.
+
+        Request must originate from public tenant.
+
+      operationId: tenantListGET
+      parameters:
+        - $ref: '#/components/parameters/multitenancyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        200:
+          description: List of tenants
+
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - tenants
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  tenants:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/tenantConfig'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
   /recipe/multitenancy/config/thirdparty:
     put:
       tags:
@@ -4050,18 +3916,6 @@ paths:
                 - `keyId` must be a non empty string
                 - `teamId` must be a non empty string
                 - `privateKey` must be a non empty string
-
-        Active Directory (id: active-directory):
-          - `clients`
-            - if it contains elements, each of them are validated as follows:
-              - `additionalConfig` should contain the key `directoryId`
-                - `directoryId` must be a non empty string
-
-        Okta (id: okta):
-          - `clients`
-            - if it contains elements, each of them are validated as follows:
-              - `additionalConfig` should contain the key `oktaDomain`
-                - `oktaDomain` must be a non empty string
 
         Google Workspaces (id: google-workspaces):
           - `clients`
@@ -4197,56 +4051,6 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /recipe/multitenancy/config/thirdparty/list:
-    get:
-      tags:
-        - Multitenancy Recipe
-      description: |
-        Returns the list of thirdParty provider config across all tenants (in the app) for the given `thirdPartyId`
-
-      operationId: listConfigsGET
-      parameters:
-        - $ref: '#/components/parameters/multitenancyRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-        - name: thirdPartyId
-          in: query
-          required: true
-          schema:
-            $ref: '#/components/schemas/thirdPartyId'
-      responses:
-        200:
-          description: ThirdParty Provider Config list
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                  - providers
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  providers:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/thirdPartyProviderConfig'
-
-        '400':
-          $ref: '#/components/responses/400'
-        
-        '401':
-          $ref: '#/components/responses/401'
-        
-        '402':
-          $ref: '#/components/responses/402'
-
-        '404':
-          $ref: '#/components/responses/404'
-        
-        '500':
-          $ref: '#/components/responses/500'
-
   /recipe/multitenancy/tenant/user:
     post:
       tags:
@@ -4254,7 +4058,9 @@ paths:
       description: |
         Add user's association with the tenant.
 
-        Note: To associate a user to a tenant, the tenant must be in the same user pool
+        User will be added to the tenant based on the url prefix of the request.
+
+        Note: To associate a user to a tenant, the tenant must be in the same database
         and user must already exist in the app
 
       operationId: addUserToTenant
@@ -4288,7 +4094,13 @@ paths:
                       $ref: '#/components/schemas/statusOK'
                     wasAlreadyAssociated:
                       type: boolean
-                - $ref: '#/components/schemas/unknownUserIdResponse'
+                - type: object
+                  required:
+                  - status
+                  properties:
+                    status:
+                      type: string
+                      enum: ['UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR', 'PHONE_NUMBER_ALREADY_EXISTS_ERROR', 'THIRD_PARTY_USER_ALREADY_EXISTS_ERROR']
 
         '400':
           $ref: '#/components/responses/400'
@@ -4311,6 +4123,8 @@ paths:
         - Multitenancy Recipe
       description: |
         Remove user's association with the tenant
+
+        User will be removed from the tenant based on the url prefix of the request.
 
       operationId: removeUserFromTenant
       parameters:
@@ -5022,3 +4836,42 @@ components:
                   type: string
                 emailVerified:
                   type: string
+
+    tenantConfig:
+      type: object
+      required:
+        - emailPassword
+        - thirdParty
+        - passwordless
+        - coreConfig
+      properties:
+        tenantId:
+          $ref: '#/components/schemas/tenantId'
+        emailPassword:
+          type: object
+          required:
+            - enabled
+          properties:
+            enabled:
+              type: boolean
+        thirdParty:
+          type: object
+          required:
+            - enabled
+          properties:
+            enabled:
+              type: boolean
+            providers:
+              type: array
+              items:
+                $ref: '#/components/schemas/thirdPartyProviderConfig'
+        passwordless:
+          type: object
+          required:
+            - enabled
+          properties:
+            enabled:
+              type: boolean
+        coreConfig:
+          type: object
+
