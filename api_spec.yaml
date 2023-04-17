@@ -1905,52 +1905,6 @@ paths:
         '500':
           $ref: '#/components/responses/500'  
   
-  /appid-<appId>/<tenantId>/recipe/handshake:
-    post:
-      tags: 
-        - Session Recipe
-      operationId: sessionHandshake
-      description: |
-        Handshake for session
-      parameters:
-        - $ref: '#/components/parameters/sessionRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      responses:
-        '200':
-          description: Session Handshake
-          content:
-            application/json:
-                schema: 
-                  type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    jwtSigningPublicKey:
-                      $ref: '#/components/schemas/jwtSigningPublicKey'
-                    jwtSigningPublicKeyExpiryTime:
-                      $ref: '#/components/schemas/jwtSigningPublicKeyExpiryTime'
-                    jwtSigningPublicKeyList:
-                      $ref: '#/components/schemas/jwtSigningPublicKeyList'
-                    accessTokenBlacklistingEnabled:
-                      $ref: '#/components/schemas/accessTokenBlacklistingEnabled'
-                    accessTokenValidity:
-                      $ref: '#/components/schemas/accessTokenValidity'
-                    refreshTokenValidity: 
-                      $ref: '#/components/schemas/refreshTokenValidity'
-          
-        '400':
-          $ref: '#/components/responses/400'
-        
-        '401':
-          $ref: '#/components/responses/401'
-        
-        '404':
-          $ref: '#/components/responses/404'
-        
-        '500':
-          $ref: '#/components/responses/500'
-
   /appid-<appId>/recipe/user/metadata:
     get:
       tags:
