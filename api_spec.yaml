@@ -2883,7 +2883,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /apiversion:
+  /appid-{appId}/(tenantId}/apiversion:
     get:
       tags:
         - Core
@@ -2892,6 +2892,8 @@ paths:
         Get a list of compatible CDI versions
       parameters:
         - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/appId'
+        - $ref: '#/components/parameters/tenantId'
       responses:
         '200':
           description: get api version
@@ -2918,7 +2920,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /config:
+  /appid-{appId}/(tenantId}/config:
     get:
       tags:
         - Core
@@ -2928,6 +2930,8 @@ paths:
       parameters: 
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/appId'
+        - $ref: '#/components/parameters/tenantId'
         - in: query
           name: pid
           schema:
