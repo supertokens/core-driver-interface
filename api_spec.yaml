@@ -652,10 +652,6 @@ paths:
                           $ref: '#/components/schemas/statusOK'
                         user:
                           $ref: '#/components/schemas/passwordlessUser'
-                        tenantIds:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/tenantId'
                     - type: object
                       properties:
                         status:
@@ -860,10 +856,6 @@ paths:
                         $ref: '#/components/schemas/statusOK'
                       user:
                         $ref: '#/components/schemas/user'
-                      tenantIds:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/tenantId'
                   - type: object
                     properties:
                       status:
@@ -1171,10 +1163,6 @@ paths:
                           $ref: '#/components/schemas/statusOK'
                         user:
                           $ref: '#/components/schemas/thirdPartyUser'
-                        tenantIds:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/tenantId'
                     - type: object
                       properties:
                         status:
@@ -4289,6 +4277,10 @@ components:
           $ref: '#/components/schemas/email'
         timeJoined:
           $ref: '#/components/schemas/timeJoined'
+        tenantIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/tenantId'
 
     passwordlessUser:
       type: object
@@ -4301,6 +4293,10 @@ components:
           $ref: '#/components/schemas/phoneNumber'
         timeJoined:
           $ref: '#/components/schemas/timeJoined'
+        tenantIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/tenantId'
 
     thirdPartyUser:
       type: object
@@ -4318,6 +4314,10 @@ components:
               $ref: '#/components/schemas/thirdPartyId'
             userId:
               $ref: '#/components/schemas/thirdPartyUserId'
+            tenantIds:
+              type: array
+              items:
+                $ref: '#/components/schemas/tenantId'
 
     codeId:
       type: string
