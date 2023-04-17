@@ -7,15 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [unreleased]
-- Adds APIs for managing tenants
+- Adds `/appid-{appId}/(tenantId}` prefix to all the APIs. `appid-{appId}` and `{tenantId}` in all the APIs are optional. Their default values are `appid-public` and `public` respectively.
+- Adds APIs for multitenancy recipe
+  - adds `/recipe/multitenancy/connectionuridomain` PUT
+  - adds `/recipe/multitenancy/connectionuridomain/remove` POST
+  - adds `/recipe/multitenancy/connectionuridomain/list` GET
+  - adds `/recipe/multitenancy/app` PUT
+  - adds `/recipe/multitenancy/app/remove` POST
+  - adds `/recipe/multitenancy/app/list` GET
   - adds `/recipe/multitenancy/tenant` PUT
   - adds `/recipe/multitenancy/tenant/remove` POST
-  - adds `/recipe/multitenancy/tenant/config` GET
   - adds `/recipe/multitenancy/tenant/list` GET
+  - adds `/recipe/multitenancy/tenant/user` POST
+  - adds `/recipe/multitenancy/tenant/user/remove` POST
+
 - Adds APIs for creating and managing Thirdparty provider config for tenants
-  - adds `/recipe/multitenancy/config/thirdparty/provider` PUT
-  - adds `/recipe/multitenancy/config/thirdparty/provider/remove` POST
-  - adds `/recipe/multitenancy/config/thirdparty/provider/list` GET
+  - adds `/recipe/multitenancy/config/thirdparty` PUT
+  - adds `/recipe/multitenancy/config/thirdparty/remove` POST
+
+- Adds `tenantIds` in response of `/recipe/user` GET in emailpassword, passwordless and thirdparty recipes.
+- Adds optional query param `includeAllTenants` to the `/users/count` GET API
+
+- Removed deprecated APIs `/recipe/user` and `/recipe/users/count`
 
 ## [2.16.2]
 
