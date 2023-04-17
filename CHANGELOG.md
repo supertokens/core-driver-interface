@@ -30,6 +30,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed deprecated APIs `/recipe/user` and `/recipe/users/count`
 
+## [2.20.0] - 2023-03-30
+
+### Added
+- Core APIs:
+  - `/user/search/tags` GET
+
+### Updated
+- Core APIs:
+  - `/users` GET with the following query params:
+    - `email` string
+    - `phone` string
+    - `provider` string
+ 
+
+## [2.19.0] - 2023-03-24
+
+- Core APIs:
+  - `/users/count/active` GET
+  - `/recipe/totp/device` POST
+  - `/recipe/totp/device` PUT
+  - `/recipe/totp/device/list` GET
+  - `/recipe/totp/device/remove` POST
+  - `/recipe/totp/verify` POST
+  - `/recipe/totp/device/verify` POST
+
+## [2.18.1] - 2023-03-1
+
+### Fixed 
+
+- Marks the `cdi-version` header param as optional
+
+## [2.18.0] - 2023-02-21
+
+- Core APIs:
+  - `/recipe/dashboard/user` POST
+  - `/recipe/dashboard/user` PUT
+  - `/recipe/dashboard/user` DELETE
+  - `/recipe/dashboard/users` GET
+  - `/recipe/dashboard/session/verify` POST
+  - `/recipe/dashboard/session` DELETE
+  - `/recipe/dashboard/signin` POST
+  - `/recipe/dashboard/user/sessions` GET
+  
+## [2.17.0] - 2023-01-04
+
+### Added
+
+- Core APIs:
+  - `/ee/featureflag` GET
+  - `/ee/license` PUT
+  - `/ee/license` DELETE
+  - `/ee/license` GET
+
 ## [2.16.2]
 
 ### Fixed
