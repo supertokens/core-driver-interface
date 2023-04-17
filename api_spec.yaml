@@ -22,7 +22,7 @@ tags:
   - name: Core
 paths:
   
-  /appid-<appId>/<tenantId>/recipe/userid/map:
+  /appid-<appId>/recipe/userid/map:
     post:
       tags:
          - UserIdMapping Recipe
@@ -155,7 +155,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-<appId>/<tenantId>/recipe/userid/map/remove:
+  /appid-<appId>/recipe/userid/map/remove:
     post:
       tags:
          - UserIdMapping Recipe
@@ -208,7 +208,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-<appId>/<tenantId>/recipe/userid/external-user-id-info:
+  /appid-<appId>/recipe/userid/external-user-id-info:
     put:
       tags:
          - UserIdMapping Recipe
@@ -622,8 +622,12 @@ paths:
       operationId: passwordlessGetUser
       description: |
         Get a user's information.
+
+        API is tenant specific if querying by email or phone number.
+        If querying by userId, tenantId will be ignored.
+
         Note that there is an invisible character at the end of the path, this was to avoid a conflict with the OpenAPI spec. 
-        
+
       parameters:
         - $ref: '#/components/parameters/passwordlessRid'
         - $ref: '#/components/parameters/api-key'
@@ -828,6 +832,10 @@ paths:
       operationId: emailPasswordGetUser
       description: |
         Get a user's information
+
+        API is tenant specific if querying by email.
+        If querying by userId, tenantId will be ignored.
+
       parameters:
         - $ref: '#/components/parameters/rid'
         - $ref: '#/components/parameters/api-key'
@@ -1133,6 +1141,10 @@ paths:
       operationId: thirdPartyGetUser
       description: |
         Get a user's information.
+
+        API is tenant specific if querying by email.
+        If querying by userId, tenantId will be ignored.
+
         Note that there is an invisible character at the end of the path, this was to avoid a conflict with the OpenAPI spec. 
         
       parameters:
@@ -1433,7 +1445,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-<appId>/<tenantId>/recipe/user/email/verify/remove:
+  /appid-<appId>/recipe/user/email/verify/remove:
     post:
       tags:
         - EmailVerification Recipe
@@ -1519,7 +1531,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/user/metadata:
+  /appid-<appId>/recipe/user/metadata:
     get:
       tags:
         - User Metadata Recipe
@@ -1608,7 +1620,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/user/metadata/remove:
+  /appid-<appId>/recipe/user/metadata/remove:
     post:
       tags:
         - User Metadata Recipe
@@ -1835,7 +1847,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-<appId>/<tenantId>/recipe/role:
+  /appid-<appId>/recipe/role:
     put:
       tags:
         - User Roles Recipe
@@ -1889,7 +1901,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-<appId>/<tenantId>/recipe/role/permissions:
+  /appid-<appId>/recipe/role/permissions:
     get:
       tags:
         - User Roles Recipe
@@ -1931,7 +1943,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-<appId>/<tenantId>/recipe/role/permissions/remove:
+  /appid-<appId>/recipe/role/permissions/remove:
     post:
       tags:
         - User Roles Recipe
@@ -1983,7 +1995,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-<appId>/<tenantId>/recipe/permission/roles:
+  /appid-<appId>/recipe/permission/roles:
     get:
       tags:
         - User Roles Recipe
@@ -2023,7 +2035,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
           
-  /appid-<appId>/<tenantId>/recipe/role/remove:
+  /appid-<appId>/recipe/role/remove:
     post:
       tags:
         - User Roles Recipe
@@ -2071,7 +2083,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-<appId>/<tenantId>/recipe/roles:
+  /appid-<appId>/recipe/roles:
     get:
       tags:
         - User Roles Recipe
@@ -2274,7 +2286,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-<appId>/<tenantId>/recipe/session/verify:
+  /appid-<appId>/recipe/session/verify:
     post:
       tags:
         - Session Recipe
@@ -2347,7 +2359,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
       
-  /appid-<appId>/<tenantId>/recipe/session/refresh:
+  /appid-<appId>/recipe/session/refresh:
     post:
       tags:
         - Session Recipe
@@ -2454,7 +2466,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-<appId>/<tenantId>/recipe/session/regenerate:
+  /appid-<appId>/recipe/session/regenerate:
     post:
       tags:
         - Session Recipe
@@ -2590,7 +2602,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
           
-  /appid-<appId>/<tenantId>/recipe/jwt:
+  /appid-<appId>/recipe/jwt:
     post:
       tags:
         - JWT Recipe
@@ -2644,7 +2656,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/jwt/jwks:
+  /appid-<appId>/recipe/jwt/jwks:
     get:
       tags:
         - JWT Recipe
@@ -2800,7 +2812,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-<appId>/<tenantId>/config:
+  /config:
     get:
       tags:
         - Core
@@ -2909,7 +2921,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-<appId>/<tenantId>/telemetry:
+  /appid-<appId>/telemetry:
     get:
       tags:
         - Core
@@ -2959,6 +2971,10 @@ paths:
       operationId: getUsersCount
       description: |
         Get number of users.
+
+        API is tenant specific if `includeAllTenants` is false.
+        Else, `tenantId` is ignored.
+
       parameters:
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
@@ -3049,7 +3065,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-<appId>/<tenantId>/user/remove:
+  /appid-<appId>/user/remove:
     post:
       tags:
         - Core
@@ -3084,7 +3100,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-<appId>/<tenantId>/recipe/multitenancy/connectionuridomain:
+  /recipe/multitenancy/connectionuridomain:
     put:
       tags:
         - Multitenancy Recipe
@@ -3161,7 +3177,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/multitenancy/connectionuridomain/remove:
+  /recipe/multitenancy/connectionuridomain/remove:
     post:
       tags:
         - Multitenancy Recipe
@@ -3220,7 +3236,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/multitenancy/connectionuridomain/list:
+  /recipe/multitenancy/connectionuridomain/list:
     get:
       tags:
         - Multitenancy Recipe
@@ -3281,7 +3297,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/multitenancy/app:
+  /recipe/multitenancy/app:
     put:
       tags:
         - Multitenancy Recipe
@@ -3356,7 +3372,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-<appId>/<tenantId>/recipe/multitenancy/app/remove:
+  /recipe/multitenancy/app/remove:
     post:
       tags:
         - Multitenancy Recipe
@@ -3413,7 +3429,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/multitenancy/app/list:
+  /recipe/multitenancy/app/list:
     get:
       tags:
         - Multitenancy Recipe
@@ -3465,7 +3481,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/multitenancy/tenant:
+  /appid-<appId>/recipe/multitenancy/tenant:
     put:
       tags:
         - Multitenancy Recipe
@@ -3609,7 +3625,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/multitenancy/tenant/remove:
+  /appid-<appId>/recipe/multitenancy/tenant/remove:
     post:
       tags:
         - Multitenancy Recipe
@@ -3663,7 +3679,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/multitenancy/tenant/list:
+  /appid-<appId>/recipe/multitenancy/tenant/list:
     get:
       tags:
         - Multitenancy Recipe
