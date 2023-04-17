@@ -30,6 +30,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adds optional query param `includeAllTenants` to the `/users/count` GET API
 
 - Removed deprecated APIs `/recipe/user` and `/recipe/users/count`
+## [2.21.0] - 2023-04-05
+
+- deprecate jwks endpoint in the jwt recipe (GET `/recipe/jwt/jwks`)
+- add standard jwks endpoint (GET `/.well-known/jwks.json`)
+- add `useDynamicSigningKey` into `createNewSession` (POST `/recipe/session`). This will be used instead of `access_token_signing_key_dynamic`
+- add `useStaticSigningKey` into `createSignedJWT` (POST `/recipe/jwt`).
+- removed handshake endpoint (POST `/recipe/handshake`)
+- add checkDatabase into `verifySession` (POST `/recipe/session/verify`)
+- removed old/unused props from responses related to signing keys & `id-refresh-token`
 
 ## [2.20.0] - 2023-03-30
 
