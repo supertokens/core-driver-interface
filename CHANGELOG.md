@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [unreleased]
-- Adds `/appid-{appId}/(tenantId}` prefix to all the APIs. `appid-{appId}` and `{tenantId}` in all the APIs are optional. Their default values are `appid-public` and `public` respectively.
+- Adds `/appid-<appId>` or `/appid-<appId>/<tenantId>` prefix to some of the APIs as applicable. 
+`appid-{appId}` and `{tenantId}` in all the APIs (wherever they are present) are optional. Their default values are `appid-public` and `public` respectively.
 - Adds APIs for multitenancy recipe
   - adds `/recipe/multitenancy/connectionuridomain` PUT
   - adds `/recipe/multitenancy/connectionuridomain/remove` POST
