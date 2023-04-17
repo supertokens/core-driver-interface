@@ -3,7 +3,7 @@ info:
   description: |
     This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
 
-    `appid-{appId}` and `{tenantId}` in all the APIs are optional. Their default values are `appid-public` and `public` respectively
+    `appid-<appId>` and `<tenantId>` in all the APIs are optional. Their default values are `appid-public` and `public` respectively
 
   version: 2.17.0
   title: Core Driver Interface
@@ -22,7 +22,7 @@ tags:
   - name: Core
 paths:
   
-  /appid-{appId}/(tenantId}/recipe/userid/map:
+  /appid-<appId>/<tenantId>/recipe/userid/map:
     post:
       tags:
          - UserIdMapping Recipe
@@ -33,8 +33,6 @@ paths:
         - $ref: '#/components/parameters/userIdMappingRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -105,8 +103,6 @@ paths:
         - $ref: '#/components/parameters/userIdMappingRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - in: query
           name: userId
           schema:
@@ -159,7 +155,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/userid/map/remove:
+  /appid-<appId>/<tenantId>/recipe/userid/map/remove:
     post:
       tags:
          - UserIdMapping Recipe
@@ -170,8 +166,6 @@ paths:
         - $ref: '#/components/parameters/userIdMappingRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -214,7 +208,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/userid/external-user-id-info:
+  /appid-<appId>/<tenantId>/recipe/userid/external-user-id-info:
     put:
       tags:
          - UserIdMapping Recipe
@@ -225,8 +219,6 @@ paths:
         - $ref: '#/components/parameters/userIdMappingRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -275,7 +267,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/signinup/code/consume:
+  /appid-<appId>/<tenantId>/recipe/signinup/code/consume:
     post:
       tags:
         - Passwordless Recipe
@@ -286,8 +278,6 @@ paths:
         - $ref: '#/components/parameters/passwordlessRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -360,7 +350,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/signinup/code:
+  /appid-<appId>/<tenantId>/recipe/signinup/code:
     post:
       tags:
         - Passwordless Recipe
@@ -372,8 +362,6 @@ paths:
         - $ref: '#/components/parameters/passwordlessRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -453,7 +441,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/signinup/code/remove:
+  /appid-<appId>/<tenantId>/recipe/signinup/code/remove:
     post:
       tags:
           - Passwordless Recipe
@@ -464,8 +452,6 @@ paths:
         - $ref: '#/components/parameters/passwordlessRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -499,7 +485,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/signinup/codes:
+  /appid-<appId>/<tenantId>/recipe/signinup/codes:
     get:
       tags:
           - Passwordless Recipe
@@ -510,8 +496,6 @@ paths:
         - $ref: '#/components/parameters/passwordlessRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - in: query
           name: email
           description: Use this parameter to get information about all devices associated with an email (without the other query params)
@@ -580,7 +564,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/signinup/codes/remove:
+  /appid-<appId>/<tenantId>/recipe/signinup/codes/remove:
     post:
       tags:
           - Passwordless Recipe
@@ -591,8 +575,6 @@ paths:
         - $ref: '#/components/parameters/passwordlessRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -633,7 +615,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/user⠀⠀:
+  /appid-<appId>/<tenantId>/recipe/user⠀⠀:
     get:
       tags:
         - Passwordless Recipe
@@ -646,8 +628,6 @@ paths:
         - $ref: '#/components/parameters/passwordlessRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - $ref: '#/components/parameters/userId'
         - in: query
           name: email
@@ -704,8 +684,6 @@ paths:
         - $ref: '#/components/parameters/passwordlessRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -747,7 +725,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/signin:
+  /appid-<appId>/<tenantId>/recipe/signin:
     post:
       tags:
         - EmailPassword Recipe
@@ -758,8 +736,6 @@ paths:
         - $ref: '#/components/parameters/rid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -797,7 +773,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/signup:
+  /appid-<appId>/<tenantId>/recipe/signup:
     post:
       tags:
         - EmailPassword Recipe
@@ -808,8 +784,6 @@ paths:
         - $ref: '#/components/parameters/rid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -851,7 +825,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
           
-  /appid-{appId}/(tenantId}/recipe/user:
+  /appid-<appId>/<tenantId>/recipe/user:
     get:
       tags:
         - EmailPassword Recipe
@@ -862,8 +836,6 @@ paths:
         - $ref: '#/components/parameters/rid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - in: query
           name: email
           description: use either email or userId, not both
@@ -919,8 +891,6 @@ paths:
         - $ref: '#/components/parameters/rid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -956,7 +926,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
         
-  /appid-{appId}/(tenantId}/recipe/user/password/reset/token:
+  /appid-<appId>/<tenantId>/recipe/user/password/reset/token:
     post:
       tags:
         - EmailPassword Recipe
@@ -967,8 +937,6 @@ paths:
         - $ref: '#/components/parameters/rid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -1004,7 +972,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/user/password/reset:
+  /appid-<appId>/<tenantId>/recipe/user/password/reset:
     post:
       tags:
         - EmailPassword Recipe
@@ -1015,8 +983,6 @@ paths:
         - $ref: '#/components/parameters/rid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -1063,7 +1029,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
           
-  /appid-{appId}/(tenantId}/recipe/user/passwordhash/import:
+  /appid-<appId>/<tenantId>/recipe/user/passwordhash/import:
     post:
       tags:
         - EmailPassword Recipe
@@ -1074,8 +1040,6 @@ paths:
         - $ref: '#/components/parameters/rid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -1119,7 +1083,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/signinup:
+  /appid-<appId>/<tenantId>/recipe/signinup:
     post:
       tags:
         - ThirdParty Recipe
@@ -1130,8 +1094,6 @@ paths:
         - $ref: '#/components/parameters/thirdPartyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -1172,7 +1134,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/user⠀:
+  /appid-<appId>/<tenantId>/recipe/user⠀:
     get:
       tags:
         - ThirdParty Recipe
@@ -1185,8 +1147,6 @@ paths:
         - $ref: '#/components/parameters/thirdPartyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - $ref: '#/components/parameters/userId'
         - in: query
           name: thirdPartyId
@@ -1233,7 +1193,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/users/by-email :
+  /appid-<appId>/<tenantId>/recipe/users/by-email :
     get:
       operationId: thirdPartyGetUsersByEmail
       tags:
@@ -1245,8 +1205,6 @@ paths:
         - $ref: '#/components/parameters/thirdPartyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - in: query
           name: email
           required: true
@@ -1308,7 +1266,7 @@ paths:
   #       '500':
   #         $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/user/email/verify/token:
+  /appid-<appId>/<tenantId>/recipe/user/email/verify/token:
     post:
       tags:
         - EmailVerification Recipe
@@ -1319,8 +1277,6 @@ paths:
         - $ref: '#/components/parameters/emailVerificationRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -1357,7 +1313,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/user/email/verify/token/remove:
+  /appid-<appId>/<tenantId>/recipe/user/email/verify/token/remove:
     post:
       tags:
         - EmailVerification Recipe
@@ -1368,8 +1324,6 @@ paths:
         - $ref: '#/components/parameters/emailVerificationRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -1398,7 +1352,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/user/email/verify:
+  /appid-<appId>/<tenantId>/recipe/user/email/verify:
     post:
       tags:
         - EmailVerification Recipe
@@ -1409,8 +1363,6 @@ paths:
         - $ref: '#/components/parameters/emailVerificationRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -1466,8 +1418,6 @@ paths:
         - $ref: '#/components/parameters/emailVerificationRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/email'
       responses:
@@ -1495,7 +1445,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/user/email/verify/remove:
+  /appid-<appId>/<tenantId>/recipe/user/email/verify/remove:
     post:
       tags:
         - EmailVerification Recipe
@@ -1506,8 +1456,6 @@ paths:
         - $ref: '#/components/parameters/emailVerificationRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -1537,7 +1485,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'  
   
-  /appid-{appId}/(tenantId}/recipe/handshake:
+  /appid-<appId>/<tenantId>/recipe/handshake:
     post:
       tags: 
         - Session Recipe
@@ -1548,8 +1496,6 @@ paths:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       responses:
         '200':
           description: Session Handshake
@@ -1585,7 +1531,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/user/metadata:
+  /appid-<appId>/<tenantId>/recipe/user/metadata:
     get:
       tags:
         - User Metadata Recipe
@@ -1596,8 +1542,6 @@ paths:
         - $ref: '#/components/parameters/userMetadataRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - $ref: '#/components/parameters/userIdRequired'
       responses:
         '200':
@@ -1642,8 +1586,6 @@ paths:
         - $ref: '#/components/parameters/userMetadataRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -1678,7 +1620,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/user/metadata/remove:
+  /appid-<appId>/<tenantId>/recipe/user/metadata/remove:
     post:
       tags:
         - User Metadata Recipe
@@ -1690,8 +1632,6 @@ paths:
         - $ref: '#/components/parameters/userMetadataRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
 
       requestBody:
         content:
@@ -1724,7 +1664,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/user/role:
+  /appid-<appId>/<tenantId>/recipe/user/role:
     put:
       tags:
         - User Roles Recipe
@@ -1736,8 +1676,6 @@ paths:
         - $ref: '#/components/parameters/userRolesRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
 
       requestBody:
         content:
@@ -1778,7 +1716,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/user/role/remove:
+  /appid-<appId>/<tenantId>/recipe/user/role/remove:
     post:
       tags:
         - User Roles Recipe
@@ -1790,8 +1728,6 @@ paths:
         - $ref: '#/components/parameters/userRolesRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
 
       requestBody:
         content:
@@ -1832,7 +1768,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/user/roles:
+  /appid-<appId>/<tenantId>/recipe/user/roles:
     get:
       tags:
         - User Roles Recipe
@@ -1843,8 +1779,6 @@ paths:
         - $ref: '#/components/parameters/userRolesRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - $ref: '#/components/parameters/userIdRequired'
       responses:
         '200':
@@ -1872,7 +1806,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/role/users:
+  /appid-<appId>/<tenantId>/recipe/role/users:
     get:
       tags:
         - User Roles Recipe
@@ -1883,8 +1817,6 @@ paths:
         - $ref: '#/components/parameters/userRolesRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - $ref: '#/components/parameters/roleRequired'
       responses:
         '200':
@@ -1915,7 +1847,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/role:
+  /appid-<appId>/<tenantId>/recipe/role:
     put:
       tags:
         - User Roles Recipe
@@ -1927,8 +1859,6 @@ paths:
         - $ref: '#/components/parameters/userRolesRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
 
       requestBody:
         content:
@@ -1971,7 +1901,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/role/permissions:
+  /appid-<appId>/<tenantId>/recipe/role/permissions:
     get:
       tags:
         - User Roles Recipe
@@ -1982,8 +1912,6 @@ paths:
         - $ref: '#/components/parameters/userRolesRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - $ref: '#/components/parameters/roleRequired'
       responses:
         '200':
@@ -2015,7 +1943,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/role/permissions/remove:
+  /appid-<appId>/<tenantId>/recipe/role/permissions/remove:
     post:
       tags:
         - User Roles Recipe
@@ -2027,8 +1955,6 @@ paths:
         - $ref: '#/components/parameters/userRolesRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
 
       requestBody:
         content:
@@ -2069,7 +1995,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/permission/roles:
+  /appid-<appId>/<tenantId>/recipe/permission/roles:
     get:
       tags:
         - User Roles Recipe
@@ -2080,8 +2006,6 @@ paths:
         - $ref: '#/components/parameters/userRolesRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - $ref: '#/components/parameters/permissionRequired'
       responses:
         '200':
@@ -2111,7 +2035,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
           
-  /appid-{appId}/(tenantId}/recipe/role/remove:
+  /appid-<appId>/<tenantId>/recipe/role/remove:
     post:
       tags:
         - User Roles Recipe
@@ -2123,8 +2047,6 @@ paths:
         - $ref: '#/components/parameters/userRolesRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
 
       requestBody:
         content:
@@ -2161,7 +2083,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/roles:
+  /appid-<appId>/<tenantId>/recipe/roles:
     get:
       tags:
         - User Roles Recipe
@@ -2172,8 +2094,6 @@ paths:
         - $ref: '#/components/parameters/userRolesRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       responses:
         '200':
           description: 'The operation was successful'
@@ -2202,7 +2122,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/session:
+  /appid-<appId>/<tenantId>/recipe/session:
     post:
       tags:
         - Session Recipe
@@ -2213,8 +2133,6 @@ paths:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -2277,8 +2195,6 @@ paths:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - in: query
           name: sessionHandle
           schema:
@@ -2320,7 +2236,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/session/remove:
+  /appid-<appId>/<tenantId>/recipe/session/remove:
     post:
       tags:
         - Session Recipe
@@ -2331,8 +2247,6 @@ paths:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -2372,7 +2286,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/session/verify:
+  /appid-<appId>/<tenantId>/recipe/session/verify:
     post:
       tags:
         - Session Recipe
@@ -2383,8 +2297,6 @@ paths:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -2447,7 +2359,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
       
-  /appid-{appId}/(tenantId}/recipe/session/refresh:
+  /appid-<appId>/<tenantId>/recipe/session/refresh:
     post:
       tags:
         - Session Recipe
@@ -2458,8 +2370,6 @@ paths:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -2519,7 +2429,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/session/user:
+  /appid-<appId>/<tenantId>/recipe/session/user:
     get:
       tags:
         - Session Recipe
@@ -2530,8 +2440,6 @@ paths:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - $ref: '#/components/parameters/userId'
       responses:
         '200':
@@ -2558,7 +2466,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/session/regenerate:
+  /appid-<appId>/<tenantId>/recipe/session/regenerate:
     post:
       tags:
         - Session Recipe
@@ -2569,8 +2477,6 @@ paths:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -2610,7 +2516,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/session/data:
+  /appid-<appId>/<tenantId>/recipe/session/data:
     get:
       deprecated: true
       tags:
@@ -2622,8 +2528,6 @@ paths:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - in: query
           name: sessionHandle
           description: Users session handle
@@ -2666,8 +2570,6 @@ paths:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -2700,7 +2602,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
           
-  /appid-{appId}/(tenantId}/recipe/jwt:
+  /appid-<appId>/<tenantId>/recipe/jwt:
     post:
       tags:
         - JWT Recipe
@@ -2711,8 +2613,6 @@ paths:
         - $ref: '#/components/parameters/jwtRID'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -2756,7 +2656,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/jwt/jwks:
+  /appid-<appId>/<tenantId>/recipe/jwt/jwks:
     get:
       tags:
         - JWT Recipe
@@ -2766,8 +2666,6 @@ paths:
         - $ref: '#/components/parameters/jwtRID'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       responses:
         '200':
           description: Retrieve JWKs for JWT verification
@@ -2793,7 +2691,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/jwt/data:
+  /appid-<appId>/<tenantId>/recipe/jwt/data:
     get:
       deprecated: true
       tags:
@@ -2805,8 +2703,6 @@ paths:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - in: query
           name: sessionHandle
           description: Users session handle
@@ -2849,8 +2745,6 @@ paths:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -2883,7 +2777,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/apiversion:
+  /appid-<appId>/<tenantId>/apiversion:
     get:
       tags:
         - Core
@@ -2892,8 +2786,6 @@ paths:
         Get a list of compatible CDI versions
       parameters:
         - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       responses:
         '200':
           description: get api version
@@ -2920,7 +2812,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/config:
+  /appid-<appId>/<tenantId>/config:
     get:
       tags:
         - Core
@@ -2930,8 +2822,6 @@ paths:
       parameters: 
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - in: query
           name: pid
           schema:
@@ -2970,30 +2860,24 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/:
+  /appid-<appId>/<tenantId>/:
     get:
       tags:
         - Core
       operationId: getHelloOnRootPath
       description: |
         Return a simple hello message
-      parameters:
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       responses:
         '200':
           $ref: '#/components/responses/hello'
         '500':
           $ref: '#/components/responses/500'
     
-  /appid-{appId}/(tenantId}/hello:
+  /appid-<appId>/<tenantId>/hello:
     get:
       tags:
         - Core
       operationId: getHello
-      parameters:
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       description: |
         Return a simple hello message
       responses:
@@ -3037,7 +2921,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/telemetry:
+  /appid-<appId>/<tenantId>/telemetry:
     get:
       tags:
         - Core
@@ -3047,8 +2931,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       responses:
         '200':
           description:  Returns the telemetryID if it exists
@@ -3082,7 +2964,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
           
-  /appid-{appId}/(tenantId}/users/count:
+  /appid-<appId>/<tenantId>/users/count:
     get:
       tags:
         - Core
@@ -3093,8 +2975,6 @@ paths:
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
         - $ref: '#/components/parameters/includeRecipeIds'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
         - name: includeAllTenants
           description: if set to true, will count users across all tenants in the app
           in: query
@@ -3127,7 +3007,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
         
-  /appid-{appId}/(tenantId}/users:
+  /appid-<appId>/<tenantId>/users:
     get:
       tags:
         - Core
@@ -3141,8 +3021,6 @@ paths:
         - $ref: '#/components/parameters/paginationToken'
         - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/timeJoinedOrder'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       responses:
         '200':
           description: User Pagination
@@ -3183,7 +3061,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/user/remove:
+  /appid-<appId>/<tenantId>/user/remove:
     post:
       tags:
         - Core
@@ -3193,8 +3071,6 @@ paths:
       parameters:
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -3220,7 +3096,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/multitenancy/connectionuridomain:
+  /appid-<appId>/<tenantId>/recipe/multitenancy/connectionuridomain:
     put:
       tags:
         - Multitenancy Recipe
@@ -3241,13 +3117,13 @@ paths:
 
         Note: The core config must contain a unique connection to the storage layer, because sharing of database between 2 different connection uri domains is not allowed.
 
+        Note: Updation of core config is not allowed for the default connectionUriDomain.
+
       operationId: createOrUpdateConnectionURIDomainPUT
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -3297,7 +3173,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/multitenancy/connectionuridomain/remove:
+  /appid-<appId>/<tenantId>/recipe/multitenancy/connectionuridomain/remove:
     post:
       tags:
         - Multitenancy Recipe
@@ -3315,8 +3191,6 @@ paths:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -3358,7 +3232,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/multitenancy/connectionuridomain/list:
+  /appid-<appId>/<tenantId>/recipe/multitenancy/connectionuridomain/list:
     get:
       tags:
         - Multitenancy Recipe
@@ -3372,8 +3246,6 @@ paths:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       responses:
         200:
           description: List of connection uri domains
@@ -3421,7 +3293,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/multitenancy/app:
+  /appid-<appId>/<tenantId>/recipe/multitenancy/app:
     put:
       tags:
         - Multitenancy Recipe
@@ -3440,13 +3312,13 @@ paths:
         Note: the newly created app will use the same connection uri domain from which
         this request originates and the request must originate from public app and public tenant.
 
+        Note: Updation of core config is not allowed for the default connectionUriDomain, public app.
+
       operationId: createOrUpdateAppPUT
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -3496,7 +3368,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-{appId}/(tenantId}/recipe/multitenancy/app/remove:
+  /appid-<appId>/<tenantId>/recipe/multitenancy/app/remove:
     post:
       tags:
         - Multitenancy Recipe
@@ -3512,8 +3384,6 @@ paths:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -3555,7 +3425,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/multitenancy/app/list:
+  /appid-<appId>/<tenantId>/recipe/multitenancy/app/list:
     get:
       tags:
         - Multitenancy Recipe
@@ -3569,8 +3439,6 @@ paths:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       responses:
         200:
           description: List of apps
@@ -3609,7 +3477,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/multitenancy/tenant:
+  /appid-<appId>/<tenantId>/recipe/multitenancy/tenant:
     put:
       tags:
         - Multitenancy Recipe
@@ -3633,8 +3501,6 @@ paths:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -3698,8 +3564,6 @@ paths:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       responses:
         200:
           description: Tenant config result
@@ -3757,7 +3621,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/multitenancy/tenant/remove:
+  /appid-<appId>/<tenantId>/recipe/multitenancy/tenant/remove:
     post:
       tags:
         - Multitenancy Recipe
@@ -3771,8 +3635,6 @@ paths:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -3813,7 +3675,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/multitenancy/tenant/list:
+  /appid-<appId>/<tenantId>/recipe/multitenancy/tenant/list:
     get:
       tags:
         - Multitenancy Recipe
@@ -3827,8 +3689,6 @@ paths:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       responses:
         200:
           description: List of tenants
@@ -3859,7 +3719,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/multitenancy/config/thirdparty:
+  /appid-<appId>/<tenantId>/recipe/multitenancy/config/thirdparty:
     put:
       tags:
         - Multitenancy Recipe
@@ -3909,8 +3769,6 @@ paths:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -3966,7 +3824,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/multitenancy/config/thirdparty/remove:
+  /appid-<appId>/<tenantId>/recipe/multitenancy/config/thirdparty/remove:
     post:
       tags:
         - Multitenancy Recipe
@@ -3978,8 +3836,6 @@ paths:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -4019,7 +3875,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/multitenancy/tenant/user:
+  /appid-<appId>/<tenantId>/recipe/multitenancy/tenant/user:
     post:
       tags:
         - Multitenancy Recipe
@@ -4036,8 +3892,6 @@ paths:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -4087,7 +3941,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-{appId}/(tenantId}/recipe/multitenancy/tenant/user/remove:
+  /appid-<appId>/<tenantId>/recipe/multitenancy/tenant/user/remove:
     post:
       tags:
         - Multitenancy Recipe
@@ -4101,8 +3955,6 @@ paths:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - $ref: '#/components/parameters/appId'
-        - $ref: '#/components/parameters/tenantId'
       requestBody:
         content:
           application/json:
@@ -4160,20 +4012,6 @@ components:
       in: header
       example: ajs30Nlbs0DjvsdFIne934n8NVee5n
       required: false
-      schema:
-        type: string
-    appId:
-      name: appId
-      in: path
-      example: app1
-      required: true
-      schema:
-        type: string
-    tenantId:
-      name: tenantId
-      in: path
-      example: tenant1
-      required: true
       schema:
         type: string
     
