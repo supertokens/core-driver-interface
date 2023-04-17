@@ -24,7 +24,7 @@ tags:
   - name: Totp Recipe
 
 paths:
-  /recipe/totp/device:
+  /appid-<appId>/recipe/totp/device:
     post:
       tags:
          - Totp Recipe
@@ -159,8 +159,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-
-  /recipe/totp/device/list:
+  /appid-<appId>/recipe/totp/device/list:
     get:
       tags:
           - Totp Recipe
@@ -221,7 +220,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /recipe/totp/device/remove:
+  /appid-<appId>/recipe/totp/device/remove:
     post:
       tags:
          - Totp Recipe
@@ -280,8 +279,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-
-  /recipe/totp/verify:
+  /appid-<appId>/<tenantId>/recipe/totp/verify:
     post:
       tags:
          - Totp Recipe
@@ -357,7 +355,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /recipe/totp/device/verify:
+  /appid-<appId>/<tenantId>/recipe/totp/device/verify:
     post:
       tags:
          - Totp Recipe
@@ -441,7 +439,6 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
-
 
   /appid-<appId>/recipe/userid/map:
     post:
@@ -3200,7 +3197,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /recipe/dashboard/user:
+  /appid-<appId>/recipe/dashboard/user:
     post:
       tags:
          - Dashboard Recipe
@@ -3438,7 +3435,7 @@ paths:
           $ref: '#/components/responses/500'
   
   
-  /recipe/dashboard/users:
+  /appid-<appId>/recipe/dashboard/users:
     get:
       tags:
         - Dashboard Recipe
@@ -3490,7 +3487,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /recipe/dashboard/session/verify:
+  /appid-<appId>/recipe/dashboard/session/verify:
     post:
       tags:
          - Dashboard Recipe
@@ -3547,7 +3544,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
                         
-  /recipe/dashboard/session:
+  /appid-<appId>/recipe/dashboard/session:
     delete:
       tags:
          - Dashboard Recipe
@@ -3586,8 +3583,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
     
-                    
-  /recipe/dashboard/signin:
+  /appid-<appId>/recipe/dashboard/signin:
     post:
       tags:
          - Dashboard Recipe
@@ -3650,7 +3646,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /recipe/dashboard/user/sessions:
+  /appid-<appId>/recipe/dashboard/user/sessions:
     get:
       tags:
         - Dashboard Recipe
@@ -3938,7 +3934,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /users/count/active:
+  /appid-<appId>/users/count/active:
     get:
       tags:
         - Core
@@ -4133,7 +4129,7 @@ paths:
           $ref: '#/components/responses/500'
   
   
-  /ee/featureflag:
+  /appid-<appId>/ee/featureflag:
     get:
       tags:
         - Core
@@ -4174,7 +4170,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /ee/license:
+  /appid-<appId>/ee/license:
     put:
       tags:
         - Core
