@@ -5499,7 +5499,7 @@ components:
           $ref: '#/components/schemas/timeJoined'
         email:
           $ref: '#/components/schemas/email'
-        thirdparty:
+        thirdParty:
           type: object
           properties:
             id:
