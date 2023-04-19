@@ -3675,7 +3675,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-<appId>/<tenantId>/apiversion:
+  /appid-<appId>/apiversion:
     get:
       tags:
         - Core
@@ -4064,7 +4064,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /user/search/tags:
+  /appid-<appId>/user/search/tags:
     get:
       tags:
         - Core
@@ -4282,7 +4282,7 @@ paths:
 
         Note: The core config must contain a unique connection to the storage layer, because sharing of database between 2 different connection uri domains is not allowed.
 
-        Note: Updation of core config is not allowed for the default connectionUriDomain.
+        Note: Updation of core config is not allowed for the default connectionUriDomain. In order to update config for the default connectionUriDomain, you must edit the config.yaml or the docker env directly.
 
       operationId: createOrUpdateConnectionURIDomainPUT
       parameters:
@@ -4477,7 +4477,7 @@ paths:
         Note: the newly created app will use the same connection uri domain from which
         this request originates and the request must originate from public app and public tenant.
 
-        Note: Updation of core config is not allowed for the default connectionUriDomain, public app.
+        Note: Updation of core config is not allowed for the default connectionUriDomain, public app. In order to update config for the default connectionUriDomain and public app, you must edit the config.yaml or the docker env directly.
 
       operationId: createOrUpdateAppPUT
       parameters:
@@ -4659,7 +4659,7 @@ paths:
 
         The request must originate from public tenant, and the new tenant will use connectionUriDomain and app from which the request originates.
 
-        Note: Updation of core config is not allowed for the default connectionUriDomain, public app and tenant.
+        Note: Updation of core config is not allowed for the default connectionUriDomain, public app and tenant. In order to update config for the default connectionUriDomain, public app and tenant, you must edit the config.yaml or the docker env directly.
 
       operationId: createOrUpdateTenantPUT
       parameters:
@@ -4913,7 +4913,7 @@ paths:
           - `clients`
             - if it contains elements, each of them are validated as follows:
               - `clientSecret` must be empty or undefined
-              - `additionalConfig` should contain the following keys - `keyId`, `teamId`, `privateKey`
+              - `additionalConfig` should contain the following keys:
                 - `keyId` must be a non empty string
                 - `teamId` must be a non empty string
                 - `privateKey` must be a non empty string
@@ -5506,10 +5506,10 @@ components:
               $ref: '#/components/schemas/thirdPartyId'
             userId:
               $ref: '#/components/schemas/thirdPartyUserId'
-            tenantIds:
-              type: array
-              items:
-                $ref: '#/components/schemas/tenantId'
+        tenantIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/tenantId'
 
     codeId:
       type: string
@@ -5739,7 +5739,7 @@ components:
 
     tenantId:
       type: string
-      example: 'supertokens'
+      example: 'customer1'
 
     thirdPartyProviderConfig:
       type: object
