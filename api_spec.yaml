@@ -10,6 +10,7 @@ info:
   contact:
     email: team@supertokens.io
 tags:
+  - name: OAuth2 Recipe
   - name: EmailPassword Recipe
   - name: ThirdParty Recipe
   - name: Passwordless Recipe
@@ -24,6 +25,810 @@ tags:
   - name: Totp Recipe
 
 paths:
+  /appid-<appId>/<tenantId>/recipe/oauth2/authorizationcode:
+    post:
+      tags:
+        - OAuth2 Recipe
+      operationId: getOAuth2AuthorizationCode
+      description: |
+        Get an authorization code for a session
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                clientId:
+                  $ref: '#/components/schemas/oauth2ClientId'
+                sessionHandle:
+                  $ref: '#/components/schemas/handle'
+                scopes:
+                  type: array
+                  items:
+                    type: string
+                accessType:
+                  type: string
+                  enum: ['offline', 'online']
+                codeChallenge:
+                  type: string
+                codeChallengeMethod:
+                  type: string
+                  enum: ['S256']
+                redirect_uri:
+                  type: string
+                  example: http://example.com/callback
+                expiresAfterMs:
+                  type: number
+                  example: 300000
+                  
+              required:
+                - clientId
+                - scopes
+                - sessionHandle
+                - accessType
+                - redirect_uri
+
+      responses:
+        '200':
+          description: |
+            Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      authorizationCode:
+                        type: string
+                      timeCreated:
+                        $ref: '#/components/schemas/timestampMs'
+                      timeExpires:
+                        $ref: '#/components/schemas/timestampMs'
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/oauth2/authorizationcode/revoke:
+    post:
+      tags:
+        - OAuth2 Recipe
+      operationId: revokeOAuth2AuthorizationCode
+      description: |
+        Revoke all authorization codes belonging to a session or to a client (across all tenants).
+        To provide Single Logout, you should also call the normal session logout endpoint and the token revocation endpoint as well
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    sessionHandle:
+                      type: string
+                - type: object
+                  properties:
+                    clientId:
+                      type: string
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/oauth2/token/verify:
+    post:
+      tags:
+        - OAuth2 Recipe
+      operationId: verifyOAuth2AccessToken
+      description: |
+        Verify an OAuth2 access token
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                required:
+                  - accessToken
+
+      responses:
+        '200':
+          description: |
+            Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      clientId:
+                        type: string
+                      sessionHandle:
+                        type: string
+                      scopes:
+                        type: array
+                        items:
+                          type: string
+                      timeCreated:
+                        $ref: '#/components/schemas/timestampMs'
+                      lastUpdated:
+                        $ref: '#/components/schemas/timestampMs'
+                      timeAccessTokenExpires:
+                        $ref: '#/components/schemas/timestampMs'
+                      timeRefreshTokenExpires:
+                        $ref: '#/components/schemas/timestampMs'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['INVALID_TOKEN']
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/oauth2/token/revoke:
+    post:
+      tags:
+        - OAuth2 Recipe
+      operationId: revokeOAuth2Token
+      description: |
+        Revoke a token or all tokens belonging to a session or to a client (across all tenants).
+        To provide Single Logout, you should also call the normal session logout endpoint and the token revocation endpoint as well.
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    accessToken:
+                      type: string
+                - type: object
+                  properties:
+                    sessionHandle:
+                      type: string
+                - type: object
+                  properties:
+                    clientId:
+                      type: string
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/oauth2/token:
+    post:
+      tags:
+        - OAuth2 Recipe
+      operationId: createOAuth2AccessToken
+      description: |
+        Create an OAuth2 access token
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    authorizationCode:
+                      type: string
+                    codeChallenge:
+                      type: string
+                    redirectUri:
+                      type: string
+                    accessTokenLifetimeMs:
+                      type: number
+                      example: 3600000
+                    refreshTokenLifetimeMs:
+                      type: number
+                      example: 360000000
+                  required:
+                    - authorizationCode
+                - type: object
+                  properties:
+                    clientId:
+                      type: string
+                    clientSecret:
+                      type: string
+                    accessTokenLifetimeMs:
+                      type: number
+                      example: 3600000
+                    refreshTokenLifetimeMs:
+                      type: number
+                      example: 360000000
+                  required:
+                    - clientId
+                    - clientSecret
+                - type: object
+                  properties:
+                    refreshToken:
+                      type: string
+                    accessTokenLifetimeMs:
+                      type: number
+                      example: 3600000
+                    refreshTokenLifetimeMs:
+                      type: number
+                      example: 360000000
+                  required:
+                    - refreshToken
+      responses:
+        '200':
+          description: |
+            Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      sessionHandle:
+                        type: string
+                      userId:
+                        $ref: '#/components/schemas/userId'
+                      scopes:
+                        type: array
+                        items:
+                          type: string
+                      accessToken:
+                        type: string
+                      refreshToken:
+                        type: string
+                      timeCreated:
+                        $ref: '#/components/schemas/timestampMs'
+                      timeAccessTokenExpires:
+                        $ref: '#/components/schemas/timestampMs'
+                      timeRefreshTokenExpires:
+                        $ref: '#/components/schemas/timestampMs'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['INVALID_TOKEN']
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/oauth2/scope:
+    get:
+      tags:
+        - OAuth2 Recipe
+      operationId: getAllOAuth2Scopes
+      description: |
+        get a list of all scopes
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+
+      responses:
+        '200':
+          description: |
+            Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      scopes:
+                        type: array
+                        items:
+                          type: string
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      tags:
+        - OAuth2 Recipe
+      operationId: addOAuth2Scope
+      description: |
+        Create a scope
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scope:
+                  type: string
+                  example: profile
+              required:
+                - scope
+
+      responses:
+        '200':
+          description: |
+            Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+    delete:
+      tags:
+        - OAuth2 Recipe
+      operationId: removeOAuth2Scope
+      description: |
+        Delete a scope
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: scope
+          schema:
+            type: string
+          required: true
+
+      responses:
+        '200':
+          description: |
+            Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/oauth2/client/scope:
+    post:
+      tags:
+        - OAuth2 Recipe
+      operationId: addOAuth2ScopeToClient
+      description: |
+        Enable a scope for an OAuth2 client
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                clientId:
+                  $ref: '#/components/schemas/oauth2ClientId'
+                scope:
+                  type: string
+                  example: profile
+              required:
+                - clientId
+                - scope
+
+      responses:
+        '200':
+          description: |
+            Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      newScopes:
+                        type: array
+                        items:
+                          type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['SCOPE_DOES_NOT_EXIST']
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+    delete:
+      tags:
+        - OAuth2 Recipe
+      operationId: removeOAuth2ScopeFromClient
+      description: |
+        Disable a scope for an OAuth2 client
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: clientId
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: scope
+          schema:
+            type: string
+          required: true
+
+      responses:
+        '200':
+          description:  |
+            Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      newScopes:
+                        type: array
+                        items:
+                          type: string
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/oauth2/client:
+    get:
+      tags:
+        - OAuth2 Recipe
+      operationId: getOAuth2Client
+      description: |
+        Get info about an OAuth2 client
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: clientId
+          schema:
+            type: string
+          required: true
+
+      responses:
+        '200':
+          description: |
+            Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      redirectUris:
+                        type: array
+                        items:
+                          type: string
+                      name:
+                        type: string
+                        example: asdf
+                      scopes:
+                        type: array
+                        items:
+                          type: string
+                      timeCreated:
+                        $ref: '#/components/schemas/timestampMs'
+                      timeUpdated:
+                        $ref: '#/components/schemas/timestampMs'
+                      authorizationCodes:
+                        type: array
+                        items:
+                          type: object
+                      issuedTokens:
+                        type: array
+                        items: 
+                          type: object
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+    post:
+      tags:
+        - OAuth2 Recipe
+      operationId: createOAuth2Client
+      description: |
+        Add a new OAuth2 client
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                redirectUris:
+                  type: array
+                  items:
+                    type: string
+                name:
+                  type: string
+                  example: asdf
+                scopes:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - redirectUris
+                - name
+
+      responses:
+        '200':
+          description: |
+            Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      clientId:
+                        $ref: '#/components/schemas/oauth2ClientId'
+                      clientSecretBase64:
+                        type: string
+                      scopes:
+                        type: array
+                        items:
+                          type: string
+                      timeCreated:
+                        $ref: '#/components/schemas/timestampMs'
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+    put:
+      tags:
+        - OAuth2 Recipe
+      operationId: updateOAuth2Client
+      description: |
+        Update an OAuth2 client
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                clientId:
+                  $ref: '#/components/schemas/oauth2ClientId'
+                regenerateSecret:
+                  type: boolean
+                  example: false
+                redirectUris:
+                  type: array
+                  items:
+                    type: string
+                name:
+                  type: string
+                  example: asdf
+                scopes:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - clientId
+
+      responses:
+        '200':
+          description: |
+            Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      timeUpdated:
+                        $ref: '#/components/schemas/timestampMs'
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+    delete:
+      tags:
+        - OAuth2 Recipe
+      operationId: removeOAuth2Client
+      description: |
+        Remove an OAuth2 client
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: clientId
+          schema:
+            type: string
+          required: true
+
+      responses:
+        '200':
+          description: |
+            Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
   /appid-<appId>/recipe/totp/device:
     post:
       tags:
@@ -5268,6 +6073,14 @@ components:
       schema:
         type: string
         
+    oauth2Rid:
+      name: rid
+      in: header
+      example: totp
+      required: false
+      schema:
+        type: string
+        
     cdi-version:
       name: cdi-version
       in: header
@@ -5541,6 +6354,11 @@ components:
       description: The maximum lifetime of the code in milliseconds
       example: 900000
               
+    oauth2ClientId:
+      type: string
+      description: Identifies an OAuth2 client
+      example: TU/52WOcktSv99zqaAZuWJG9BSoS0aRLfCbep8rFEwk=
+
     statusOK:
       type: string
       enum:
@@ -5606,6 +6424,9 @@ components:
       type: number
       example: 1637262633029
       
+    timestampMs:
+      type: number
+      example: 1637262633029
           
     sessionHandles:
       type: array
