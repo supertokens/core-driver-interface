@@ -29,9 +29,9 @@ paths:
     post:
       tags:
         - OAuth2 Recipe
-      operationId: getOAuth2AuthorizationCode
+      operationId: createOAuth2AuthorizationCode
       description: |
-        Get an authorization code for a session
+        Create an authorization code for a session
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -49,7 +49,7 @@ paths:
                 scopes:
                   type: array
                   items:
-                    type: string
+                    $ref: '#/components/schemas/oauth2Scope'
                 accessType:
                   type: string
                   enum: ['offline', 'online']
@@ -58,9 +58,9 @@ paths:
                 codeChallengeMethod:
                   type: string
                   enum: ['S256']
-                redirect_uri:
+                redirectUri:
                   type: string
-                  example: http://example.com/callback
+                  $ref: '#/components/schemas/oauth2RedirectUri'
                 expiresAfterMs:
                   type: number
                   example: 300000
@@ -70,7 +70,7 @@ paths:
                 - scopes
                 - sessionHandle
                 - accessType
-                - redirect_uri
+                - redirectUri
 
       responses:
         '200':
@@ -90,6 +90,11 @@ paths:
                         $ref: '#/components/schemas/timestampMs'
                       timeExpires:
                         $ref: '#/components/schemas/timestampMs'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['UNKNOWN_CLIENT_ID', 'INVALID_REDIRECT_URI', 'INVALID_SCOPES', 'UNKNOWN_CODE_CHALLENGE_METHOD', 'INVALID_ACCESS_TYPE', 'INVALID_CODE_CHALLENGE']
         '400':
           $ref: '#/components/responses/400'
         
@@ -191,7 +196,7 @@ paths:
                       scopes:
                         type: array
                         items:
-                          type: string
+                          $ref: '#/components/schemas/oauth2Scope'
                       timeCreated:
                         $ref: '#/components/schemas/timestampMs'
                       lastUpdated:
@@ -254,6 +259,9 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
+                      didTokenExist:
+                        type: boolean
+                        example: true
         '400':
           $ref: '#/components/responses/400'
         
@@ -286,16 +294,24 @@ paths:
                   properties:
                     authorizationCode:
                       type: string
-                    codeChallenge:
+                    clientId:
+                      type: string
+                    clientSecret:
+                      type: string
+                    codeVerifier:
                       type: string
                     redirectUri:
-                      type: string
+                      $ref: '#/components/schemas/oauth2RedirectUri'
                     accessTokenLifetimeMs:
                       type: number
                       example: 3600000
                     refreshTokenLifetimeMs:
                       type: number
                       example: 360000000
+                    customAccessTokenPayload:
+                      $ref: '#/components/schemas/createJWTPayload'
+                    customIdTokenPayload:
+                      $ref: '#/components/schemas/createJWTPayload'
                   required:
                     - authorizationCode
                 - type: object
@@ -310,6 +326,10 @@ paths:
                     refreshTokenLifetimeMs:
                       type: number
                       example: 360000000
+                    customAccessTokenPayload:
+                      $ref: '#/components/schemas/createJWTPayload'
+                    customIdTokenPayload:
+                      $ref: '#/components/schemas/createJWTPayload'
                   required:
                     - clientId
                     - clientSecret
@@ -323,6 +343,10 @@ paths:
                     refreshTokenLifetimeMs:
                       type: number
                       example: 360000000
+                    customAccessTokenPayload:
+                      $ref: '#/components/schemas/createJWTPayload'
+                    customIdTokenPayload:
+                      $ref: '#/components/schemas/createJWTPayload'
                   required:
                     - refreshToken
       responses:
@@ -344,10 +368,12 @@ paths:
                       scopes:
                         type: array
                         items:
-                          type: string
+                          $ref: '#/components/schemas/oauth2Scope'
                       accessToken:
                         type: string
                       refreshToken:
+                        type: string
+                      idToken:
                         type: string
                       timeCreated:
                         $ref: '#/components/schemas/timestampMs'
@@ -359,7 +385,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['INVALID_TOKEN']
+                        enum: ['INVALID_AUTHORIZATION_CODE', 'INVALID_CODE_CHALLENGE', 'REDIRECTION_URI_MISMATCH', 'INVALID_CLIENT_CREDENTIALS', 'INVALID_REFRESH_TOKEN']
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -396,7 +422,7 @@ paths:
                       scopes:
                         type: array
                         items:
-                          type: string
+                          $ref: '#/components/schemas/oauth2Scope'
         '400':
           $ref: '#/components/responses/400'
         
@@ -425,8 +451,7 @@ paths:
               type: object
               properties:
                 scope:
-                  type: string
-                  example: profile
+                  $ref: '#/components/schemas/oauth2Scope'
               required:
                 - scope
 
@@ -454,6 +479,55 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
+    put:
+      tags:
+        - OAuth2 Recipe
+      operationId: renameOAuth2Scope
+      description: |
+        Rename a scope
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scope:
+                  $ref: '#/components/schemas/oauth2Scope'
+                newName:
+                  $ref: '#/components/schemas/oauth2Scope'
+
+      responses:
+        '200':
+          description: |
+            Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['SCOPE_DOES_NOT_EXIST']
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
     delete:
       tags:
         - OAuth2 Recipe
@@ -482,6 +556,8 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
+                      didScopeExist:
+                        type: boolean
         '400':
           $ref: '#/components/responses/400'
         
@@ -514,8 +590,7 @@ paths:
                 clientId:
                   $ref: '#/components/schemas/oauth2ClientId'
                 scope:
-                  type: string
-                  example: profile
+                  $ref: '#/components/schemas/oauth2Scope'
               required:
                 - clientId
                 - scope
@@ -535,7 +610,7 @@ paths:
                       newScopes:
                         type: array
                         items:
-                          type: string
+                          $ref: '#/components/schemas/oauth2Scope'
                   - type: object
                     properties:
                       status:
@@ -589,7 +664,12 @@ paths:
                       newScopes:
                         type: array
                         items:
-                          type: string
+                          $ref: '#/components/schemas/oauth2Scope'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['UNKNOWN_CLIENT_ID']
         '400':
           $ref: '#/components/responses/400'
         
@@ -634,14 +714,14 @@ paths:
                       redirectUris:
                         type: array
                         items:
-                          type: string
+                          $ref: '#/components/schemas/oauth2RedirectUri'
                       name:
                         type: string
                         example: asdf
                       scopes:
                         type: array
                         items:
-                          type: string
+                          $ref: '#/components/schemas/oauth2Scope'
                       timeCreated:
                         $ref: '#/components/schemas/timestampMs'
                       timeUpdated:
@@ -650,10 +730,59 @@ paths:
                         type: array
                         items:
                           type: object
+                          properties:
+                            tenantId:
+                              type: string
+                            sessionHandle:
+                              $ref: '#/components/schemas/handle'
+                            scopes:
+                              type: array
+                              items:
+                                $ref: '#/components/schemas/oauth2Scope'
+                            accessType:
+                              type: string
+                              enum: ['offline', 'online']
+                            codeChallenge:
+                              type: string
+                            codeChallengeMethod:
+                              type: string
+                              enum: ['S256']
+                            redirectUri:
+                              $ref: '#/components/schemas/oauth2RedirectUri'
+                            timeCreated:
+                              $ref: '#/components/schemas/timestampMs'
+                            timeExpires:
+                              $ref: '#/components/schemas/timestampMs'
                       issuedTokens:
                         type: array
                         items: 
                           type: object
+                          properties:
+                            tenantId:
+                              type: string
+                            sessionHandle:
+                              type: string
+                            userId:
+                              $ref: '#/components/schemas/userId'
+                            scopes:
+                              type: array
+                              items:
+                                $ref: '#/components/schemas/oauth2Scope'
+                            accessTokenHash:
+                              type: string
+                            refreshTokenHash:
+                              type: string
+                            timeCreated:
+                              $ref: '#/components/schemas/timestampMs'
+                            timeAccessTokenExpires:
+                              $ref: '#/components/schemas/timestampMs'
+                            timeRefreshTokenExpires:
+                              $ref: '#/components/schemas/timestampMs'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["UNKNOWN_CLIENT_ID"]
         '400':
           $ref: '#/components/responses/400'
         
@@ -680,22 +809,30 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                redirectUris:
-                  type: array
-                  items:
-                    type: string
-                name:
-                  type: string
-                  example: asdf
-                scopes:
-                  type: array
-                  items:
-                    type: string
-              required:
-                - redirectUris
-                - name
+              oneOf:
+                - type: object
+                  properties:
+                    redirectUris:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/oauth2RedirectUri'
+                    name:
+                      type: string
+                      example: asdf
+                    scopes:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/oauth2Scope'
+                  required:
+                    - redirectUris
+                    - name
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      enum: ["UNKNOWN_SCOPE"]
+                    scope:
+                      $ref: '#/components/schemas/oauth2Scope'
 
       responses:
         '200':
@@ -716,9 +853,23 @@ paths:
                       scopes:
                         type: array
                         items:
-                          type: string
+                          $ref: '#/components/schemas/oauth2Scope'
                       timeCreated:
                         $ref: '#/components/schemas/timestampMs'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["INVALID_REDIRECT_URI"]
+                      redirectUri:
+                        $ref: '#/components/schemas/oauth2RedirectUri'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["UNKNOWN_SCOPE"]
+                      scope:
+                        $ref: '#/components/schemas/oauth2Scope'
         '400':
           $ref: '#/components/responses/400'
         
@@ -755,14 +906,14 @@ paths:
                 redirectUris:
                   type: array
                   items:
-                    type: string
+                    $ref: '#/components/schemas/oauth2RedirectUri'
                 name:
                   type: string
                   example: asdf
                 scopes:
                   type: array
                   items:
-                    type: string
+                    $ref: '#/components/schemas/oauth2Scope'
               required:
                 - clientId
 
@@ -780,6 +931,25 @@ paths:
                         $ref: '#/components/schemas/statusOK'
                       timeUpdated:
                         $ref: '#/components/schemas/timestampMs'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["UNKNOWN_CLIENT_ID"]
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["INVALID_REDIRECT_URI"]
+                      redirectUri:
+                        $ref: '#/components/schemas/oauth2RedirectUri'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["UNKNOWN_SCOPE"]
+                      scope:
+                        $ref: '#/components/schemas/oauth2Scope'
         '400':
           $ref: '#/components/responses/400'
         
@@ -820,6 +990,9 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
+                      didClientExist:
+                        type: boolean
+                        example: true
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -6076,7 +6249,7 @@ components:
     oauth2Rid:
       name: rid
       in: header
-      example: totp
+      example: oauth2
       required: false
       schema:
         type: string
@@ -6670,3 +6843,11 @@ components:
               type: boolean
         coreConfig:
           type: object
+          
+    oauth2Scope:
+      type: string
+      example: 'profile'
+      
+    oauth2RedirectUri:
+      type: string
+      example: 'https://example.com/auth/callback'
