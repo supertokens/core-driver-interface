@@ -3494,6 +3494,8 @@ paths:
                       status:
                         type: string
                         enum: ["OK"]
+                      email:
+                        type: string
                   - type: object
                     properties:
                       status:
