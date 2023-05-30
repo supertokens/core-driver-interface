@@ -846,30 +846,20 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      clientId:
-                        $ref: '#/components/schemas/oauth2ClientId'
-                      clientSecretBase64:
-                        type: string
-                      scopes:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/oauth2Scope'
-                      timeCreated:
-                        $ref: '#/components/schemas/timestampMs'
+                      clientInfo:
+                        $ref: '#/components/schemas/oauth2ClientInfo'
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ["INVALID_REDIRECT_URI"]
-                      redirectUri:
-                        $ref: '#/components/schemas/oauth2RedirectUri'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ["UNKNOWN_SCOPE"]
+                        enum: ["UNKNOWN_SCOPE_ERROR"]
                       scope:
                         $ref: '#/components/schemas/oauth2Scope'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["CLIENT_ALREADY_EXISTS_ERROR"]
         '400':
           $ref: '#/components/responses/400'
         
@@ -6851,3 +6841,18 @@ components:
     oauth2RedirectUri:
       type: string
       example: 'https://example.com/auth/callback'
+      
+    oauth2ClientInfo:
+      type: object
+      properties: 
+        clientId:
+          type: string
+          example: "d974c3d4-e857-44cf-bccf-c626effa1c22"
+        clientSecret:
+          type: string
+        scopes: 
+          type: array
+          items:
+            $ref: '#/components/schemas/oauth2Scope'
+        timeCreated:
+          $ref: '#/components/schemas/timestampMs'
