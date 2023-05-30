@@ -867,9 +867,12 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["UNKNOWN_SCOPE"]
-                      scope:
-                        $ref: '#/components/schemas/oauth2Scope'
+                        enum: ["UNKNOWN_SCOPES_ERROR"]
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["CLIENT_ALREADY_EXISTS_ERROR"]
         '400':
           $ref: '#/components/responses/400'
         
