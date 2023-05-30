@@ -846,28 +846,15 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      clientId:
-                        $ref: '#/components/schemas/oauth2ClientId'
-                      clientSecretBase64:
-                        type: string
-                      scopes:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/oauth2Scope'
-                      timeCreated:
-                        $ref: '#/components/schemas/timestampMs'
+                      clientInfo:
+                        $ref: '#/components/schemas/oauth2ClientInfo'
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ["INVALID_REDIRECT_URI"]
-                      redirectUri:
-                        $ref: '#/components/schemas/oauth2RedirectUri'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ["UNKNOWN_SCOPES_ERROR"]
+                        enum: ["UNKNOWN_SCOPE_ERROR"]
+                      scope:
+                        $ref: '#/components/schemas/oauth2ClientInfo'
                   - type: object
                     properties:
                       status:
@@ -6854,3 +6841,18 @@ components:
     oauth2RedirectUri:
       type: string
       example: 'https://example.com/auth/callback'
+      
+    oauth2ClientInfo:
+      type: object
+      properties: 
+        clientId:
+          type: string
+          example: "TU/52WOcktSv99zqaAZuWJG9BSoS0aRLfCbep8rFEwk="
+        clientSecret:
+          type: string
+        scopes: 
+          type: array
+          items:
+            $ref: '#/components/schemas/oauth2Scope'
+        timeCreated:
+          $ref: '#/components/schemas/timestampMs'
