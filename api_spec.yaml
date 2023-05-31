@@ -697,8 +697,7 @@ paths:
         - in: query
           name: clientId
           schema:
-            type: string
-            example: 'd974c3d4-e857-44cf-bccf-c626effa1c22'
+            $ref: '#/components/schemas/oauth2ClientId'
           required: true
 
       responses:
