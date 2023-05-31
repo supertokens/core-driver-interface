@@ -6512,8 +6512,8 @@ components:
               
     oauth2ClientId:
       type: string
-      description: Identifies an OAuth2 client
-      example: TU/52WOcktSv99zqaAZuWJG9BSoS0aRLfCbep8rFEwk=
+      description: An UUID (Version 4) uniquely identifies the OAuth2 client.
+      example: 98c607be-7797-48e7-b95a-f76ff918ac2e
 
     statusOK:
       type: string
@@ -6843,7 +6843,7 @@ components:
           example: 'developement'
         clientId:
           type: string
-          example: 'd974c3d4-e857-44cf-bccf-c626effa1c22'
+          $ref: '#/components/schemas/oauth2ClientId'
         clientSecret:
           type: string
         scopes: 
