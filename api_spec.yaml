@@ -818,7 +818,10 @@ paths:
                     $ref: '#/components/schemas/oauth2RedirectUri'
                 name:
                   type: string
-                  example: 'developement'
+                  example: 'development'
+                addDefaultSupertokensScopes:
+                  type: boolean
+                  default: true
                 scopes:
                   type: array
                   items:
@@ -6837,10 +6840,17 @@ components:
       
     oauth2ClientInfo:
       type: object
+      required:
+        - name
+        - clientId
+        - clientSecret
+        - redirectUris
+        - timeCreated
+        - timeUpdated
       properties: 
         name:
           type: string
-          example: 'developement'
+          example: 'development'
         clientId:
           type: string
           $ref: '#/components/schemas/oauth2ClientId'
