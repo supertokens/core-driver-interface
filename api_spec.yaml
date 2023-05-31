@@ -688,7 +688,8 @@ paths:
         - OAuth2 Recipe
       operationId: getOAuth2Client
       description: |
-        Get info about an OAuth2 client
+        Get info about an OAuth2 client, 
+        [Click here](https://app.code2flow.com/8JfH4soWhSZO) for flow digaram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -697,6 +698,7 @@ paths:
           name: clientId
           schema:
             type: string
+            example: 'd974c3d4-e857-44cf-bccf-c626effa1c22'
           required: true
 
       responses:
@@ -708,28 +710,26 @@ paths:
               schema:
                 oneOf:
                   - type: object
+                    required:
+                      - status
+                      - clientInfo
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      redirectUris:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/oauth2RedirectUri'
-                      name:
-                        type: string
-                        example: asdf
-                      scopes:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/oauth2Scope'
-                      timeCreated:
-                        $ref: '#/components/schemas/timestampMs'
-                      timeUpdated:
-                        $ref: '#/components/schemas/timestampMs'
+                      clientInfo:
+                        $ref: '#/components/schemas/oauth2ClientInfo'
                       authorizationCodes:
                         type: array
                         items:
                           type: object
+                          required:
+                            - tenantId
+                            - sessionHandle
+                            - scopes
+                            - accessType
+                            - redirectUri
+                            - timeCreated
+                            - timeExpires
                           properties:
                             tenantId:
                               type: string
@@ -757,13 +757,23 @@ paths:
                         type: array
                         items: 
                           type: object
+                          required:
+                            - id
+                            - tenantId
+                            - sessionHandle
+                            - scopes
+                            - accessTokenHash
+                            - timeUpdated
+                            - timeCreated
+                            - timeAccessTokenExpires
                           properties:
+                            id:
+                              type: string
+                              example: '98c607be-7797-48e7-b95a-f76ff918ac2e'
                             tenantId:
                               type: string
                             sessionHandle:
                               type: string
-                            userId:
-                              $ref: '#/components/schemas/userId'
                             scopes:
                               type: array
                               items:
@@ -772,6 +782,8 @@ paths:
                               type: string
                             refreshTokenHash:
                               type: string
+                            timeUpdated:
+                              $ref: '#/components/schemas/timestampMs'
                             timeCreated:
                               $ref: '#/components/schemas/timestampMs'
                             timeAccessTokenExpires:
@@ -782,7 +794,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["UNKNOWN_CLIENT_ID"]
+                        enum: ["UNKNOWN_CLIENT_ID_ERROR"]
         '400':
           $ref: '#/components/responses/400'
         
