@@ -713,6 +713,8 @@ paths:
                     required:
                       - status
                       - clientInfo
+                      - authorizationCodes
+                      - issuedTokens
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
