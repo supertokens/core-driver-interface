@@ -800,7 +800,8 @@ paths:
         - OAuth2 Recipe
       operationId: createOAuth2Client
       description: |
-        Add a new OAuth2 client
+        Add a new OAuth2 client, 
+        [Click here ](https://app.code2flow.com/flowcharts/6475a4953f4c2482c82a4352) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -809,30 +810,22 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
-                - type: object
-                  properties:
-                    redirectUris:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/oauth2RedirectUri'
-                    name:
-                      type: string
-                      example: asdf
-                    scopes:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/oauth2Scope'
-                  required:
-                    - redirectUris
-                    - name
-                - type: object
-                  properties:
-                    status:
-                      type: string
-                      enum: ["UNKNOWN_SCOPE"]
-                    scope:
-                      $ref: '#/components/schemas/oauth2Scope'
+              type: object
+              properties:
+                redirectUris:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/oauth2RedirectUri'
+                name:
+                  type: string
+                  example: 'developement'
+                scopes:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/oauth2Scope'
+              required:
+                - redirectUris
+                - name
 
       responses:
         '200':
@@ -6845,14 +6838,23 @@ components:
     oauth2ClientInfo:
       type: object
       properties: 
+        name:
+          type: string
+          example: 'dev_client'
         clientId:
           type: string
-          example: "d974c3d4-e857-44cf-bccf-c626effa1c22"
+          example: 'd974c3d4-e857-44cf-bccf-c626effa1c22'
         clientSecret:
           type: string
         scopes: 
           type: array
           items:
             $ref: '#/components/schemas/oauth2Scope'
+        redirectUris:
+          type: array
+          items:
+            $ref: '#/components/schemas/oauth2RedirectUri'
         timeCreated:
+          $ref: '#/components/schemas/timestampMs'
+        timeUpdated:
           $ref: '#/components/schemas/timestampMs'
