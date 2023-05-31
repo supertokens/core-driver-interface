@@ -6840,7 +6840,7 @@ components:
       properties: 
         name:
           type: string
-          example: 'dev_client'
+          example: 'developement'
         clientId:
           type: string
           example: 'd974c3d4-e857-44cf-bccf-c626effa1c22'
