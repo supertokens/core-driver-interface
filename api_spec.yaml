@@ -800,7 +800,8 @@ paths:
         - OAuth2 Recipe
       operationId: createOAuth2Client
       description: |
-        Add a new OAuth2 client
+        Add a new OAuth2 client, 
+        [Click here ](https://app.code2flow.com/flowcharts/6475a4953f4c2482c82a4352) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -809,30 +810,25 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
-                - type: object
-                  properties:
-                    redirectUris:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/oauth2RedirectUri'
-                    name:
-                      type: string
-                      example: asdf
-                    scopes:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/oauth2Scope'
-                  required:
-                    - redirectUris
-                    - name
-                - type: object
-                  properties:
-                    status:
-                      type: string
-                      enum: ["UNKNOWN_SCOPE"]
-                    scope:
-                      $ref: '#/components/schemas/oauth2Scope'
+              type: object
+              properties:
+                redirectUris:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/oauth2RedirectUri'
+                name:
+                  type: string
+                  example: 'development'
+                addDefaultSupertokensScopes:
+                  type: boolean
+                  default: true
+                scopes:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/oauth2Scope'
+              required:
+                - redirectUris
+                - name
 
       responses:
         '200':
@@ -6519,8 +6515,8 @@ components:
               
     oauth2ClientId:
       type: string
-      description: Identifies an OAuth2 client
-      example: TU/52WOcktSv99zqaAZuWJG9BSoS0aRLfCbep8rFEwk=
+      description: An UUID (Version 4) uniquely identifies the OAuth2 client.
+      example: 98c607be-7797-48e7-b95a-f76ff918ac2e
 
     statusOK:
       type: string
@@ -6844,15 +6840,31 @@ components:
       
     oauth2ClientInfo:
       type: object
+      required:
+        - name
+        - clientId
+        - clientSecret
+        - redirectUris
+        - timeCreated
+        - timeUpdated
       properties: 
+        name:
+          type: string
+          example: 'development'
         clientId:
           type: string
-          example: "d974c3d4-e857-44cf-bccf-c626effa1c22"
+          $ref: '#/components/schemas/oauth2ClientId'
         clientSecret:
           type: string
         scopes: 
           type: array
           items:
             $ref: '#/components/schemas/oauth2Scope'
+        redirectUris:
+          type: array
+          items:
+            $ref: '#/components/schemas/oauth2RedirectUri'
         timeCreated:
+          $ref: '#/components/schemas/timestampMs'
+        timeUpdated:
           $ref: '#/components/schemas/timestampMs'
