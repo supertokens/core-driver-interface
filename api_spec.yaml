@@ -726,7 +726,6 @@ paths:
                           required:
                             - tenantId
                             - sessionHandle
-                            - scopes
                             - accessType
                             - redirectUri
                             - timeCreated
@@ -762,7 +761,6 @@ paths:
                             - id
                             - tenantId
                             - sessionHandle
-                            - scopes
                             - accessTokenHash
                             - timeUpdated
                             - timeCreated
