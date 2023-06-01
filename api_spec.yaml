@@ -618,6 +618,8 @@ paths:
                       status:
                         type: string
                         enum: ['UNKNOWN_SCOPE_ERROR']
+                      scope:
+                        $ref: '#/components/schemas/oauth2Scope'
                   - type: object
                     properties:
                       status:
@@ -628,6 +630,8 @@ paths:
                       status:
                         type: string
                         enum: [SCOPE_ALREADY_EXISTS_ERROR]
+                      scope:
+                        $ref: '#/components/schemas/oauth2Scope'
 
         '400':
           $ref: '#/components/responses/400'
