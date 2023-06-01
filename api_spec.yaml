@@ -600,7 +600,7 @@ paths:
         '200':
           description: |
             Indicates success with status property,
-            and newScopes property which has newly added scopes
+            and newScopes property with added scopes
           content:
             application/json:
               schema:
