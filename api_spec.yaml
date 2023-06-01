@@ -885,7 +885,7 @@ paths:
       operationId: updateOAuth2Client
       description: |
         Update an OAuth2 client, 
-        [Click here]() for flow diagram
+        [Click here](https://app.code2flow.com/nXFGV7pIFOFl) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -961,7 +961,8 @@ paths:
         - OAuth2 Recipe
       operationId: removeOAuth2Client
       description: |
-        Remove an OAuth2 client
+        Remove an OAuth2 client, 
+        [click here]( https://app.code2flow.com/UiXnQw4XZRN3) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -969,7 +970,8 @@ paths:
         - in: query
           name: clientId
           schema:
-            type: string
+            clientId:
+            $ref: '#/components/schemas/oauth2ClientId'
           required: true
 
       responses:
@@ -984,9 +986,11 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      didClientExist:
-                        type: boolean
-                        example: true
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["UNKNOWN_CLIENT_ID_ERROR"]
         '400':
           $ref: '#/components/responses/400'
         '401':
