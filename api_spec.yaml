@@ -906,7 +906,7 @@ paths:
                   $ref: '#/components/schemas/oauth2ClientId'
                 regenerateSecret:
                   type: boolean
-                  example: false
+                  default: false
                 redirectUris:
                   type: array
                   items:
@@ -930,9 +930,13 @@ paths:
               schema:
                 oneOf:
                   - type: object
+                    required:
+                      - status
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
+                      clientSecret:
+                        type: string
                   - type: object
                     properties:
                       status:
