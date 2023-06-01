@@ -576,7 +576,8 @@ paths:
         - OAuth2 Recipe
       operationId: addOAuth2ScopeToClient
       description: |
-        Enable a scope for an OAuth2 client
+        Add a new scope for an OAuth2 client,
+        [click here](https://app.code2flow.com/9NrD4TY9ttl2) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -598,7 +599,8 @@ paths:
       responses:
         '200':
           description: |
-            Indicates success with the status property
+            Indicates success with status property,
+            and newScopes property which has newly added scopes
           content:
             application/json:
               schema:
@@ -615,7 +617,18 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['SCOPE_DOES_NOT_EXIST']
+                        enum: ['UNKNOWN_SCOPE_ERROR']
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['UNKNOWN_CLIENT_ID_ERROR']
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [SCOPE_ALREADY_EXISTS_ERROR]
+
         '400':
           $ref: '#/components/responses/400'
         
