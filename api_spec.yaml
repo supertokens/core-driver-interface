@@ -891,7 +891,7 @@ paths:
       operationId: updateOAuth2Client
       description: |
         Update an OAuth2 client, 
-        [Click here]() for flow diagram
+        [Click here](https://app.code2flow.com/nXFGV7pIFOFl) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
