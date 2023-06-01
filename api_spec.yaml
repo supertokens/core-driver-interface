@@ -972,7 +972,7 @@ paths:
       operationId: removeOAuth2Client
       description: |
         Remove an OAuth2 client, 
-        [click here]( https://app.code2flow.com/UiXnQw4XZRN3) for flow diagram
+        [click here](https://app.code2flow.com/UiXnQw4XZRN3) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
