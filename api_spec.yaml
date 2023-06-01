@@ -883,7 +883,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-     put:
+    put:
       tags:
         - OAuth2 Recipe
       operationId: updateOAuth2Client
@@ -963,7 +963,45 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-    
+    delete:
+      tags:
+        - OAuth2 Recipe
+      operationId: removeOAuth2Client
+      description: |
+        Remove an OAuth2 client
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: clientId
+          schema:
+            type: string
+          required: true
+
+      responses:
+        '200':
+          description: |
+            Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      didClientExist:
+                        type: boolean
+                        example: true
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
 
   /appid-<appId>/recipe/totp/device:
     post:
