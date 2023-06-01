@@ -652,21 +652,27 @@ paths:
         - OAuth2 Recipe
       operationId: removeOAuth2ScopeFromClient
       description: |
-        Disable a scope for an OAuth2 client
+        Disable a scope for an OAuth2 client,
+        [click here](https://app.code2flow.com/VSVAl8IVRU1h) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - in: query
-          name: clientId
-          schema:
-            type: string
-          required: true
-        - in: query
-          name: scope
-          schema:
-            type: string
-          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                clientId:
+                  $ref: '#/components/schemas/oauth2ClientId'
+                scopes:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/oauth2Scope'
+              required:
+                - clientId
+                - scopes
 
       responses:
         '200':
@@ -680,15 +686,19 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      newScopes:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/oauth2Scope'
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ['UNKNOWN_CLIENT_ID']
+                        enum: ['UNKNOWN_CLIENT_ID_ERROR']
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['UNKNOWN_SCOPE_ERROR']
+                      scope:
+                        $ref: '#/components/schemas/oauth2Scope'
+
         '400':
           $ref: '#/components/responses/400'
         
