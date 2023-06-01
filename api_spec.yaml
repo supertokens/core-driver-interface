@@ -726,6 +726,7 @@ paths:
                           required:
                             - tenantId
                             - sessionHandle
+                            - scopes
                             - accessType
                             - redirectUri
                             - timeCreated
@@ -761,6 +762,7 @@ paths:
                             - id
                             - tenantId
                             - sessionHandle
+                            - scopes
                             - accessTokenHash
                             - timeUpdated
                             - timeCreated
@@ -854,7 +856,11 @@ paths:
                       status:
                         $ref: '#/components/schemas/statusOK'
                       clientInfo:
-                        $ref: '#/components/schemas/oauth2ClientInfo'
+                        type : object
+                        allOf:
+                          - $ref: '#/components/schemas/oauth2ClientInfo'
+                        required:
+                          - clientSecret
                   - type: object
                     properties:
                       status:
@@ -900,7 +906,7 @@ paths:
                   $ref: '#/components/schemas/oauth2ClientId'
                 regenerateSecret:
                   type: boolean
-                  example: false
+                  default: false
                 redirectUris:
                   type: array
                   items:
@@ -924,9 +930,13 @@ paths:
               schema:
                 oneOf:
                   - type: object
+                    required:
+                      - status
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
+                      clientSecret:
+                        type: string
                   - type: object
                     properties:
                       status:
@@ -6855,7 +6865,7 @@ components:
       required:
         - name
         - clientId
-        - clientSecret
+        - scopes
         - redirectUris
         - timeCreated
         - timeUpdated
