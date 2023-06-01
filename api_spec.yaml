@@ -854,7 +854,11 @@ paths:
                       status:
                         $ref: '#/components/schemas/statusOK'
                       clientInfo:
-                        $ref: '#/components/schemas/oauth2ClientInfo'
+                        type : object
+                        allOf:
+                          - $ref: '#/components/schemas/oauth2ClientInfo'
+                        required:
+                          - clientSecret
                   - type: object
                     properties:
                       status:
@@ -884,7 +888,8 @@ paths:
         - OAuth2 Recipe
       operationId: updateOAuth2Client
       description: |
-        Update an OAuth2 client
+        Update an OAuth2 client, 
+        [Click here](https://app.code2flow.com/nXFGV7pIFOFl) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -906,7 +911,7 @@ paths:
                     $ref: '#/components/schemas/oauth2RedirectUri'
                 name:
                   type: string
-                  example: asdf
+                  example: 'developement'
                 scopes:
                   type: array
                   items:
@@ -926,27 +931,23 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      timeUpdated:
-                        $ref: '#/components/schemas/timestampMs'
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ["UNKNOWN_CLIENT_ID"]
+                        enum: ["UNKNOWN_CLIENT_ID_ERROR"]
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ["INVALID_REDIRECT_URI"]
-                      redirectUri:
-                        $ref: '#/components/schemas/oauth2RedirectUri'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ["UNKNOWN_SCOPE"]
+                        enum: ["UNKNOWN_SCOPE_ERROR"]
                       scope:
                         $ref: '#/components/schemas/oauth2Scope'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["CLIENT_ALREADY_EXISTS_ERROR"]
         '400':
           $ref: '#/components/responses/400'
         
@@ -964,7 +965,8 @@ paths:
         - OAuth2 Recipe
       operationId: removeOAuth2Client
       description: |
-        Remove an OAuth2 client
+        Remove an OAuth2 client, 
+        [click here](https://app.code2flow.com/UiXnQw4XZRN3) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -972,7 +974,8 @@ paths:
         - in: query
           name: clientId
           schema:
-            type: string
+            clientId:
+            $ref: '#/components/schemas/oauth2ClientId'
           required: true
 
       responses:
@@ -987,9 +990,11 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      didClientExist:
-                        type: boolean
-                        example: true
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["UNKNOWN_CLIENT_ID_ERROR"]
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -6854,7 +6859,6 @@ components:
       required:
         - name
         - clientId
-        - clientSecret
         - redirectUris
         - timeCreated
         - timeUpdated
