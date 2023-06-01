@@ -726,6 +726,7 @@ paths:
                           required:
                             - tenantId
                             - sessionHandle
+                            - scopes
                             - accessType
                             - redirectUri
                             - timeCreated
@@ -761,6 +762,7 @@ paths:
                             - id
                             - tenantId
                             - sessionHandle
+                            - scopes
                             - accessTokenHash
                             - timeUpdated
                             - timeCreated
@@ -854,7 +856,11 @@ paths:
                       status:
                         $ref: '#/components/schemas/statusOK'
                       clientInfo:
-                        $ref: '#/components/schemas/oauth2ClientInfo'
+                        type : object
+                        allOf:
+                          - $ref: '#/components/schemas/oauth2ClientInfo'
+                        required:
+                          - clientSecret
                   - type: object
                     properties:
                       status:
@@ -6851,7 +6857,7 @@ components:
       required:
         - name
         - clientId
-        - clientSecret
+        - scopes
         - redirectUris
         - timeCreated
         - timeUpdated
