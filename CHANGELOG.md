@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [unreleased]
+
+## [3.0.0]
 - Adds `/appid-<appId>` or `/appid-<appId>/<tenantId>` prefix to some of the APIs as applicable. 
 `appid-{appId}` and `{tenantId}` in all the APIs (wherever they are present) are optional. Their default values are `appid-public` and `public` respectively.
 - Adds APIs for multitenancy recipe
@@ -30,6 +32,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adds optional query param `includeAllTenants` to the `/users/count` GET API
 
 - Removed deprecated APIs `/recipe/user` and `/recipe/users/count`
+
+## [2.21.0] - 2023-05-12
+
+### Fixed 
+- Fixes `thirdParty` property in `thirdPartyUser` object
+
 ## [2.21.0] - 2023-04-05
 
 - deprecate jwks endpoint in the jwt recipe (GET `/recipe/jwt/jwks`)

@@ -5,7 +5,7 @@ info:
 
     `appid-<appId>` and `<tenantId>` in all the APIs are optional. Their default values are `appid-public` and `public` respectively
 
-  version: 2.21.0
+  version: 3.0.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
