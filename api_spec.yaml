@@ -31,7 +31,7 @@ paths:
         - OAuth2 Recipe
       operationId: createOAuth2AuthorizationCode
       description: |
-        Create an authorization code for a session
+        Create an authorization code for a session, [click here](https://app.code2flow.com/D8MKcpiDunxL) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -86,15 +86,17 @@ paths:
                         $ref: '#/components/schemas/statusOK'
                       authorizationCode:
                         type: string
-                      timeCreated:
+                      timeCreatedMs:
                         $ref: '#/components/schemas/timestampMs'
-                      timeExpires:
+                      timeExpiresMs:
                         $ref: '#/components/schemas/timestampMs'
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ['UNKNOWN_CLIENT_ID', 'INVALID_REDIRECT_URI', 'INVALID_SCOPES', 'UNKNOWN_CODE_CHALLENGE_METHOD', 'INVALID_ACCESS_TYPE', 'INVALID_CODE_CHALLENGE']
+                        enum: ['UNKNOWN_CLIENT_ID_ERROR',
+                        'UNKNOWN_SESSION_HANDLE_ERROR',
+                        'UNKNOWN_REDIRECT_URI_ERROR', 'UNKNOWN_SCOPE_ERROR', 'UNKNOWN_CODE_CHALLENGE_METHOD_ERROR', 'UNKNOWN_ACCESS_TYPE_ERROR', 'UNKNOWN_CODE_CHALLENGE_ERROR']
         '400':
           $ref: '#/components/responses/400'
         
