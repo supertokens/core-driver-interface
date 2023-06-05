@@ -556,7 +556,7 @@ paths:
         - in: query
           name: scope
           schema:
-            type: string
+            $ref: '#/components/schemas/oauth2Scope'
           required: true
 
       responses:
