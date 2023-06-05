@@ -590,10 +590,8 @@ paths:
               properties:
                 clientId:
                   $ref: '#/components/schemas/oauth2ClientId'
-                scopes:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/oauth2Scope'
+                scope:
+                  $ref: '#/components/schemas/oauth2Scope'
               required:
                 - clientId
                 - scope
@@ -611,10 +609,6 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      newScopes:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/oauth2Scope'
                   - type: object
                     properties:
                       status:
