@@ -434,7 +434,7 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
-          
+
     post:
       tags:
         - OAuth2 Recipe
@@ -542,12 +542,13 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+
     delete:
       tags:
         - OAuth2 Recipe
       operationId: removeOAuth2Scope
       description: |
-        Delete a scope
+        Delete a scope, [click here]() for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -570,8 +571,11 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      didScopeExist:
-                        type: boolean
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['UNKNOWN_SCOPE_ERROR']
         '400':
           $ref: '#/components/responses/400'
         
