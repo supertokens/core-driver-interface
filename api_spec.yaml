@@ -595,10 +595,8 @@ paths:
               properties:
                 clientId:
                   $ref: '#/components/schemas/oauth2ClientId'
-                scopes:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/oauth2Scope'
+                scope:
+                  $ref: '#/components/schemas/oauth2Scope'
               required:
                 - clientId
                 - scope
@@ -616,17 +614,11 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      newScopes:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/oauth2Scope'
                   - type: object
                     properties:
                       status:
                         type: string
                         enum: ['UNKNOWN_SCOPE_ERROR']
-                      scope:
-                        $ref: '#/components/schemas/oauth2Scope'
                   - type: object
                     properties:
                       status:
@@ -637,8 +629,6 @@ paths:
                       status:
                         type: string
                         enum: [SCOPE_ALREADY_EXISTS_ERROR]
-                      scope:
-                        $ref: '#/components/schemas/oauth2Scope'
 
         '400':
           $ref: '#/components/responses/400'
@@ -671,10 +661,8 @@ paths:
               properties:
                 clientId:
                   $ref: '#/components/schemas/oauth2ClientId'
-                scopes:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/oauth2Scope'
+                scope:
+                  $ref: '#/components/schemas/oauth2Scope'
               required:
                 - clientId
                 - scopes
@@ -701,8 +689,6 @@ paths:
                       status:
                         type: string
                         enum: ['UNKNOWN_SCOPE_ERROR']
-                      scope:
-                        $ref: '#/components/schemas/oauth2Scope'
 
         '400':
           $ref: '#/components/responses/400'
