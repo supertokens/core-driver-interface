@@ -647,19 +647,16 @@ paths:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                clientId:
-                  $ref: '#/components/schemas/oauth2ClientId'
-                scope:
-                  $ref: '#/components/schemas/oauth2Scope'
-              required:
-                - clientId
-                - scopes
+        - in: query
+          name: clientId
+          schema:
+            $ref: '#/components/schemas/oauth2ClientId'
+          required: true
+        - in: query
+          name: scope
+          schema:
+            $ref: '#/components/schemas/oauth2Scope'
+          required: true
 
       responses:
         '200':
