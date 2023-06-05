@@ -576,7 +576,8 @@ paths:
         - OAuth2 Recipe
       operationId: addOAuth2ScopeToClient
       description: |
-        Enable a scope for an OAuth2 client
+        Add a new scope for an OAuth2 client,
+        [click here](https://app.code2flow.com/9NrD4TY9ttl2) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -598,7 +599,7 @@ paths:
       responses:
         '200':
           description: |
-            Indicates success with the status property
+            Indicates success with status property
           content:
             application/json:
               schema:
@@ -607,15 +608,22 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      newScopes:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/oauth2Scope'
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ['SCOPE_DOES_NOT_EXIST']
+                        enum: ['UNKNOWN_SCOPE_ERROR']
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['UNKNOWN_CLIENT_ID_ERROR']
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [SCOPE_ALREADY_EXISTS_ERROR]
+
         '400':
           $ref: '#/components/responses/400'
         
@@ -633,7 +641,8 @@ paths:
         - OAuth2 Recipe
       operationId: removeOAuth2ScopeFromClient
       description: |
-        Disable a scope for an OAuth2 client
+        Disable a scope for an OAuth2 client,
+        [click here](https://app.code2flow.com/VSVAl8IVRU1h) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -641,12 +650,12 @@ paths:
         - in: query
           name: clientId
           schema:
-            type: string
+            $ref: '#/components/schemas/oauth2ClientId'
           required: true
         - in: query
           name: scope
           schema:
-            type: string
+            $ref: '#/components/schemas/oauth2Scope'
           required: true
 
       responses:
@@ -661,15 +670,17 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      newScopes:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/oauth2Scope'
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ['UNKNOWN_CLIENT_ID']
+                        enum: ['UNKNOWN_CLIENT_ID_ERROR']
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['UNKNOWN_SCOPE_ERROR']
+
         '400':
           $ref: '#/components/responses/400'
         
