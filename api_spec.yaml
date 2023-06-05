@@ -655,7 +655,7 @@ paths:
         - OAuth2 Recipe
       operationId: removeOAuth2ScopeFromClient
       description: |
-        Disable a scope/s for an OAuth2 client,
+        Disable a scope for an OAuth2 client,
         [click here](https://app.code2flow.com/VSVAl8IVRU1h) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
