@@ -832,9 +832,6 @@ paths:
                 name:
                   type: string
                   example: 'development'
-                addDefaultSupertokensScopes:
-                  type: boolean
-                  default: true
                 scopes:
                   type: array
                   items:
