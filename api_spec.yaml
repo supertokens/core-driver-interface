@@ -548,7 +548,7 @@ paths:
         - OAuth2 Recipe
       operationId: removeOAuth2Scope
       description: |
-        Delete a scope, [click here]() for flow diagram
+        Delete a scope, [click here](https://app.code2flow.com/XEw1xg7jvfkD) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
