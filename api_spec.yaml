@@ -604,8 +604,7 @@ paths:
       responses:
         '200':
           description: |
-            Indicates success with status property,
-            and newScopes property with added scopes
+            Indicates success with status property
           content:
             application/json:
               schema:
