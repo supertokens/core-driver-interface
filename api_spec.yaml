@@ -524,7 +524,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['UNKNOWN_SCOPE_ERROR']
+                        enum: ['SCOPE_NOT_FOUND_ERROR']
                   - type: object
                     properties:
                       status:
