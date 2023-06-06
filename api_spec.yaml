@@ -116,6 +116,7 @@ paths:
       operationId: revokeOAuth2AuthorizationCode
       description: |
         Revoke all authorization codes belonging to a session or to a client (across all tenants).
+        [Click here](https://app.code2flow.com/gPxFBmp7sdCR) for flow diagram.
         To provide Single Logout, you should also call the normal session logout endpoint and the token revocation endpoint as well
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
@@ -145,6 +146,12 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['UNKNOWN_CLIENT_ID_ERROR','UNKNOWN_SESSION_HANDLE_ERROR']
+                        
         '400':
           $ref: '#/components/responses/400'
         
