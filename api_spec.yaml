@@ -401,7 +401,7 @@ paths:
         - OAuth2 Recipe
       operationId: getAllOAuth2Scopes
       description: |
-        get a list of all scopes
+        get a list of all scopes, [click here](https://app.code2flow.com/Ax9gCjYjGOuk) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -434,6 +434,7 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+          
     post:
       tags:
         - OAuth2 Recipe
