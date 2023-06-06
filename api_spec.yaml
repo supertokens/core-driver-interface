@@ -439,7 +439,7 @@ paths:
         - OAuth2 Recipe
       operationId: addOAuth2Scope
       description: |
-        Create a scope
+        Create a scope, [click here](https://app.code2flow.com/7PHBCpE5Ygjt) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -467,6 +467,11 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['SCOPE_ALREADY_EXISTS_ERROR']
         '400':
           $ref: '#/components/responses/400'
         
@@ -670,16 +675,15 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
+                      didScopeExist:
+                        type: boolean
+                    required:
+                      didScopeExist
                   - type: object
                     properties:
                       status:
                         type: string
                         enum: ['UNKNOWN_CLIENT_ID_ERROR']
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ['UNKNOWN_SCOPE_ERROR']
 
         '400':
           $ref: '#/components/responses/400'
