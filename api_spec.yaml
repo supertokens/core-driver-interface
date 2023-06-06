@@ -114,7 +114,7 @@ paths:
         - OAuth2 Recipe
       operationId: revokeOAuth2AuthorizationCode
       description: |
-        Revoke all authorization codes belonging to a session or to a client (across all tenants).
+        Revoke/Delete all authorization codes belonging to a session or to a client (across all tenants).
         [Click here](https://app.code2flow.com/gPxFBmp7sdCR) for flow diagram.
         To provide Single Logout, you should also call the normal session logout endpoint and the token revocation endpoint as well
       parameters:
@@ -143,7 +143,7 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      revokedCount:
+                      deletedCount:
                        type: number
                   - type: object
                     properties:
