@@ -94,9 +94,8 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['UNKNOWN_CLIENT_ID_ERROR',
-                        'UNKNOWN_SESSION_HANDLE_ERROR',
-                        'UNKNOWN_REDIRECT_URI_ERROR', 'UNKNOWN_SCOPE_ERROR', 'UNKNOWN_CODE_CHALLENGE_METHOD_ERROR', 'UNKNOWN_ACCESS_TYPE_ERROR', 'UNKNOWN_CODE_CHALLENGE_ERROR']
+                        enum: ['UNKNOWN_CLIENT_ID_ERROR', 'UNKNOWN_SESSION_HANDLE_ERROR',
+                        'UNKNOWN_REDIRECT_URI_ERROR', 'UNKNOWN_SCOPE_ERROR']
         '400':
           $ref: '#/components/responses/400'
         
