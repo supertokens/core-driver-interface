@@ -108,8 +108,8 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/recipe/oauth2/authorizationcode/revoke:
-    post:
+  /appid-<appId>/recipe/oauth2/authorizationcode:
+    delete:
       tags:
         - OAuth2 Recipe
       operationId: revokeOAuth2AuthorizationCode
@@ -121,19 +121,17 @@ paths:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              oneOf:
-                - type: object
-                  properties:
-                    sessionHandle:
-                      type: string
-                - type: object
-                  properties:
-                    clientId:
-                      type: string
+        - in: query
+          name: clientId
+          schema:
+            clientId:
+            $ref: '#/components/schemas/oauth2ClientId'
+        - in: query
+          name: sessionHandle
+          schema:
+            sessionHandle:
+            $ref: '#/components/schemas/handle'
+  
       responses:
         '200':
           description: Indicates success with the status property
@@ -145,6 +143,8 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
+                      revokedCount:
+                       type: number
                   - type: object
                     properties:
                       status:
