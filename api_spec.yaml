@@ -572,6 +572,7 @@ paths:
                     $ref: '#/components/schemas/statusOK'
                   didScopeExist:
                     type: boolean
+                    
         '400':
           $ref: '#/components/responses/400'
         
@@ -687,7 +688,7 @@ paths:
                       didScopeExist:
                         type: boolean
                     required:
-                      didScopeExist
+                    - didScopeExist
                   - type: object
                     properties:
                       status:
