@@ -114,7 +114,7 @@ paths:
         - OAuth2 Recipe
       operationId: revokeOAuth2AuthorizationCode
       description: |
-        Revoke/Delete all authorization codes belonging to a session or to a client (across all tenants).
+        Revoke all authorization codes belonging to a session or to a client (across all tenants).
         [Click here](https://app.code2flow.com/gPxFBmp7sdCR) for flow diagram.
         To provide Single Logout, you should also call the normal session logout endpoint and the token revocation endpoint as well
       parameters:
@@ -143,7 +143,7 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      deletedCount:
+                      revokedCount:
                        type: number
                   - type: object
                     properties:
@@ -288,7 +288,7 @@ paths:
         - OAuth2 Recipe
       operationId: createOAuth2AccessToken
       description: |
-        Create an OAuth2 access token
+        Create an OAuth2 access token, [click here](https://app.code2flow.com/CSieLWTZG8qh) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -304,6 +304,7 @@ paths:
                       type: string
                     clientId:
                       type: string
+                      $ref: '#/components/schemas/oauth2ClientId'
                     clientSecret:
                       type: string
                     codeVerifier:
@@ -322,12 +323,18 @@ paths:
                       $ref: '#/components/schemas/createJWTPayload'
                   required:
                     - authorizationCode
+                    - clientId
                 - type: object
                   properties:
                     clientId:
                       type: string
+                      $ref: '#/components/schemas/oauth2ClientId'
                     clientSecret:
                       type: string
+                    scopes:
+                      type : array
+                      items:
+                        $ref: '#/components/schemas/oauth2Scope'
                     accessTokenLifetimeMs:
                       type: number
                       example: 3600000
@@ -341,9 +348,15 @@ paths:
                   required:
                     - clientId
                     - clientSecret
+                    - scopes
                 - type: object
                   properties:
                     refreshToken:
+                      type: string
+                    clientId:
+                      type: string
+                      $ref: '#/components/schemas/oauth2ClientId'
+                    clientSecret:
                       type: string
                     accessTokenLifetimeMs:
                       type: number
@@ -357,6 +370,7 @@ paths:
                       $ref: '#/components/schemas/createJWTPayload'
                   required:
                     - refreshToken
+                    - clientId
       responses:
         '200':
           description: |
@@ -370,7 +384,7 @@ paths:
                       status:
                         $ref: '#/components/schemas/statusOK'
                       sessionHandle:
-                        type: string
+                        $ref: '#/components/schemas/handle'
                       userId:
                         $ref: '#/components/schemas/userId'
                       scopes:
@@ -383,17 +397,28 @@ paths:
                         type: string
                       idToken:
                         type: string
-                      timeCreated:
+                      timeCreatedMs:
                         $ref: '#/components/schemas/timestampMs'
-                      timeAccessTokenExpires:
+                      timeAccessTokenExpiresMs:
                         $ref: '#/components/schemas/timestampMs'
-                      timeRefreshTokenExpires:
+                      timeRefreshTokenExpiresMs:
                         $ref: '#/components/schemas/timestampMs'
+                    required:
+                     - status
+                     - scopes
+                     - accessToken
+                     - timeCreatedMs
+                     - timeAccessTokenExpiresMs
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ['INVALID_AUTHORIZATION_CODE', 'INVALID_CODE_CHALLENGE', 'REDIRECTION_URI_MISMATCH', 'INVALID_CLIENT_CREDENTIALS', 'INVALID_REFRESH_TOKEN']
+                        enum: ['INVALID_AUTHORIZATION_CODE_ERROR', 'UNKNOWN_CODE_CHALLENGE', 'UNKNOWN_REDIRECT_URI_ERROR', 'UNKNOWN_CLIENT_CREDENTIALS_ERROR',
+                          'UNKNOWN_CLIENT_ID_ERROR',
+                          'UNKNOWN_AUTH_CODE_ERROR',
+                          'UNKNOWN_REFRESH_TOKEN_LIFE_TIME_ERROR',
+                          'INVALID_REFRESH_TOKEN_ERROR',
+                        'UNKNOWN_REFRESH_TOKEN_ERROR']
         '400':
           $ref: '#/components/responses/400'
         '401':
