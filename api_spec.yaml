@@ -489,7 +489,7 @@ paths:
         - OAuth2 Recipe
       operationId: renameOAuth2Scope
       description: |
-        Rename a scope
+        Rename a scope, [click here](https://app.code2flow.com/WDizMrUkln5l) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -502,8 +502,11 @@ paths:
               properties:
                 scope:
                   $ref: '#/components/schemas/oauth2Scope'
-                newName:
+                newScope:
                   $ref: '#/components/schemas/oauth2Scope'
+              required:
+                - scope
+                - newScope
 
       responses:
         '200':
@@ -521,7 +524,12 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['SCOPE_DOES_NOT_EXIST']
+                        enum: ['SCOPE_NOT_FOUND_ERROR']
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['SCOPE_ALREADY_EXISTS_ERROR']
         '400':
           $ref: '#/components/responses/400'
         
