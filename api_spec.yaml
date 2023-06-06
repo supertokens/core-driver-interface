@@ -164,26 +164,22 @@ paths:
           $ref: '#/components/responses/500'
 
   /appid-<appId>/<tenantId>/recipe/oauth2/token/verify:
-    post:
+    get:
       tags:
         - OAuth2 Recipe
       operationId: verifyOAuth2AccessToken
       description: |
-        Verify an OAuth2 access token
+        Verify an OAuth2 access token, [click here](https://app.code2flow.com/PXgMWcBANhQq) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-                type: object
-                properties:
-                  accessToken:
-                    type: string
-                required:
-                  - accessToken
+        - in: query
+          name: accessToken
+          schema:
+            accessToken:
+            $ref: '#/components/schemas/token'
+          required: true
 
       responses:
         '200':
@@ -197,27 +193,40 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      clientId:
-                        type: string
                       sessionHandle:
-                        type: string
+                        $ref: '#/components/schemas/handle'
+                      userId:
+                        $ref: '#/components/schemas/userId'
                       scopes:
                         type: array
                         items:
                           $ref: '#/components/schemas/oauth2Scope'
-                      timeCreated:
+                      accessToken:
+                        type: string
+                      refreshToken:
+                        type: string
+                      idToken:
+                        type: string
+                      timeCreatedMs:
                         $ref: '#/components/schemas/timestampMs'
-                      lastUpdated:
+                      timelastUdpatedMs:
                         $ref: '#/components/schemas/timestampMs'
-                      timeAccessTokenExpires:
+                      timeAccessTokenExpiresMs:
                         $ref: '#/components/schemas/timestampMs'
-                      timeRefreshTokenExpires:
+                      timeRefreshTokenExpiresMs:
                         $ref: '#/components/schemas/timestampMs'
+                    required:
+                     - status
+                     - scopes
+                     - accessToken
+                     - timeCreatedMs
+                     - timelastUdpatedMs
+                     - timeAccessTokenExpiresMs
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ['INVALID_TOKEN']
+                        enum: ['UNKNOWN_ACCESS_TOKEN_ERROR']
         '400':
           $ref: '#/components/responses/400'
         '401':
