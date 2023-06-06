@@ -566,16 +566,12 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ['UNKNOWN_SCOPE_ERROR']
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  didScopeExist:
+                    type: boolean
         '400':
           $ref: '#/components/responses/400'
         
