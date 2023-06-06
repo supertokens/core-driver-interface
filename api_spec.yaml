@@ -525,7 +525,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['UNKNOWN_SCOPE_ERROR']
+                        enum: ['SCOPE_NOT_FOUND_ERROR']
                   - type: object
                     properties:
                       status:
@@ -688,16 +688,15 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
+                      didScopeExist:
+                        type: boolean
+                    required:
+                      didScopeExist
                   - type: object
                     properties:
                       status:
                         type: string
                         enum: ['UNKNOWN_CLIENT_ID_ERROR']
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ['UNKNOWN_SCOPE_ERROR']
 
         '400':
           $ref: '#/components/responses/400'
