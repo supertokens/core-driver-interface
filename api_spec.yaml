@@ -436,7 +436,7 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
-
+          
     post:
       tags:
         - OAuth2 Recipe
@@ -527,7 +527,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['UNKNOWN_SCOPE_ERROR']
+                        enum: ['SCOPE_NOT_FOUND_ERROR']
                   - type: object
                     properties:
                       status:
@@ -568,16 +568,13 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ['UNKNOWN_SCOPE_ERROR']
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  didScopeExist:
+                    type: boolean
+                    
         '400':
           $ref: '#/components/responses/400'
         
@@ -690,16 +687,13 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
+                      didScopeExist:
+                        type: boolean
                   - type: object
                     properties:
                       status:
                         type: string
                         enum: ['UNKNOWN_CLIENT_ID_ERROR']
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ['UNKNOWN_SCOPE_ERROR']
 
         '400':
           $ref: '#/components/responses/400'
