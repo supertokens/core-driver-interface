@@ -687,8 +687,6 @@ paths:
                         $ref: '#/components/schemas/statusOK'
                       didScopeExist:
                         type: boolean
-                    required:
-                    - didScopeExist
                   - type: object
                     properties:
                       status:
