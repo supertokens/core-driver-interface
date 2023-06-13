@@ -379,14 +379,6 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      sessionHandle:
-                        $ref: '#/components/schemas/handle'
-                      userId:
-                        $ref: '#/components/schemas/userId'
-                      scopes:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/oauth2Scope'
                       accessToken:
                         type: string
                       refreshToken:
@@ -399,7 +391,6 @@ paths:
                         $ref: '#/components/schemas/timestampMs'
                     required:
                      - status
-                     - scopes
                      - accessToken
                      - timeCreatedMs
                      - timeAccessTokenExpiresMs
@@ -411,9 +402,10 @@ paths:
                           'AUTH_CODE_EXPIRY_ERROR', 
                           'UNKNOWN_REDIRECT_URI_ERROR',
                           'UNKNOWN_CLIENT_CREDENTIALS_ERROR', 
-                          'UNKNOWN_CLIENT_ID_ERROR', 
+                          'UNKNOWN_CLIENT_ID_ERROR',
                           'REFRESH_TOKEN_EXPIRY_ERROR',
-                          'UNKNOWN_REFRESH_TOKEN_ERROR']
+                          'UNKNOWN_REFRESH_TOKEN_ERROR',
+                          'INVALID_CODE_VERIFIER_ERROR']
         '400':
           $ref: '#/components/responses/400'
         '401':
