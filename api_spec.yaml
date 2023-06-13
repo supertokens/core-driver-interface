@@ -319,11 +319,10 @@ paths:
                       example: 360000000
                     customAccessTokenPayload:
                       $ref: '#/components/schemas/createJWTPayload'
-                    customIdTokenPayload:
-                      $ref: '#/components/schemas/createJWTPayload'
                   required:
                     - authorizationCode
                     - clientId
+                    - redirectUri
                 - type: object
                   properties:
                     clientId:
@@ -338,12 +337,7 @@ paths:
                     accessTokenLifetimeMs:
                       type: number
                       example: 3600000
-                    refreshTokenLifetimeMs:
-                      type: number
-                      example: 360000000
                     customAccessTokenPayload:
-                      $ref: '#/components/schemas/createJWTPayload'
-                    customIdTokenPayload:
                       $ref: '#/components/schemas/createJWTPayload'
                   required:
                     - clientId
@@ -365,8 +359,6 @@ paths:
                       type: number
                       example: 360000000
                     customAccessTokenPayload:
-                      $ref: '#/components/schemas/createJWTPayload'
-                    customIdTokenPayload:
                       $ref: '#/components/schemas/createJWTPayload'
                   required:
                     - refreshToken
@@ -395,8 +387,6 @@ paths:
                         type: string
                       refreshToken:
                         type: string
-                      idToken:
-                        type: string
                       timeCreatedMs:
                         $ref: '#/components/schemas/timestampMs'
                       timeAccessTokenExpiresMs:
@@ -413,12 +403,13 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['INVALID_AUTHORIZATION_CODE_ERROR', 'UNKNOWN_CODE_CHALLENGE', 'UNKNOWN_REDIRECT_URI_ERROR', 'UNKNOWN_CLIENT_CREDENTIALS_ERROR',
-                          'UNKNOWN_CLIENT_ID_ERROR',
-                          'UNKNOWN_AUTH_CODE_ERROR',
-                          'UNKNOWN_REFRESH_TOKEN_LIFE_TIME_ERROR',
-                          'INVALID_REFRESH_TOKEN_ERROR',
-                        'UNKNOWN_REFRESH_TOKEN_ERROR']
+                        enum: ['UNKNOWN_AUTH_CODE_ERROR',
+                          'AUTH_CODE_EXPIRY_ERROR', 
+                          'UNKNOWN_REDIRECT_URI_ERROR',
+                          'UNKNOWN_CLIENT_CREDENTIALS_ERROR', 
+                          'UNKNOWN_CLIENT_ID_ERROR', 
+                          'REFRESH_TOKEN_EXPIRY_ERROR',
+                          'UNKNOWN_REFRESH_TOKEN_ERROR']
         '400':
           $ref: '#/components/responses/400'
         '401':
