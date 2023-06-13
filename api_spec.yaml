@@ -309,6 +309,9 @@ paths:
                       type: string
                     codeVerifier:
                       type: string
+                    mode:
+                      type: string
+                      enum: ['OFFLINE', 'ONLINE']
                     redirectUri:
                       $ref: '#/components/schemas/oauth2RedirectUri'
                     accessTokenLifetimeMs:
@@ -322,6 +325,7 @@ paths:
                   required:
                     - authorizationCode
                     - clientId
+                    - mode
                     - redirectUri
                 - type: object
                   properties:
