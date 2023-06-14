@@ -193,23 +193,11 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      sessionHandle:
-                        $ref: '#/components/schemas/handle'
-                      userId:
-                        $ref: '#/components/schemas/userId'
-                      scopes:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/oauth2Scope'
                       accessToken:
                         type: string
                       refreshToken:
                         type: string
-                      idToken:
-                        type: string
                       timeCreatedMs:
-                        $ref: '#/components/schemas/timestampMs'
-                      timelastUdpatedMs:
                         $ref: '#/components/schemas/timestampMs'
                       timeAccessTokenExpiresMs:
                         $ref: '#/components/schemas/timestampMs'
@@ -217,16 +205,15 @@ paths:
                         $ref: '#/components/schemas/timestampMs'
                     required:
                      - status
-                     - scopes
                      - accessToken
                      - timeCreatedMs
-                     - timelastUdpatedMs
                      - timeAccessTokenExpiresMs
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ['UNKNOWN_ACCESS_TOKEN_ERROR']
+                        enum: ['UNKNOWN_ACCESS_TOKEN_ERROR',
+                          'ACCESS_TOKEN_EXPIRY_ERROR']
         '400':
           $ref: '#/components/responses/400'
         '401':
