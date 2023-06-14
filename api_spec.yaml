@@ -197,8 +197,6 @@ paths:
                         type: string
                       refreshToken:
                         type: string
-                      timeCreatedMs:
-                        $ref: '#/components/schemas/timestampMs'
                       timeAccessTokenExpiresMs:
                         $ref: '#/components/schemas/timestampMs'
                       timeRefreshTokenExpiresMs:
@@ -206,7 +204,6 @@ paths:
                     required:
                      - status
                      - accessToken
-                     - timeCreatedMs
                      - timeAccessTokenExpiresMs
                   - type: object
                     properties:
@@ -222,8 +219,8 @@ paths:
           $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
-
-  /appid-<appId>/recipe/oauth2/token:
+          
+  /appid-<appId>/<tenantId>/recipe/oauth2/token:
     delete:
       tags:
         - OAuth2 Recipe
@@ -285,8 +282,7 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
-
-  /appid-<appId>/<tenantId>/recipe/oauth2/token:
+          
     post:
       tags:
         - OAuth2 Recipe
@@ -313,9 +309,6 @@ paths:
                       type: string
                     codeVerifier:
                       type: string
-                    mode:
-                      type: string
-                      enum: ['OFFLINE', 'ONLINE']
                     redirectUri:
                       $ref: '#/components/schemas/oauth2RedirectUri'
                     accessTokenLifetimeMs:
@@ -360,6 +353,10 @@ paths:
                       $ref: '#/components/schemas/oauth2ClientId'
                     clientSecret:
                       type: string
+                    scopes:
+                      type : array
+                      items:
+                        $ref: '#/components/schemas/oauth2Scope'
                     accessTokenLifetimeMs:
                       type: number
                       example: 3600000
@@ -387,8 +384,6 @@ paths:
                         type: string
                       refreshToken:
                         type: string
-                      timeCreatedMs:
-                        $ref: '#/components/schemas/timestampMs'
                       timeAccessTokenExpiresMs:
                         $ref: '#/components/schemas/timestampMs'
                       timeRefreshTokenExpiresMs:
@@ -409,7 +404,6 @@ paths:
                           'UNKNOWN_CLIENT_ID_ERROR',
                           'REFRESH_TOKEN_EXPIRY_ERROR',
                           'UNKNOWN_REFRESH_TOKEN_ERROR',
-                          'UNKNOWN_SESSION_HANDLE_ERROR',
                           'INVALID_CODE_VERIFIER_ERROR']
         '400':
           $ref: '#/components/responses/400'
