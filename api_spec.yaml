@@ -163,7 +163,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/oauth2/token/verify:
+  /appid-<appId>/oauth2/token/verify:
     post:
       tags:
         - OAuth2 Recipe
@@ -226,8 +226,8 @@ paths:
           $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
-
-  /appid-<appId>/recipe/oauth2/token:
+          
+  /appid-<appId>/<tenantId>/recipe/oauth2/token:
     delete:
       tags:
         - OAuth2 Recipe
@@ -289,8 +289,7 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
-
-  /appid-<appId>/<tenantId>/recipe/oauth2/token:
+          
     post:
       tags:
         - OAuth2 Recipe
