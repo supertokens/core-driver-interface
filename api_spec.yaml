@@ -317,6 +317,9 @@ paths:
                       type: string
                     codeVerifier:
                       type: string
+                    mode:
+                      type: string
+                      enum: ['OFFLINE', 'ONLINE']
                     redirectUri:
                       $ref: '#/components/schemas/oauth2RedirectUri'
                     accessTokenLifetimeMs:
@@ -327,11 +330,11 @@ paths:
                       example: 360000000
                     customAccessTokenPayload:
                       $ref: '#/components/schemas/createJWTPayload'
-                    customIdTokenPayload:
-                      $ref: '#/components/schemas/createJWTPayload'
                   required:
                     - authorizationCode
                     - clientId
+                    - mode
+                    - redirectUri
                 - type: object
                   properties:
                     clientId:
@@ -346,12 +349,7 @@ paths:
                     accessTokenLifetimeMs:
                       type: number
                       example: 3600000
-                    refreshTokenLifetimeMs:
-                      type: number
-                      example: 360000000
                     customAccessTokenPayload:
-                      $ref: '#/components/schemas/createJWTPayload'
-                    customIdTokenPayload:
                       $ref: '#/components/schemas/createJWTPayload'
                   required:
                     - clientId
@@ -374,8 +372,6 @@ paths:
                       example: 360000000
                     customAccessTokenPayload:
                       $ref: '#/components/schemas/createJWTPayload'
-                    customIdTokenPayload:
-                      $ref: '#/components/schemas/createJWTPayload'
                   required:
                     - refreshToken
                     - clientId
@@ -391,19 +387,9 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      sessionHandle:
-                        $ref: '#/components/schemas/handle'
-                      userId:
-                        $ref: '#/components/schemas/userId'
-                      scopes:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/oauth2Scope'
                       accessToken:
                         type: string
                       refreshToken:
-                        type: string
-                      idToken:
                         type: string
                       timeCreatedMs:
                         $ref: '#/components/schemas/timestampMs'
@@ -413,7 +399,6 @@ paths:
                         $ref: '#/components/schemas/timestampMs'
                     required:
                      - status
-                     - scopes
                      - accessToken
                      - timeCreatedMs
                      - timeAccessTokenExpiresMs
@@ -421,12 +406,14 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['INVALID_AUTHORIZATION_CODE_ERROR', 'UNKNOWN_CODE_CHALLENGE', 'UNKNOWN_REDIRECT_URI_ERROR', 'UNKNOWN_CLIENT_CREDENTIALS_ERROR',
+                        enum: ['UNKNOWN_AUTH_CODE_ERROR',
+                          'AUTH_CODE_EXPIRY_ERROR', 
+                          'UNKNOWN_REDIRECT_URI_ERROR',
+                          'UNKNOWN_CLIENT_CREDENTIALS_ERROR', 
                           'UNKNOWN_CLIENT_ID_ERROR',
-                          'UNKNOWN_AUTH_CODE_ERROR',
-                          'UNKNOWN_REFRESH_TOKEN_LIFE_TIME_ERROR',
-                          'INVALID_REFRESH_TOKEN_ERROR',
-                        'UNKNOWN_REFRESH_TOKEN_ERROR']
+                          'REFRESH_TOKEN_EXPIRY_ERROR',
+                          'UNKNOWN_REFRESH_TOKEN_ERROR',
+                          'INVALID_CODE_VERIFIER_ERROR']
         '400':
           $ref: '#/components/responses/400'
         '401':
