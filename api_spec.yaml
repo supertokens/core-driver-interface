@@ -405,6 +405,7 @@ paths:
                           'UNKNOWN_CLIENT_ID_ERROR',
                           'REFRESH_TOKEN_EXPIRY_ERROR',
                           'UNKNOWN_REFRESH_TOKEN_ERROR',
+                          'UNKNOWN_SESSION_HANDLE_ERROR',
                           'INVALID_CODE_VERIFIER_ERROR']
         '400':
           $ref: '#/components/responses/400'
