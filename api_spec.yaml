@@ -309,6 +309,8 @@ paths:
                       type: string
                     codeVerifier:
                       type: string
+                    queryString:
+                      $ref : '#/components/schemas/oauth2QueryString'
                     redirectUri:
                       $ref: '#/components/schemas/oauth2RedirectUri'
                     accessTokenLifetimeMs:
@@ -384,6 +386,8 @@ paths:
                         type: string
                       refreshToken:
                         type: string
+                      queryString:
+                        $ref: '#/components/schemas/oauth2QueryString'
                       timeAccessTokenExpiresMs:
                         $ref: '#/components/schemas/timestampMs'
                       timeRefreshTokenExpiresMs:
@@ -400,10 +404,12 @@ paths:
                         enum: ['UNKNOWN_AUTH_CODE_ERROR',
                           'AUTH_CODE_EXPIRY_ERROR', 
                           'UNKNOWN_REDIRECT_URI_ERROR',
-                          'UNKNOWN_CLIENT_CREDENTIALS_ERROR', 
+                          'UNKNOWN_CLIENT_SECRET_ERROR', 
                           'UNKNOWN_CLIENT_ID_ERROR',
                           'REFRESH_TOKEN_EXPIRY_ERROR',
                           'UNKNOWN_REFRESH_TOKEN_ERROR',
+                          'UNKNOWN_SCOPE_ERROR',
+                          'UNKNOWN_QUERY_STRING_ERROR',
                           'INVALID_CODE_VERIFIER_ERROR']
         '400':
           $ref: '#/components/responses/400'
@@ -6657,7 +6663,7 @@ components:
       type: object
       description: The payload of the JWT, should be a JSON object.
       example: {"custom-claim": ""}
-
+    
     createJWTAlgorithm:
       type: string
       description: The algorithm to use when creating the JWT.
@@ -6929,3 +6935,8 @@ components:
           $ref: '#/components/schemas/timestampMs'
         timeUpdated:
           $ref: '#/components/schemas/timestampMs'
+    
+    oauth2QueryString:
+      type: string
+      description: The query params passed during auth code creation, should be a String.
+      example: "param1=value1&param2=value2"
