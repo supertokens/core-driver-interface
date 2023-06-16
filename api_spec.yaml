@@ -6662,8 +6662,7 @@ components:
     createJWTPayload:
       type: object
       description: The payload of the JWT, should be a JSON object.
-      example: {"custom-claim": ""}
-    
+      example: {"custom-claim": ""}    
     createJWTAlgorithm:
       type: string
       description: The algorithm to use when creating the JWT.
@@ -6938,5 +6937,5 @@ components:
     
     oauth2QueryString:
       type: string
-      description: The query params passed during auth code creation, should be a String.
+      description: The query params passed during auth code creation.
       example: "param1=value1&param2=value2"
