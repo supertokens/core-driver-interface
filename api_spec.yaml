@@ -403,13 +403,14 @@ paths:
                         type: string
                         enum: ['UNKNOWN_AUTH_CODE_ERROR',
                           'AUTH_CODE_EXPIRY_ERROR', 
-                          'UNKNOWN_REDIRECT_URI_ERROR',
+                          'INVALID_REDIRECT_URI_ERROR',
                           'UNKNOWN_CLIENT_SECRET_ERROR', 
                           'UNKNOWN_CLIENT_ID_ERROR',
                           'REFRESH_TOKEN_EXPIRY_ERROR',
                           'UNKNOWN_REFRESH_TOKEN_ERROR',
-                          'UNKNOWN_SCOPE_ERROR',
-                          'UNKNOWN_QUERY_STRING_ERROR',
+                          'UNKNOWN_CLIENT_SCOPE_ERROR',
+                          'INVALID_CLIENT_SCOPE_ERROR',
+                          'INVALID_QUERY_STRING_ERROR',
                           'INVALID_CODE_VERIFIER_ERROR']
         '400':
           $ref: '#/components/responses/400'
