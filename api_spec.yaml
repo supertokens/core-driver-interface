@@ -6662,7 +6662,8 @@ components:
     createJWTPayload:
       type: object
       description: The payload of the JWT, should be a JSON object.
-      example: {"custom-claim": ""}    
+      example: {"custom-claim": ""}
+
     createJWTAlgorithm:
       type: string
       description: The algorithm to use when creating the JWT.
