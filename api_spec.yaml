@@ -408,8 +408,8 @@ paths:
                           'UNKNOWN_CLIENT_ID_ERROR',
                           'REFRESH_TOKEN_EXPIRY_ERROR',
                           'UNKNOWN_REFRESH_TOKEN_ERROR',
-                          'UNKNOWN_CLIENT_SCOPE_ERROR',
-                          'INVALID_CLIENT_SCOPE_ERROR',
+                          'UNKNOWN_SCOPE_ERROR',
+                          'INVALID_SCOPE_ERROR',
                           'INVALID_QUERY_STRING_ERROR',
                           'INVALID_CODE_VERIFIER_ERROR']
         '400':
