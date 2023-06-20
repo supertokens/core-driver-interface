@@ -5,7 +5,7 @@ info:
 
     `appid-<appId>` and `<tenantId>` in all the APIs are optional. Their default values are `appid-public` and `public` respectively
 
-  version: 3.0.0
+  version: 3.0.1
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -4716,6 +4716,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
+  /appid-<appId>/<tenantId>/recipe/multitenancy/tenant:
     get:
       tags:
         - Multitenancy Recipe
