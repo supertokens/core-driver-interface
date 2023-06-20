@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Fixed `/recipe/multitenancy/tenant` GET
+
 ## [3.0.0] - 2023-06-02
 
 - Adds `/appid-<appId>` or `/appid-<appId>/<tenantId>` prefix to some of the APIs as applicable. 

@@ -4716,6 +4716,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
+  /appid-<appId>/<tenantId>/recipe/multitenancy/tenant:
     get:
       tags:
         - Multitenancy Recipe
