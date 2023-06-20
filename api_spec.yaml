@@ -219,7 +219,7 @@ paths:
           $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
-          
+  
   /appid-<appId>/<tenantId>/recipe/oauth2/token:
     delete:
       tags:
@@ -309,21 +309,32 @@ paths:
                       type: string
                     codeVerifier:
                       type: string
+                    queryString:
+                      $ref : '#/components/schemas/oauth2QueryString'
                     redirectUri:
                       $ref: '#/components/schemas/oauth2RedirectUri'
+                    scope:
+                      type : array
+                      items:
+                        $ref: '#/components/schemas/oauth2Scope'
+                    grantType:
+                      type : string
+                      enum : ['AUTHORIZATION_CODE']
                     accessTokenLifetimeMs:
                       type: number
                       example: 3600000
                     refreshTokenLifetimeMs:
                       type: number
                       example: 360000000
-                    customAccessTokenPayload:
+                    accessTokenPayload:
                       $ref: '#/components/schemas/createJWTPayload'
                   required:
                     - authorizationCode
                     - clientId
-                    - mode
+                    - accessTokenPayload
                     - redirectUri
+                    - grantType
+                    - queryString
                 - type: object
                   properties:
                     clientId:
@@ -331,19 +342,24 @@ paths:
                       $ref: '#/components/schemas/oauth2ClientId'
                     clientSecret:
                       type: string
-                    scopes:
+                    scope:
                       type : array
                       items:
                         $ref: '#/components/schemas/oauth2Scope'
+                    grantType:
+                      type : string
+                      enum : ['CLIENT_CREDENTIALS']
                     accessTokenLifetimeMs:
                       type: number
                       example: 3600000
-                    customAccessTokenPayload:
+                    accessTokenPayload:
                       $ref: '#/components/schemas/createJWTPayload'
                   required:
                     - clientId
                     - clientSecret
-                    - scopes
+                    - scope
+                    - grantType
+                    - accessTokenPayload
                 - type: object
                   properties:
                     refreshToken:
@@ -353,21 +369,25 @@ paths:
                       $ref: '#/components/schemas/oauth2ClientId'
                     clientSecret:
                       type: string
-                    scopes:
+                    scope:
                       type : array
                       items:
                         $ref: '#/components/schemas/oauth2Scope'
+                    grantType:
+                      type : string
+                      enum : ['REFRESH_TOKEN']
                     accessTokenLifetimeMs:
                       type: number
                       example: 3600000
                     refreshTokenLifetimeMs:
                       type: number
                       example: 360000000
-                    customAccessTokenPayload:
+                    accessTokenPayload:
                       $ref: '#/components/schemas/createJWTPayload'
                   required:
                     - refreshToken
                     - clientId
+                    - grantType
       responses:
         '200':
           description: |
@@ -384,6 +404,8 @@ paths:
                         type: string
                       refreshToken:
                         type: string
+                      queryString:
+                        $ref: '#/components/schemas/oauth2QueryString'
                       timeAccessTokenExpiresMs:
                         $ref: '#/components/schemas/timestampMs'
                       timeRefreshTokenExpiresMs:
@@ -392,19 +414,19 @@ paths:
                      - status
                      - accessToken
                      - timeCreatedMs
+                     - queryString
                      - timeAccessTokenExpiresMs
                   - type: object
                     properties:
                       status:
                         type: string
                         enum: ['UNKNOWN_AUTH_CODE_ERROR',
-                          'AUTH_CODE_EXPIRY_ERROR', 
-                          'UNKNOWN_REDIRECT_URI_ERROR',
-                          'UNKNOWN_CLIENT_CREDENTIALS_ERROR', 
+                          'AUTH_CODE_EXPIRY_ERROR',
+                          'UNKNOWN_CLIENT_SECRET_ERROR', 
                           'UNKNOWN_CLIENT_ID_ERROR',
                           'REFRESH_TOKEN_EXPIRY_ERROR',
                           'UNKNOWN_REFRESH_TOKEN_ERROR',
-                          'INVALID_CODE_VERIFIER_ERROR']
+                          'UNKNOWN_SCOPE_ERROR']
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -6929,3 +6951,8 @@ components:
           $ref: '#/components/schemas/timestampMs'
         timeUpdated:
           $ref: '#/components/schemas/timestampMs'
+    
+    oauth2QueryString:
+      type: string
+      description: The query params passed during auth code creation.
+      example: "param1=value1&param2=value2"
