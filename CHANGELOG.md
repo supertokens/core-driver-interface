@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [3.0.1] - 2023-06-20
+
 - Fixed `/recipe/multitenancy/tenant` GET
 
 ## [3.0.0] - 2023-06-02
