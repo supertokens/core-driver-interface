@@ -334,6 +334,7 @@ paths:
                     - accessTokenPayload
                     - redirectUri
                     - grantType
+                    - queryString
                 - type: object
                   properties:
                     clientId:
