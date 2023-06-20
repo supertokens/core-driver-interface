@@ -164,7 +164,7 @@ paths:
           $ref: '#/components/responses/500'
 
   /appid-<appId>/<tenantId>/recipe/oauth2/token/verify:
-    get:
+    post:
       tags:
         - OAuth2 Recipe
       operationId: verifyOAuth2AccessToken
@@ -174,12 +174,20 @@ paths:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        - in: query
-          name: accessToken
-          schema:
-            accessToken:
-            $ref: '#/components/schemas/token'
-          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                clientId:
+                  type: string
+                  $ref: '#/components/schemas/oauth2ClientId'
+                accessToken:
+                  type: string
+              required:
+                - clientId
+                - accessToken
 
       responses:
         '200':
@@ -193,23 +201,43 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      accessToken:
+                      clientId:
                         type: string
-                      refreshToken:
+                        $ref: '#/components/schemas/oauth2ClientId'
+                      sessionHandle:
+                        $ref: '#/components/schemas/handle'
+                      accessTokenHash:
                         type: string
+                      refreshTokenHash:
+                        type: string
+                      scope:
+                        type : array
+                        items:
+                          $ref: '#/components/schemas/oauth2Scope'
+                      queryString:
+                        $ref: '#/components/schemas/oauth2QueryString'
+                      timeCreatedAtMs:
+                        $ref: '#/components/schemas/timestampMs'
+                      timeUpdatedAtMs:
+                        $ref: '#/components/schemas/timestampMs'
                       timeAccessTokenExpiresMs:
                         $ref: '#/components/schemas/timestampMs'
                       timeRefreshTokenExpiresMs:
                         $ref: '#/components/schemas/timestampMs'
                     required:
                      - status
-                     - accessToken
+                     - clientId
+                     - sessionHandle
+                     - accessTokenHash
                      - timeAccessTokenExpiresMs
+                     - scope
+                     - timeCreatedAtMs
+                     - timeUpdatedAtMs
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ['UNKNOWN_ACCESS_TOKEN_ERROR',
+                        enum: ['INVALID_ACCESS_TOKEN_ERROR',
                           'ACCESS_TOKEN_EXPIRY_ERROR']
         '400':
           $ref: '#/components/responses/400'
