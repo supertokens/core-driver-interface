@@ -226,35 +226,33 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/recipe/oauth2/token/revoke:
-    post:
+  /appid-<appId>/<tenantId>/recipe/oauth2/token:
+    delete:
       tags:
         - OAuth2 Recipe
       operationId: revokeOAuth2Token
       description: |
-        Revoke a token or all tokens belonging to a session or to a client (across all tenants).
+        Revoke a token or all tokens belonging to a session or to a client (across all tenants). [Click here](https://app.code2flow.com/V0wfSu1Y1b9U) for flow diagram.
         To provide Single Logout, you should also call the normal session logout endpoint and the token revocation endpoint as well.
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              oneOf:
-                - type: object
-                  properties:
-                    accessToken:
-                      type: string
-                - type: object
-                  properties:
-                    sessionHandle:
-                      type: string
-                - type: object
-                  properties:
-                    clientId:
-                      type: string
+        - in: query
+          name: accessToken
+          schema:
+            accessToken:
+            $ref: '#/components/schemas/token'
+        - in: query
+          name: clientId
+          schema:
+            clientId:
+            $ref: '#/components/schemas/oauth2ClientId'
+        - in: query
+          name: sessionHandle
+          schema:
+            sessionHandle:
+            $ref: '#/components/schemas/handle'
       responses:
         '200':
           description: Indicates success with the status property
@@ -266,9 +264,16 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      didTokenExist:
-                        type: boolean
-                        example: true
+                      deletedCount:
+                        type: number
+                    required:
+                      - status
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['UNKNOWN_CLIENT_ID_ERROR', 'UNKNOWN_SESSION_HANDLE_ERROR', 'INVALID_ACCESS_TOKEN_ERROR']
+          
         '400':
           $ref: '#/components/responses/400'
         
@@ -280,8 +285,7 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
-
-  /appid-<appId>/<tenantId>/recipe/oauth2/token:
+          
     post:
       tags:
         - OAuth2 Recipe
