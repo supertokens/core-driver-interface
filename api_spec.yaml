@@ -778,7 +778,7 @@ paths:
       operationId: getOAuth2Client
       description: |
         Get info about an OAuth2 client, 
-        [Click here](https://app.code2flow.com/8JfH4soWhSZO) for flow digaram
+        [Click here](https://app.code2flow.com/RdjPbUdmj66f) for flow digaram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
