@@ -429,7 +429,8 @@ paths:
                           'UNKNOWN_REFRESH_TOKEN_ERROR',
                           'UNKNOWN_SCOPE_ERROR',
                           'SCOPE_NOT_ALLOWED_ERROR',
-                          'CODE_MISMATCH_ERROR']
+                          'CODE_MISMATCH_ERROR',
+                          'QUERY_STRING_MISMATCH_ERROR']
         '400':
           $ref: '#/components/responses/400'
         '401':
