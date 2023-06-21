@@ -596,6 +596,8 @@ paths:
                         type: string
                       refreshTokenHash:
                         type: string
+                      clientSecretRequiredForRefresh:
+                        type: boolean
                       scope:
                         type : array
                         items:
@@ -616,6 +618,7 @@ paths:
                      - sessionHandle
                      - refreshTokenHash
                      - accessTokenHash
+                     - clientSecretRequiredForRefresh
                      - timeAccessTokenExpiresMs
                      - timeRefreshTokenExpiresMs
                      - scope
@@ -627,8 +630,7 @@ paths:
                       status:
                         type: string
                         enum: [ 'UNKNOWN_CLIENT_ID_ERROR',
-                          'UNKNOWN_REFRESH_TOKEN_ERROR',
-                          'REFRESH_TOKEN_EXPIRY_ERROR']
+                          'UNKNOWN_REFRESH_TOKEN_ERROR']
         '400':
           $ref: '#/components/responses/400'
         '401':
