@@ -108,7 +108,6 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/recipe/oauth2/authorizationcode:
     delete:
       tags:
         - OAuth2 Recipe
@@ -316,8 +315,6 @@ paths:
                       type: string
                     codeVerifier:
                       type: string
-                    queryString:
-                      $ref : '#/components/schemas/oauth2QueryString'
                     redirectUri:
                       $ref: '#/components/schemas/oauth2RedirectUri'
                     scope:
@@ -428,16 +425,13 @@ paths:
                       status:
                         type: string
                         enum: ['UNKNOWN_AUTH_CODE_ERROR',
-                          'AUTH_CODE_EXPIRY_ERROR',
                           'UNKNOWN_CLIENT_SECRET_ERROR', 
                           'UNKNOWN_CLIENT_ID_ERROR',
-                          'REFRESH_TOKEN_EXPIRY_ERROR',
-                          'REDIRECT_URI_MISMATCH_ERROR',
+                          'UNKNOWN_REDIRECT_URI_ERROR',
                           'UNKNOWN_REFRESH_TOKEN_ERROR',
                           'UNKNOWN_SCOPE_ERROR',
                           'SCOPE_NOT_ALLOWED_ERROR',
-                          'CODE_MISMATCH_ERROR',
-                          'QUERY_STRING_MISMATCH_ERROR']
+                          'UNKNOWN_CODE_VERIFIER_ERROR']
         '400':
           $ref: '#/components/responses/400'
         '401':
