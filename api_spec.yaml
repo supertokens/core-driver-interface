@@ -778,7 +778,7 @@ paths:
       operationId: getOAuth2Client
       description: |
         Get info about an OAuth2 client, 
-        [Click here](https://app.code2flow.com/8JfH4soWhSZO) for flow digaram
+        [Click here](https://app.code2flow.com/RdjPbUdmj66f) for flow digaram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -801,85 +801,36 @@ paths:
                     required:
                       - status
                       - clientInfo
-                      - authorizationCodes
-                      - issuedTokens
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
                       clientInfo:
-                        $ref: '#/components/schemas/oauth2ClientInfo'
-                      authorizationCodes:
-                        type: array
-                        items:
-                          type: object
-                          required:
-                            - tenantId
-                            - sessionHandle
-                            - scopes
-                            - accessType
-                            - redirectUri
-                            - timeCreated
-                            - timeExpires
-                          properties:
-                            tenantId:
-                              type: string
-                            sessionHandle:
-                              $ref: '#/components/schemas/handle'
-                            scopes:
-                              type: array
-                              items:
-                                $ref: '#/components/schemas/oauth2Scope'
-                            accessType:
-                              type: string
-                              enum: ['offline', 'online']
-                            codeChallenge:
-                              type: string
-                            codeChallengeMethod:
-                              type: string
-                              enum: ['S256']
-                            redirectUri:
+                        type: object
+                        required:
+                          - name
+                          - clientId
+                          - scopes
+                          - redirectUris
+                          - timeCreated
+                          - timeUpdated
+                        properties: 
+                          name:
+                            type: string
+                            example: 'development'
+                          clientId:
+                            $ref: '#/components/schemas/oauth2ClientId'
+                          scopes: 
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/oauth2Scope'
+                          redirectUris:
+                            type: array
+                            items:
                               $ref: '#/components/schemas/oauth2RedirectUri'
-                            timeCreated:
-                              $ref: '#/components/schemas/timestampMs'
-                            timeExpires:
-                              $ref: '#/components/schemas/timestampMs'
-                      issuedTokens:
-                        type: array
-                        items: 
-                          type: object
-                          required:
-                            - id
-                            - tenantId
-                            - sessionHandle
-                            - scopes
-                            - accessTokenHash
-                            - timeUpdated
-                            - timeCreated
-                            - timeAccessTokenExpires
-                          properties:
-                            id:
-                              type: string
-                              example: '98c607be-7797-48e7-b95a-f76ff918ac2e'
-                            tenantId:
-                              type: string
-                            sessionHandle:
-                              type: string
-                            scopes:
-                              type: array
-                              items:
-                                $ref: '#/components/schemas/oauth2Scope'
-                            accessTokenHash:
-                              type: string
-                            refreshTokenHash:
-                              type: string
-                            timeUpdated:
-                              $ref: '#/components/schemas/timestampMs'
-                            timeCreated:
-                              $ref: '#/components/schemas/timestampMs'
-                            timeAccessTokenExpires:
-                              $ref: '#/components/schemas/timestampMs'
-                            timeRefreshTokenExpires:
-                              $ref: '#/components/schemas/timestampMs'
+                          timeCreated:
+                            $ref: '#/components/schemas/timestampMs'
+                          timeUpdated:
+                            $ref: '#/components/schemas/timestampMs'
                   - type: object
                     properties:
                       status:
