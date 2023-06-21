@@ -247,7 +247,7 @@ paths:
           $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/<tenantId>/recipe/oauth2/token:
     delete:
       tags:
@@ -453,8 +453,12 @@ paths:
                           'UNKNOWN_CLIENT_SECRET_ERROR', 
                           'UNKNOWN_CLIENT_ID_ERROR',
                           'REFRESH_TOKEN_EXPIRY_ERROR',
+                          'REDIRECT_URI_MISMATCH_ERROR',
                           'UNKNOWN_REFRESH_TOKEN_ERROR',
-                          'UNKNOWN_SCOPE_ERROR']
+                          'UNKNOWN_SCOPE_ERROR',
+                          'SCOPE_NOT_ALLOWED_ERROR',
+                          'CODE_MISMATCH_ERROR',
+                          'QUERY_STRING_MISMATCH_ERROR']
         '400':
           $ref: '#/components/responses/400'
         '401':
