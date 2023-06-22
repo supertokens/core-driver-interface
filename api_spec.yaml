@@ -428,22 +428,11 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      accessToken:
-                        type: string
-                      refreshToken:
-                        type: string
-                      queryString:
-                        $ref: '#/components/schemas/oauth2QueryString'
-                      timeAccessTokenExpiresMs:
-                        $ref: '#/components/schemas/timestampMs'
-                      timeRefreshTokenExpiresMs:
-                        $ref: '#/components/schemas/timestampMs'
+                      tokenInfo:
+                        $ref: '#/components/schemas/oauth2TokenInfo'
                     required:
                      - status
-                     - accessToken
-                     - timeCreatedMs
-                     - queryString
-                     - timeAccessTokenExpiresMs
+                     - tokenInfo
                   - type: object
                     properties:
                       status:
