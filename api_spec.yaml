@@ -50,6 +50,8 @@ paths:
                   type: array
                   items:
                     $ref: '#/components/schemas/oauth2Scope'
+                queryString:
+                  $ref: '#/components/schemas/oauth2QueryString'
                 accessType:
                   type: string
                   enum: ['offline', 'online']
@@ -64,14 +66,14 @@ paths:
                 expiresAfterMs:
                   type: number
                   example: 300000
-                  
               required:
                 - clientId
                 - scopes
                 - sessionHandle
+                - queryString
                 - accessType
                 - redirectUri
-
+    
       responses:
         '200':
           description: |
@@ -86,6 +88,8 @@ paths:
                         $ref: '#/components/schemas/statusOK'
                       authorizationCode:
                         type: string
+                      queryString:
+                        $ref: '#/components/schemas/oauth2QueryString'
                       timeCreatedMs:
                         $ref: '#/components/schemas/timestampMs'
                       timeExpiresMs:
@@ -95,7 +99,7 @@ paths:
                       status:
                         type: string
                         enum: ['UNKNOWN_CLIENT_ID_ERROR', 'UNKNOWN_SESSION_HANDLE_ERROR',
-                        'UNKNOWN_REDIRECT_URI_ERROR', 'UNKNOWN_SCOPE_ERROR']
+                        'UNKNOWN_REDIRECT_URI_ERROR', 'SCOPE_NOT_ALLOWED_ERROR']
         '400':
           $ref: '#/components/responses/400'
         
@@ -107,8 +111,98 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+          
+    get:
+      tags:
+        - OAuth2 Recipe
+      operationId: getOAuth2AuthorizationCode
+      description: |
+        get authorization code details belonging to a client.
+        [Click here](https://app.code2flow.com/gq43eMfvLwfg) for flow diagram.
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: clientId
+          schema:
+            clientId:
+            $ref: '#/components/schemas/oauth2ClientId'
+          required: true
+        - in: query
+          name: authorizationCode
+          schema:
+            type: string
+          required : true
+      responses:
+        '200':
+          description: |
+            Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      clientId:
+                        type: string
+                        $ref: '#/components/schemas/oauth2ClientId'
+                      sessionHandle:
+                        $ref: '#/components/schemas/handle'
+                      authorizationCodeHash:
+                        type: string
+                      scope:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/oauth2Scope'
+                      accessType:
+                        type: string
+                        enum: ['offline', 'online']
+                      codeChallenge:
+                        type: string
+                      codeChallengeMethod:
+                        type: string
+                        enum: ['S256']
+                      redirectUri:
+                        type: string
+                        $ref: '#/components/schemas/oauth2RedirectUri'
+                      queryString:
+                        $ref: '#/components/schemas/oauth2QueryString'
+                      timeCreatedMs:
+                        $ref: '#/components/schemas/timestampMs'
+                      timeExpiresMs:
+                        $ref: '#/components/schemas/timestampMs'
+                    required:
+                     - status 
+                     - clientId
+                     - sessionHandle
+                     - authorizationCodeHash
+                     - scope
+                     - queryString
+                     - accessType
+                     - redirectUri
+                     - timeCreatedMs
+                     - timeExpiresMs
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['UNKNOWN_CLIENT_ID_ERROR', 'UNKNOWN_AUTH_CODE_ERROR']
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+              
 
-  /appid-<appId>/recipe/oauth2/authorizationcode:
     delete:
       tags:
         - OAuth2 Recipe
@@ -163,99 +257,33 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/oauth2/token/verify:
-    post:
-      tags:
-        - OAuth2 Recipe
-      operationId: verifyOAuth2AccessToken
-      description: |
-        Verify an OAuth2 access token
-      parameters:
-        - $ref: '#/components/parameters/oauth2Rid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-                type: object
-                properties:
-                  accessToken:
-                    type: string
-                required:
-                  - accessToken
-
-      responses:
-        '200':
-          description: |
-            Indicates success with the status property
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      clientId:
-                        type: string
-                      sessionHandle:
-                        type: string
-                      scopes:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/oauth2Scope'
-                      timeCreated:
-                        $ref: '#/components/schemas/timestampMs'
-                      lastUpdated:
-                        $ref: '#/components/schemas/timestampMs'
-                      timeAccessTokenExpires:
-                        $ref: '#/components/schemas/timestampMs'
-                      timeRefreshTokenExpires:
-                        $ref: '#/components/schemas/timestampMs'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ['INVALID_TOKEN']
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-
-  /appid-<appId>/recipe/oauth2/token/revoke:
-    post:
+  /appid-<appId>/<tenantId>/recipe/oauth2/token:
+    delete:
       tags:
         - OAuth2 Recipe
       operationId: revokeOAuth2Token
       description: |
-        Revoke a token or all tokens belonging to a session or to a client (across all tenants).
+        Revoke a token or all tokens belonging to a session or to a client (across all tenants). [Click here](https://app.code2flow.com/V0wfSu1Y1b9U) for flow diagram.
         To provide Single Logout, you should also call the normal session logout endpoint and the token revocation endpoint as well.
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              oneOf:
-                - type: object
-                  properties:
-                    accessToken:
-                      type: string
-                - type: object
-                  properties:
-                    sessionHandle:
-                      type: string
-                - type: object
-                  properties:
-                    clientId:
-                      type: string
+        - in: query
+          name: accessToken
+          schema:
+            accessToken:
+            $ref: '#/components/schemas/token'
+        - in: query
+          name: clientId
+          schema:
+            clientId:
+            $ref: '#/components/schemas/oauth2ClientId'
+        - in: query
+          name: sessionHandle
+          schema:
+            sessionHandle:
+            $ref: '#/components/schemas/handle'
       responses:
         '200':
           description: Indicates success with the status property
@@ -267,9 +295,16 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      didTokenExist:
-                        type: boolean
-                        example: true
+                      deletedCount:
+                        type: number
+                    required:
+                      - status
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['UNKNOWN_CLIENT_ID_ERROR', 'UNKNOWN_SESSION_HANDLE_ERROR', 'UNKNOWN_ACCESS_TOKEN_ERROR']
+          
         '400':
           $ref: '#/components/responses/400'
         
@@ -281,14 +316,13 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
-
-  /appid-<appId>/<tenantId>/recipe/oauth2/token:
+          
     post:
       tags:
         - OAuth2 Recipe
       operationId: createOAuth2AccessToken
       description: |
-        Create an OAuth2 access token
+        Create an OAuth2 access token, [click here](https://app.code2flow.com/CSieLWTZG8qh) for flow diagram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -304,59 +338,88 @@ paths:
                       type: string
                     clientId:
                       type: string
+                      $ref: '#/components/schemas/oauth2ClientId'
                     clientSecret:
                       type: string
                     codeVerifier:
                       type: string
                     redirectUri:
                       $ref: '#/components/schemas/oauth2RedirectUri'
+                    scope:
+                      type : array
+                      items:
+                        $ref: '#/components/schemas/oauth2Scope'
+                    grantType:
+                      type : string
+                      enum : ['AUTHORIZATION_CODE']
                     accessTokenLifetimeMs:
                       type: number
                       example: 3600000
                     refreshTokenLifetimeMs:
                       type: number
                       example: 360000000
-                    customAccessTokenPayload:
-                      $ref: '#/components/schemas/createJWTPayload'
-                    customIdTokenPayload:
+                    accessTokenPayload:
                       $ref: '#/components/schemas/createJWTPayload'
                   required:
                     - authorizationCode
+                    - clientId
+                    - accessTokenPayload
+                    - redirectUri
+                    - grantType
+                    - queryString
                 - type: object
                   properties:
                     clientId:
                       type: string
+                      $ref: '#/components/schemas/oauth2ClientId'
                     clientSecret:
                       type: string
+                    scope:
+                      type : array
+                      items:
+                        $ref: '#/components/schemas/oauth2Scope'
+                    grantType:
+                      type : string
+                      enum : ['CLIENT_CREDENTIALS']
                     accessTokenLifetimeMs:
                       type: number
                       example: 3600000
-                    refreshTokenLifetimeMs:
-                      type: number
-                      example: 360000000
-                    customAccessTokenPayload:
-                      $ref: '#/components/schemas/createJWTPayload'
-                    customIdTokenPayload:
+                    accessTokenPayload:
                       $ref: '#/components/schemas/createJWTPayload'
                   required:
                     - clientId
                     - clientSecret
+                    - scope
+                    - grantType
+                    - accessTokenPayload
                 - type: object
                   properties:
                     refreshToken:
                       type: string
+                    clientId:
+                      type: string
+                      $ref: '#/components/schemas/oauth2ClientId'
+                    clientSecret:
+                      type: string
+                    scope:
+                      type : array
+                      items:
+                        $ref: '#/components/schemas/oauth2Scope'
+                    grantType:
+                      type : string
+                      enum : ['REFRESH_TOKEN']
                     accessTokenLifetimeMs:
                       type: number
                       example: 3600000
                     refreshTokenLifetimeMs:
                       type: number
                       example: 360000000
-                    customAccessTokenPayload:
-                      $ref: '#/components/schemas/createJWTPayload'
-                    customIdTokenPayload:
+                    accessTokenPayload:
                       $ref: '#/components/schemas/createJWTPayload'
                   required:
                     - refreshToken
+                    - clientId
+                    - grantType
       responses:
         '200':
           description: |
@@ -369,31 +432,22 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      sessionHandle:
-                        type: string
-                      userId:
-                        $ref: '#/components/schemas/userId'
-                      scopes:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/oauth2Scope'
-                      accessToken:
-                        type: string
-                      refreshToken:
-                        type: string
-                      idToken:
-                        type: string
-                      timeCreated:
-                        $ref: '#/components/schemas/timestampMs'
-                      timeAccessTokenExpires:
-                        $ref: '#/components/schemas/timestampMs'
-                      timeRefreshTokenExpires:
-                        $ref: '#/components/schemas/timestampMs'
+                      tokenInfo:
+                        $ref: '#/components/schemas/oauth2TokenInfo'
+                    required:
+                     - status
+                     - tokenInfo
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ['INVALID_AUTHORIZATION_CODE', 'INVALID_CODE_CHALLENGE', 'REDIRECTION_URI_MISMATCH', 'INVALID_CLIENT_CREDENTIALS', 'INVALID_REFRESH_TOKEN']
+                        enum: ['UNKNOWN_AUTH_CODE_ERROR',
+                          'UNKNOWN_CLIENT_SECRET_ERROR', 
+                          'UNKNOWN_CLIENT_ID_ERROR',
+                          'UNKNOWN_REDIRECT_URI_ERROR',
+                          'UNKNOWN_REFRESH_TOKEN_ERROR',
+                          'SCOPE_NOT_ALLOWED_ERROR',
+                          'UNKNOWN_CODE_VERIFIER_ERROR']
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -402,6 +456,71 @@ paths:
           $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
+    
+    get:
+      tags:
+        - OAuth2 Recipe
+      operationId: getOAuth2TokenInfo
+      description: |
+        Get token info by providing either an access token, a refresh token, or a session handle, along with the client ID.[Click here](https://app.code2flow.com/t7Y644fyWxei) for flow diagram.
+      parameters:
+        - $ref: '#/components/parameters/oauth2Rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: clientId
+          schema:
+            clientId:
+            $ref: '#/components/schemas/oauth2ClientId'
+          required : true
+        - in: query
+          name: refreshToken
+          schema:
+             type: string
+        - in: query
+          name: accessToken
+          schema:
+             type: string
+        - in: query
+          name: sessionHandle
+          schema:
+            sessionHandle:
+            $ref: '#/components/schemas/handle'
+      responses:
+        '200':
+          description: |
+            Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      tokenInfo:
+                        type : array
+                        items :
+                          $ref: '#/components/schemas/oauth2TokenInfo'
+                    required:
+                     - status
+                     - tokenInfo
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'UNKNOWN_CLIENT_ID_ERROR',
+                          'UNKNOWN_REFRESH_TOKEN_ERROR','UNKNOWN_ACCESS_TOKEN_ERROR',
+                          'UNKNOWN_SESSION_HANDLE_ERROR']
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+        
 
   /appid-<appId>/recipe/oauth2/scope:
     get:
@@ -533,7 +652,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['SCOPE_NOT_FOUND_ERROR']
+                        enum: ['UNKNOWN_SCOPE_ERROR']
                   - type: object
                     properties:
                       status:
@@ -635,7 +754,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['UNKNOWN_SCOPE_ERROR']
+                        enum: ['SCOPE_NOT_ALLOWED_ERROR']
                   - type: object
                     properties:
                       status:
@@ -720,7 +839,7 @@ paths:
       operationId: getOAuth2Client
       description: |
         Get info about an OAuth2 client, 
-        [Click here](https://app.code2flow.com/8JfH4soWhSZO) for flow digaram
+        [Click here](https://app.code2flow.com/RdjPbUdmj66f) for flow digaram
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -743,85 +862,36 @@ paths:
                     required:
                       - status
                       - clientInfo
-                      - authorizationCodes
-                      - issuedTokens
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
                       clientInfo:
-                        $ref: '#/components/schemas/oauth2ClientInfo'
-                      authorizationCodes:
-                        type: array
-                        items:
-                          type: object
-                          required:
-                            - tenantId
-                            - sessionHandle
-                            - scopes
-                            - accessType
-                            - redirectUri
-                            - timeCreated
-                            - timeExpires
-                          properties:
-                            tenantId:
-                              type: string
-                            sessionHandle:
-                              $ref: '#/components/schemas/handle'
-                            scopes:
-                              type: array
-                              items:
-                                $ref: '#/components/schemas/oauth2Scope'
-                            accessType:
-                              type: string
-                              enum: ['offline', 'online']
-                            codeChallenge:
-                              type: string
-                            codeChallengeMethod:
-                              type: string
-                              enum: ['S256']
-                            redirectUri:
+                        type: object
+                        required:
+                          - name
+                          - clientId
+                          - scope
+                          - redirectUris
+                          - timeCreated
+                          - timeUpdated
+                        properties: 
+                          name:
+                            type: string
+                            example: 'development'
+                          clientId:
+                            $ref: '#/components/schemas/oauth2ClientId'
+                          scope: 
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/oauth2Scope'
+                          redirectUris:
+                            type: array
+                            items:
                               $ref: '#/components/schemas/oauth2RedirectUri'
-                            timeCreated:
-                              $ref: '#/components/schemas/timestampMs'
-                            timeExpires:
-                              $ref: '#/components/schemas/timestampMs'
-                      issuedTokens:
-                        type: array
-                        items: 
-                          type: object
-                          required:
-                            - id
-                            - tenantId
-                            - sessionHandle
-                            - scopes
-                            - accessTokenHash
-                            - timeUpdated
-                            - timeCreated
-                            - timeAccessTokenExpires
-                          properties:
-                            id:
-                              type: string
-                              example: '98c607be-7797-48e7-b95a-f76ff918ac2e'
-                            tenantId:
-                              type: string
-                            sessionHandle:
-                              type: string
-                            scopes:
-                              type: array
-                              items:
-                                $ref: '#/components/schemas/oauth2Scope'
-                            accessTokenHash:
-                              type: string
-                            refreshTokenHash:
-                              type: string
-                            timeUpdated:
-                              $ref: '#/components/schemas/timestampMs'
-                            timeCreated:
-                              $ref: '#/components/schemas/timestampMs'
-                            timeAccessTokenExpires:
-                              $ref: '#/components/schemas/timestampMs'
-                            timeRefreshTokenExpires:
-                              $ref: '#/components/schemas/timestampMs'
+                          timeCreated:
+                            $ref: '#/components/schemas/timestampMs'
+                          timeUpdated:
+                            $ref: '#/components/schemas/timestampMs'
                   - type: object
                     properties:
                       status:
@@ -893,7 +963,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["UNKNOWN_SCOPE_ERROR"]
+                        enum: ["SCOPE_NOT_ALLOWED_ERROR"]
                       scope:
                         $ref: '#/components/schemas/oauth2Scope'
                   - type: object
@@ -974,7 +1044,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["UNKNOWN_SCOPE_ERROR"]
+                        enum: ["SCOPE_NOT_ALLOWED_ERROR"]
                       scope:
                         $ref: '#/components/schemas/oauth2Scope'
                   - type: object
@@ -6917,4 +6987,47 @@ components:
         timeCreated:
           $ref: '#/components/schemas/timestampMs'
         timeUpdated:
+          $ref: '#/components/schemas/timestampMs'
+    
+    oauth2QueryString:
+      type: string
+      description: The query params passed during auth code creation.
+      example: "param1=value1&param2=value2"
+    
+    oauth2TokenInfo:
+      type: object
+      required: 
+        - clientId
+        - sessionHandle
+        - accessTokenHash
+        - clientSecretRequiredForRefresh
+        - timeAccessTokenExpiresMs
+        - scope
+        - queryString
+        - timeCreatedAtMs
+        - timeUpdatedAtMs
+      properties:
+        clientId:
+          $ref: '#/components/schemas/oauth2ClientId'
+        sessionHandle:
+          $ref: '#/components/schemas/handle'
+        accessTokenHash:
+          type: string
+        refreshTokenHash:
+          type: string
+        clientSecretRequiredForRefresh:
+          type: boolean
+        scope:
+          type : array
+          items:
+            $ref: '#/components/schemas/oauth2Scope'
+        queryString:
+          $ref: '#/components/schemas/oauth2QueryString'
+        timeCreatedAtMs:
+          $ref: '#/components/schemas/timestampMs'
+        timeUpdatedAtMs:
+          $ref: '#/components/schemas/timestampMs'
+        timeAccessTokenExpiresMs:
+          $ref: '#/components/schemas/timestampMs'
+        timeRefreshTokenExpiresMs:
           $ref: '#/components/schemas/timestampMs'
