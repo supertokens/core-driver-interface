@@ -253,93 +253,6 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/oauth2/token/verify:
-    post:
-      tags:
-        - OAuth2 Recipe
-      operationId: verifyOAuth2AccessToken
-      description: |
-        Verify an OAuth2 access token, [click here](https://app.code2flow.com/PXgMWcBANhQq) for flow diagram
-      parameters:
-        - $ref: '#/components/parameters/oauth2Rid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                clientId:
-                  type: string
-                  $ref: '#/components/schemas/oauth2ClientId'
-                accessToken:
-                  type: string
-              required:
-                - clientId
-                - accessToken
-
-      responses:
-        '200':
-          description: |
-            Indicates success with the status property
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      clientId:
-                        type: string
-                        $ref: '#/components/schemas/oauth2ClientId'
-                      sessionHandle:
-                        $ref: '#/components/schemas/handle'
-                      accessTokenHash:
-                        type: string
-                      refreshTokenHash:
-                        type: string
-                      clientSecretRequiredForRefresh:
-                        type: boolean
-                      scope:
-                        type : array
-                        items:
-                          $ref: '#/components/schemas/oauth2Scope'
-                      queryString:
-                        $ref: '#/components/schemas/oauth2QueryString'
-                      timeCreatedAtMs:
-                        $ref: '#/components/schemas/timestampMs'
-                      timeUpdatedAtMs:
-                        $ref: '#/components/schemas/timestampMs'
-                      timeAccessTokenExpiresMs:
-                        $ref: '#/components/schemas/timestampMs'
-                      timeRefreshTokenExpiresMs:
-                        $ref: '#/components/schemas/timestampMs'
-                    required:
-                     - status
-                     - clientId
-                     - sessionHandle
-                     - accessTokenHash
-                     - clientSecretRequiredForRefresh
-                     - timeAccessTokenExpiresMs
-                     - scope
-                     - timeCreatedAtMs
-                     - timeUpdatedAtMs
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ['INVALID_ACCESS_TOKEN_ERROR']
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-
   /appid-<appId>/<tenantId>/recipe/oauth2/token:
     delete:
       tags:
@@ -552,14 +465,12 @@ paths:
         '500':
           $ref: '#/components/responses/500'
     
-  /appid-<appId>/<tenantId>/recipe/oauth2/refreshtoken:
     get:
       tags:
         - OAuth2 Recipe
-      operationId: getOAuth2RefreshToken
+      operationId: getOAuth2TokenInfo
       description: |
-        get refresh token details belonging to a client.
-        [Click here](https://app.code2flow.com/t7Y644fyWxei) for flow diagram.
+        Get token info by providing either an access token, a refresh token, or a session handle, along with the client ID.[Click here](https://app.code2flow.com/t7Y644fyWxei) for flow diagram.
       parameters:
         - $ref: '#/components/parameters/oauth2Rid'
         - $ref: '#/components/parameters/api-key'
@@ -574,7 +485,15 @@ paths:
           name: refreshToken
           schema:
              type: string
-          required : true
+        - in: query
+          name: accessToken
+          schema:
+             type: string
+        - in: query
+          name: sessionHandle
+          schema:
+            sessionHandle:
+            $ref: '#/components/schemas/handle'
       responses:
         '200':
           description: |
@@ -587,50 +506,20 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      clientId:
-                        type: string
-                        $ref: '#/components/schemas/oauth2ClientId'
-                      sessionHandle:
-                        $ref: '#/components/schemas/handle'
-                      accessTokenHash:
-                        type: string
-                      refreshTokenHash:
-                        type: string
-                      clientSecretRequiredForRefresh:
-                        type: boolean
-                      scope:
+                      tokenInfo:
                         type : array
-                        items:
-                          $ref: '#/components/schemas/oauth2Scope'
-                      queryString:
-                        $ref: '#/components/schemas/oauth2QueryString'
-                      timeCreatedAtMs:
-                        $ref: '#/components/schemas/timestampMs'
-                      timeUpdatedAtMs:
-                        $ref: '#/components/schemas/timestampMs'
-                      timeAccessTokenExpiresMs:
-                        $ref: '#/components/schemas/timestampMs'
-                      timeRefreshTokenExpiresMs:
-                        $ref: '#/components/schemas/timestampMs'
+                        items :
+                          $ref: '#/components/schemas/oauth2TokenInfo'
                     required:
                      - status
-                     - clientId
-                     - sessionHandle
-                     - refreshTokenHash
-                     - accessTokenHash
-                     - clientSecretRequiredForRefresh
-                     - timeAccessTokenExpiresMs
-                     - timeRefreshTokenExpiresMs
-                     - scope
-                     - queryString
-                     - timeCreatedAtMs
-                     - timeUpdatedAtMs
+                     - tokenInfo
                   - type: object
                     properties:
                       status:
                         type: string
                         enum: [ 'UNKNOWN_CLIENT_ID_ERROR',
-                          'UNKNOWN_REFRESH_TOKEN_ERROR']
+                          'UNKNOWN_REFRESH_TOKEN_ERROR','UNKNOWN_ACCESS_TOKEN_ERROR',
+                          'UNKNOWN_SESSION_HANDLE_ERROR']
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -989,7 +878,7 @@ paths:
                         required:
                           - name
                           - clientId
-                          - scopes
+                          - scope
                           - redirectUris
                           - timeCreated
                           - timeUpdated
@@ -999,7 +888,7 @@ paths:
                             example: 'development'
                           clientId:
                             $ref: '#/components/schemas/oauth2ClientId'
-                          scopes: 
+                          scope: 
                             type: array
                             items:
                               $ref: '#/components/schemas/oauth2Scope'
@@ -7112,3 +7001,41 @@ components:
       type: string
       description: The query params passed during auth code creation.
       example: "param1=value1&param2=value2"
+    
+    oauth2TokenInfo:
+      type: object
+      required: 
+        - clientId
+        - sessionHandle
+        - accessTokenHash
+        - clientSecretRequiredForRefresh
+        - timeAccessTokenExpiresMs
+        - scope
+        - queryString
+        - timeCreatedAtMs
+        - timeUpdatedAtMs
+      properties:
+        clientId:
+          $ref: '#/components/schemas/oauth2ClientId'
+        sessionHandle:
+          $ref: '#/components/schemas/handle'
+        accessTokenHash:
+          type: string
+        refreshTokenHash:
+          type: string
+        clientSecretRequiredForRefresh:
+          type: boolean
+        scope:
+          type : array
+          items:
+            $ref: '#/components/schemas/oauth2Scope'
+        queryString:
+          $ref: '#/components/schemas/oauth2QueryString'
+        timeCreatedAtMs:
+          $ref: '#/components/schemas/timestampMs'
+        timeUpdatedAtMs:
+          $ref: '#/components/schemas/timestampMs'
+        timeAccessTokenExpiresMs:
+          $ref: '#/components/schemas/timestampMs'
+        timeRefreshTokenExpiresMs:
+          $ref: '#/components/schemas/timestampMs'
