@@ -50,6 +50,8 @@ paths:
                   type: array
                   items:
                     $ref: '#/components/schemas/oauth2Scope'
+                queryString:
+                  $ref: '#/components/schemas/oauth2QueryString'
                 accessType:
                   type: string
                   enum: ['offline', 'online']
@@ -64,14 +66,14 @@ paths:
                 expiresAfterMs:
                   type: number
                   example: 300000
-                  
               required:
                 - clientId
                 - scopes
                 - sessionHandle
+                - queryString
                 - accessType
                 - redirectUri
-
+    
       responses:
         '200':
           description: |
@@ -86,6 +88,8 @@ paths:
                         $ref: '#/components/schemas/statusOK'
                       authorizationCode:
                         type: string
+                      queryString:
+                        $ref: '#/components/schemas/oauth2QueryString'
                       timeCreatedMs:
                         $ref: '#/components/schemas/timestampMs'
                       timeExpiresMs:
@@ -95,7 +99,7 @@ paths:
                       status:
                         type: string
                         enum: ['UNKNOWN_CLIENT_ID_ERROR', 'UNKNOWN_SESSION_HANDLE_ERROR',
-                        'UNKNOWN_REDIRECT_URI_ERROR', 'UNKNOWN_SCOPE_ERROR']
+                        'UNKNOWN_REDIRECT_URI_ERROR', 'SCOPE_NOT_ALLOWED_ERROR']
         '400':
           $ref: '#/components/responses/400'
         
@@ -299,7 +303,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['UNKNOWN_CLIENT_ID_ERROR', 'UNKNOWN_SESSION_HANDLE_ERROR', 'INVALID_ACCESS_TOKEN_ERROR']
+                        enum: ['UNKNOWN_CLIENT_ID_ERROR', 'UNKNOWN_SESSION_HANDLE_ERROR', 'UNKNOWN_ACCESS_TOKEN_ERROR']
           
         '400':
           $ref: '#/components/responses/400'
@@ -442,7 +446,6 @@ paths:
                           'UNKNOWN_CLIENT_ID_ERROR',
                           'UNKNOWN_REDIRECT_URI_ERROR',
                           'UNKNOWN_REFRESH_TOKEN_ERROR',
-                          'UNKNOWN_SCOPE_ERROR',
                           'SCOPE_NOT_ALLOWED_ERROR',
                           'UNKNOWN_CODE_VERIFIER_ERROR']
         '400':
@@ -649,7 +652,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['SCOPE_NOT_FOUND_ERROR']
+                        enum: ['UNKNOWN_SCOPE_ERROR']
                   - type: object
                     properties:
                       status:
@@ -751,7 +754,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['UNKNOWN_SCOPE_ERROR']
+                        enum: ['SCOPE_NOT_ALLOWED_ERROR']
                   - type: object
                     properties:
                       status:
@@ -960,7 +963,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["UNKNOWN_SCOPE_ERROR"]
+                        enum: ["SCOPE_NOT_ALLOWED_ERROR"]
                       scope:
                         $ref: '#/components/schemas/oauth2Scope'
                   - type: object
@@ -1041,7 +1044,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["UNKNOWN_SCOPE_ERROR"]
+                        enum: ["SCOPE_NOT_ALLOWED_ERROR"]
                       scope:
                         $ref: '#/components/schemas/oauth2Scope'
                   - type: object
