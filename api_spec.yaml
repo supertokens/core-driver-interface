@@ -275,6 +275,10 @@ paths:
             accessToken:
             $ref: '#/components/schemas/token'
         - in: query
+          name: accessTokenHash
+          schema:
+            type: string
+        - in: query
           name: clientId
           schema:
             clientId:
