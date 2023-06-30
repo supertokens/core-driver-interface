@@ -5,7 +5,7 @@ info:
 
     `appid-<appId>` and `<tenantId>` in all the APIs are optional. Their default values are `appid-public` and `public` respectively
 
-  version: 3.0.1
+  version: 3.0.2
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -2555,6 +2555,8 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/session:
     get:
       tags:
         - Session Recipe
@@ -2613,6 +2615,8 @@ paths:
       operationId: deleteSession
       description: |
         Delete a sesion
+        
+        If revoking session by `userId`, the sessions are cleared across all tenants by default.
       parameters:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
@@ -2627,9 +2631,13 @@ paths:
                     sessionHandles:
                       $ref: '#/components/schemas/sessionHandles'
                 - type: object
+                  required:
+                  - userId
                   properties:
                     userId:
                       $ref: '#/components/schemas/userId'
+                    revokeAcrossAllTenants:
+                      type: boolean
                 
       responses:
         '200':
@@ -2796,11 +2804,19 @@ paths:
       operationId: getUserSessionHandles
       description: |
         Get session handles for a user
+        
+        By default, the session handles are fetched across all tenants. Set `fetchAcrossAllTenants` to `false` to get sessionHandles for the user for a particular tenant.
       parameters:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
         - $ref: '#/components/parameters/userId'
+        - name: fetchAcrossAllTenants
+          schema:
+            type: string
+            enum: ["true", "false"]
+          required: false
+          in: query
       responses:
         '200':
           description: Get user Session Handles
@@ -2876,7 +2892,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   
-  /appid-<appId>/<tenantId>/recipe/session/data:
+  /appid-<appId>/recipe/session/data:
     get:
       deprecated: true
       tags:
