@@ -5291,7 +5291,7 @@ components:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version. 
-      example: 2.19
+      example: '3.0'
       schema:
         type: string
     
