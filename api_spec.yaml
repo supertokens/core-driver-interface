@@ -2594,6 +2594,8 @@ paths:
                         $ref: '#/components/schemas/timeCreated'
                       sessionHandle:
                         $ref: '#/components/schemas/handle'
+                      tenantId:
+                        $ref: '#/components/schemas/tenantId'
                   - $ref: '#/components/schemas/unauthorisedMessageResponse'
           
         '400':
@@ -5606,6 +5608,8 @@ components:
           $ref: '#/components/schemas/userId'
         userDataInJWT:
           $ref: '#/components/schemas/userDataInJWT'
+        tenantId:
+          $ref: '#/components/schemas/tenantId'
     
     cookieInfo:
       type: object
