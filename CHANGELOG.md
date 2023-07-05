@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [3.0.2]
+- Updates following session APIs to include tenantId in response:
+  - POST `/appid-<appId>/<tenantId>/recipe/session`
+  - GET `/appid-<appId>/recipe/session`
+  - POST `/appid-<appId>/recipe/session/verify`
+  - POST `/appid-<appId>/recipe/session/refresh`
+  - POST `/appid-<appId>/recipe/session/regenerate`
+
 ## [3.0.1] - 2023-06-20
 
 - Fixed `/recipe/multitenancy/tenant` GET
