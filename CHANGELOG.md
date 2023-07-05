@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.0.2]
 - Updates following session APIs to include tenantId in response:
+  - POST `/appid-<appId>/<tenantId>/recipe/session`
   - GET `/appid-<appId>/recipe/session`
   - POST `/appid-<appId>/recipe/session/verify`
   - POST `/appid-<appId>/recipe/session/refresh`
