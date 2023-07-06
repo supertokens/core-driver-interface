@@ -4758,45 +4758,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                - type: object
-                  required:
-                    - status
-                    - emailPassword
-                    - thirdParty
-                    - passwordless
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    emailPassword:
-                      type: object
-                      required:
-                        - enabled
-                      properties:
-                        enabled:
-                          type: boolean
-                    thirdParty:
-                      type: object
-                      required:
-                        - enabled
-                      properties:
-                        enabled:
-                          type: boolean
-                        providers:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/thirdPartyProviderConfig'
-                    passwordless:
-                      type: object
-                      required:
-                        - enabled
-                      properties:
-                        enabled:
-                          type: boolean
-                    coreConfig:
-                      type: object
-                    tenantId:
-                      $ref: '#/components/schemas/tenantId'
+                $ref: '#/components/schemas/tenantConfig'  
 
         '400':
           $ref: '#/components/responses/400'
@@ -5848,6 +5810,7 @@ components:
         - thirdParty
         - passwordless
         - coreConfig
+        - tenantId
       properties:
         tenantId:
           $ref: '#/components/schemas/tenantId'
