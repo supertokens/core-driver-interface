@@ -18,6 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixes GET `/appid-<appId>/<tenantId>/recipe/multitenancy/tenant` to include `coreConfig` and `tenantId`
 - Fixes GET `/appid-<appId>/recipe/user/email/verify` to be app specific
 
+## [3.0.2]
+- Updates POST `/appid-<appId>/<tenantId>/recipe/session/remove` to include `revokeAcrossAllTenants` in the request
+- Updates GET `/appid-<appId>/<tenantId>/recipe/session/user` to include `fetchAcrossAllTenants` in the query params
+- Updates following APIs to be app specific:
+  - GET and PUT `/appid-<appId>/recipe/session/data`
+  - GET `/appid-<appId>/recipe/session`
+
 ## [3.0.1] - 2023-06-20
 
 - Fixed `/recipe/multitenancy/tenant` GET
