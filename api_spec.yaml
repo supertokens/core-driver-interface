@@ -5,7 +5,7 @@ info:
 
     `appid-<appId>` and `<tenantId>` in all the APIs are optional. Their default values are `appid-public` and `public` respectively
 
-  version: 3.0.2
+  version: 3.0.3
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -1828,6 +1828,8 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/user/email/verify:
     get:
       tags:
         - EmailVerification Recipe
@@ -4756,41 +4758,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                - type: object
-                  required:
-                    - status
-                    - emailPassword
-                    - thirdParty
-                    - passwordless
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    emailPassword:
-                      type: object
-                      required:
-                        - enabled
-                      properties:
-                        enabled:
-                          type: boolean
-                    thirdParty:
-                      type: object
-                      required:
-                        - enabled
-                      properties:
-                        enabled:
-                          type: boolean
-                        providers:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/thirdPartyProviderConfig'
-                    passwordless:
-                      type: object
-                      required:
-                        - enabled
-                      properties:
-                        enabled:
-                          type: boolean
+                $ref: '#/components/schemas/tenantConfig'  
 
         '400':
           $ref: '#/components/responses/400'
@@ -5842,6 +5810,7 @@ components:
         - thirdParty
         - passwordless
         - coreConfig
+        - tenantId
       properties:
         tenantId:
           $ref: '#/components/schemas/tenantId'
