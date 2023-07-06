@@ -4791,6 +4791,8 @@ paths:
                       properties:
                         enabled:
                           type: boolean
+                    coreConfig:
+                      type: object
 
         '400':
           $ref: '#/components/responses/400'
