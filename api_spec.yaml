@@ -5,7 +5,7 @@ info:
 
     `appid-<appId>` and `<tenantId>` in all the APIs are optional. Their default values are `appid-public` and `public` respectively
 
-  version: 3.0.2
+  version: 3.0.3
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -4795,6 +4795,8 @@ paths:
                           type: boolean
                     coreConfig:
                       type: object
+                    tenantId:
+                      $ref: '#/components/schemas/tenantId'
 
         '400':
           $ref: '#/components/responses/400'
