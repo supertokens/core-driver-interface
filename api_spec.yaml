@@ -1828,6 +1828,8 @@ paths:
         
         '500':
           $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/user/email/verify:
     get:
       tags:
         - EmailVerification Recipe
