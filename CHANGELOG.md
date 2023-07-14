@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [3.0.4]
+- Updates `/appid-<appId>/<tenantId>/recipe/multitenancy/tenant` to also return `TENANT_NOT_FOUND_ERROR`
+
 ## [3.0.3]
 - Updates following session APIs to include tenantId in response:
   - POST `/appid-<appId>/<tenantId>/recipe/session`
