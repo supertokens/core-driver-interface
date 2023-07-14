@@ -4770,7 +4770,6 @@ paths:
                     status:
                       type: string
                       enum: [TENANT_NOT_FOUND_ERROR]
-
         '400':
           $ref: '#/components/responses/400'
         
