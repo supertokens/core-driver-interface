@@ -5,7 +5,7 @@ info:
 
     `appid-<appId>` and `<tenantId>` in all the APIs are optional. Their default values are `appid-public` and `public` respectively
 
-  version: 3.0.4
+  version: 4.0.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -22,8 +22,284 @@ tags:
   - name: Core
   - name: Dashboard Recipe
   - name: Totp Recipe
+  - name: Account Linking Recipe
 
 paths:
+  /appid-<appId>/recipe/accountlinking/user/primary/check:
+    get:
+      tags:
+        - Account Linking Recipe
+      operationId: canCreatePrimaryUser
+      description: |
+        Check if primary user can be created for given user id
+      parameters:
+        - $ref: '#/components/parameters/accountLinkingRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: recipeUserId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+      responses:
+        '200':
+          description: Indicates success with the status and canCreatePrimaryUser properties
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      wasAlreadyAPrimaryUser:
+                        type: boolean
+                        example: true
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["ACCOUNT_INFO_ALREADY_ASSOCIATED_WITH_ANOTHER_PRIMARY_USER_ID_ERROR"]
+                      primaryUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      description:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["RECIPE_USER_ID_ALREADY_LINKED_WITH_PRIMARY_USER_ID_ERROR"]
+                      primaryUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      description:
+                        type: string
+  /appid-<appId>/recipe/accountlinking/user/link/check:
+    get:
+      tags:
+        - Account Linking Recipe
+      operationId: canLinkAccounts
+      description: |
+        Check if accounts can be linked for given primary and recipe user id
+      parameters:
+        - $ref: '#/components/parameters/accountLinkingRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: primaryUserId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+        - in: query
+          name: recipeUserId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+      responses:
+        '200':
+          description: Indicates success with the status and canLinkAccounts properties
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      accountsAlreadyLinked:
+                        type: boolean
+                        example: true
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["ACCOUNT_INFO_ALREADY_ASSOCIATED_WITH_ANOTHER_PRIMARY_USER_ID_ERROR"]
+                      primaryUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      description:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["RECIPE_USER_ID_ALREADY_LINKED_WITH_ANOTHER_PRIMARY_USER_ID_ERROR"]
+                      primaryUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      description:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["INPUT_USER_IS_NOT_A_PRIMARY_USER"]
+  /appid-<appId>/recipe/accountlinking/user/primary:
+    post:
+      tags:
+        - Account Linking Recipe
+      operationId: createPrimaryUser
+      description: |
+        Create a primary user for given user id
+      parameters:
+        - $ref: '#/components/parameters/accountLinkingRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipeUserId:
+                  type: string
+                  example: fa7a0841-b533-4478-9253-0fde890c576
+              required:
+                - recipeUserId
+      responses:
+        '200':
+          description: Indicates success with the status and primaryUserId properties
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      wasAlreadyAPrimaryUser:
+                        type: boolean
+                        example: true
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["ACCOUNT_INFO_ALREADY_ASSOCIATED_WITH_ANOTHER_PRIMARY_USER_ID_ERROR"]
+                      primaryUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      description:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["RECIPE_USER_ID_ALREADY_LINKED_WITH_PRIMARY_USER_ID_ERROR"]
+                      primaryUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      description:
+                        type: string
+  
+  /appid-<appId>/recipe/accountlinking/user/link:
+    post:
+      tags:
+        - Account Linking Recipe
+      operationId: linkAccounts
+      description: |
+        Link accounts for given primary and recipe user id
+      parameters:
+        - $ref: '#/components/parameters/accountLinkingRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                primaryUserId:
+                  type: string
+                  example: fa7a0841-b533-4478-9253-0fde890c576
+                recipeUserId:
+                  type: string
+                  example: fa7a0841-b533-4478-9253-0fde890c576
+              required:
+                - primaryUserId
+                - recipeUserId
+      responses:
+        '200':
+          description: Indicates success with the status and accountsAlreadyLinked properties
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      accountsAlreadyLinked:
+                        type: boolean
+                        example: true
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["ACCOUNT_INFO_ALREADY_ASSOCIATED_WITH_ANOTHER_PRIMARY_USER_ID_ERROR"]
+                      primaryUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      description:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["RECIPE_USER_ID_ALREADY_LINKED_WITH_ANOTHER_PRIMARY_USER_ID_ERROR"]
+                      primaryUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      description:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["INPUT_USER_IS_NOT_A_PRIMARY_USER"]
+  /appid-<appId>/recipe/accountlinking/user/unlink:
+    post:
+      tags:
+        - Account Linking Recipe
+      operationId: unlinkAccounts
+      description: |
+        Unlink accounts for given recipe user id
+      parameters:
+        - $ref: '#/components/parameters/accountLinkingRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipeUserId:
+                  type: string
+                  example: fa7a0841-b533-4478-9253-0fde890c576
+              required:
+                - recipeUserId
+      responses:
+        '200':
+          description: Indicates success with the status and accountsUnlinked properties
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      wasRecipeUserDeleted:
+                        type: boolean
+                        example: true
+                      wasLinked:
+                        type: boolean
+                        example: true
+
   /appid-<appId>/recipe/totp/device:
     post:
       tags:
@@ -4066,9 +4342,14 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - userId
               properties:
                 userId:
                   $ref: '#/components/schemas/userId'
+                removeAllLinkedAccounts:
+                  type: boolean
+                  example: true
       responses:
         '200':
           description:  Returns OK if the operation succeeded (even if the user didn't exist before the call)
@@ -5266,7 +5547,15 @@ components:
       required: false
       schema:
         type: string
-        
+
+    accountLinkingRid:
+      name: rid
+      in: header
+      example: accountlinking
+      required: false
+      schema:
+        type: string        
+
     cdi-version:
       name: cdi-version
       in: header
