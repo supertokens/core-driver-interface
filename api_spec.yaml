@@ -210,6 +210,8 @@ paths:
                       wasAlreadyAPrimaryUser:
                         type: boolean
                         example: true
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
                   - type: object
                     properties:
                       status:
@@ -291,6 +293,8 @@ paths:
                       accountsAlreadyLinked:
                         type: boolean
                         example: true
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
                   - type: object
                     properties:
                       status:
@@ -315,6 +319,8 @@ paths:
                       primaryUserId:
                         type: string
                         example: fa7a0841-b533-4478-9253-0fde890c576
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
                       description:
                         type: string
                   - type: object
@@ -1476,7 +1482,7 @@ paths:
           application/json:
             schema:
               properties:
-                userId:
+                recipeUserId:
                   $ref: '#/components/schemas/userId'
                 email:
                   allOf:
@@ -1631,6 +1637,7 @@ paths:
       tags:
         - EmailPassword Recipe
       operationId: emailPasswordGetUser
+      deprecated: true
       description: |
         Get a user's information
 
@@ -1697,7 +1704,7 @@ paths:
           application/json:
             schema:
               properties:
-                userId:
+                recipeUserId:
                   $ref: '#/components/schemas/userId'
                 email:
                   $ref: '#/components/schemas/email'
@@ -4787,6 +4794,12 @@ paths:
           schema:
             type: string
             example: '1234567890'
+        - in: query
+          name: doUnionOfAccountInfo
+          required: true
+          schema:
+            type: boolean
+            example: true
       responses:
         '200':
           description: The operation was successful
@@ -6067,57 +6080,6 @@ components:
     phoneNumber:
       type: string
       example: '+14155552671'
-
-    user:
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/userId'
-        email:
-          $ref: '#/components/schemas/email'
-        timeJoined:
-          $ref: '#/components/schemas/timeJoined'
-        tenantIds:
-          type: array
-          items:
-            $ref: '#/components/schemas/tenantId'
-
-    passwordlessUser:
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/userId'
-        email:
-          $ref: '#/components/schemas/email'
-        phoneNumber:
-          $ref: '#/components/schemas/phoneNumber'
-        timeJoined:
-          $ref: '#/components/schemas/timeJoined'
-        tenantIds:
-          type: array
-          items:
-            $ref: '#/components/schemas/tenantId'
-
-    thirdPartyUser:
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/userId'
-        timeJoined:
-          $ref: '#/components/schemas/timeJoined'
-        email:
-          $ref: '#/components/schemas/email'
-        thirdParty:
-          type: object
-          properties:
-            id:
-              $ref: '#/components/schemas/thirdPartyId'
-            userId:
-              $ref: '#/components/schemas/thirdPartyUserId'
-        tenantIds:
-          type: array
-          items:
-            $ref: '#/components/schemas/tenantId'
 
     codeId:
       type: string
