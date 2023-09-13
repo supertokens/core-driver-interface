@@ -82,6 +82,17 @@ paths:
                         example: fa7a0841-b533-4478-9253-0fde890c576
                       description:
                         type: string
+        "400":
+          $ref: "#/components/responses/400"
+
+        "401":
+          $ref: "#/components/responses/401"
+
+        "404":
+          $ref: "#/components/responses/404"
+
+        "500":
+          $ref: "#/components/responses/500"
   /appid-<appId>/recipe/accountlinking/user/link/check:
     get:
       tags:
@@ -150,6 +161,17 @@ paths:
                       status:
                         type: string
                         enum: ["INPUT_USER_IS_NOT_A_PRIMARY_USER"]
+        "400":
+          $ref: "#/components/responses/400"
+
+        "401":
+          $ref: "#/components/responses/401"
+
+        "404":
+          $ref: "#/components/responses/404"
+
+        "500":
+          $ref: "#/components/responses/500"
   /appid-<appId>/recipe/accountlinking/user/primary:
     post:
       tags:
@@ -212,6 +234,20 @@ paths:
                         example: fa7a0841-b533-4478-9253-0fde890c576
                       description:
                         type: string
+        "400":
+          $ref: "#/components/responses/400"
+
+        "401":
+          $ref: "#/components/responses/401"
+
+        "402":
+          $ref: "#/components/responses/402"
+
+        "404":
+          $ref: "#/components/responses/404"
+
+        "500":
+          $ref: "#/components/responses/500"
   /appid-<appId>/recipe/accountlinking/user/link:
     post:
       tags:
@@ -283,6 +319,20 @@ paths:
                       status:
                         type: string
                         enum: ["INPUT_USER_IS_NOT_A_PRIMARY_USER"]
+        "400":
+          $ref: "#/components/responses/400"
+
+        "401":
+          $ref: "#/components/responses/401"
+        
+        "402":
+          $ref: "#/components/responses/402"
+
+        "404":
+          $ref: "#/components/responses/404"
+
+        "500":
+          $ref: "#/components/responses/500"
   /appid-<appId>/recipe/accountlinking/user/unlink:
     post:
       tags:
@@ -322,6 +372,17 @@ paths:
                       wasLinked:
                         type: boolean
                         example: true
+        "400":
+          $ref: "#/components/responses/400"
+
+        "401":
+          $ref: "#/components/responses/401"
+
+        "404":
+          $ref: "#/components/responses/404"
+
+        "500":
+          $ref: "#/components/responses/500"
 
   /appid-<appId>/recipe/totp/device:
     post:
@@ -1028,7 +1089,7 @@ paths:
                       user:
                         $ref: "#/components/schemas/authRecipeUser"
                       recipeUserId:
-                        $ref: "#/components/schemas/recipeUserId"
+                        $ref: "#/components/schemas/userId"
                   - type: object
                     properties:
                       status:
@@ -1499,7 +1560,7 @@ paths:
                       user:
                         $ref: "#/components/schemas/authRecipeUser"
                       recipeUserId:
-                        $ref: "#/components/schemas/recipeUserId"
+                        $ref: "#/components/schemas/userId"
 
                   - $ref: "#/components/schemas/wrongCredentialsResponse"
 
@@ -1549,7 +1610,7 @@ paths:
                       user:
                         $ref: "#/components/schemas/authRecipeUser"
                       recipeUserId:
-                        $ref: "#/components/schemas/recipeUserId"
+                        $ref: "#/components/schemas/userId"
                   - type: object
                     properties:
                       status:
@@ -1879,6 +1940,17 @@ paths:
                       status:
                         type: string
                         enum: ["RESET_PASSWORD_INVALID_TOKEN_ERROR"]
+        "400":
+          $ref: "#/components/responses/400"
+
+        "401":
+          $ref: "#/components/responses/401"
+
+        "404":
+          $ref: "#/components/responses/404"
+
+        "500":
+          $ref: "#/components/responses/500"
 
   /appid-<appId>/<tenantId>/recipe/signinup:
     post:
