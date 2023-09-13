@@ -32,8 +32,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updates GET `/appid-<appId>/<tenantId>/recipe/user` (for all recipes)
   - Response `user` object is updated
 
+- Updates PUT `/appid-<appId>/<tenantId>/recipe/user` (emailpassword and passwordless)
+  - Renames input field `userId` to `recipeUserId`
+
 - Updates PUT `/appid-<appId>/<tenantId>/recipe/user` (passwordless)
-  - returns new statuses `EMAIL_CHANGE_NOT_ALLOWED_ERROR` and `PHONE_NUMBER_CHANGE_NOT_ALLOWED_ERROR` along with `reason`
+  - Returns new statuses `EMAIL_CHANGE_NOT_ALLOWED_ERROR` and `PHONE_NUMBER_CHANGE_NOT_ALLOWED_ERROR` along with `reason`
 
 - Updates POST `/appid-<appId>/<tenantId>/recipe/signin`
   - Response `user` object is updated
