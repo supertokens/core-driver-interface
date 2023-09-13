@@ -1689,9 +1689,14 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - userId
+                - email
               properties:
                 userId:
                   $ref: "#/components/schemas/userId"
+                email:
+                  $ref: "#/components/schemas/email"
       responses:
         "200":
           description: Generate a new reset password token for this user
@@ -1811,7 +1816,7 @@ paths:
                   status:
                     $ref: "#/components/schemas/statusOK"
                   user:
-                    $ref: "#/components/schemas/user"
+                    $ref: "#/components/schemas/authRecipeUser"
                   didUserAlreadyExist:
                     type: boolean
 
@@ -1827,6 +1832,44 @@ paths:
         "500":
           $ref: "#/components/responses/500"
   /appid-<appId>/<tenantId>/recipe/user/password/reset/token/consume:
+    post:
+      tags:
+        - EmailPassword Recipe
+      operationId: emailPasswordResetPasswordConsumeToken
+      description: |
+        Consume a password reset token
+      parameters:
+        - $ref: "#/components/parameters/rid"
+        - $ref: "#/components/parameters/api-key"
+        - $ref: "#/components/parameters/cdi-version"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  $ref: "#/components/schemas/token"
+      responses:
+        "200":
+          description: Consume a password reset token
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: "#/components/schemas/statusOK"
+                      userId:
+                        $ref: "#/components/schemas/userId"
+                      email:
+                        $ref: "#/components/schemas/email"
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["RESET_PASSWORD_INVALID_TOKEN_ERROR"]
 
   /appid-<appId>/<tenantId>/recipe/signinup:
     post:
@@ -4295,14 +4338,8 @@ paths:
                     items:
                       type: object
                       properties:
-                        recipeId:
-                          type: string
-                          enum: ["emailpassword", "thirdparty", "passwordless"]
                         user:
-                          anyOf:
-                            - $ref: "#/components/schemas/user"
-                            - $ref: "#/components/schemas/thirdPartyUser"
-                            - $ref: "#/components/schemas/passwordlessUser"
+                          $ref: "#/components/schemas/authRecipeUser"
                       required: [recipeId, user]
                       additionalProperties: false
                   nextPaginationToken:
@@ -4551,8 +4588,82 @@ paths:
         "500":
           $ref: "#/components/responses/500"
   /appid-<appId>/user/id:
-
+    get:
+      tags:
+        - Core
+      operationId: getUserId
+      description: |
+        Get user id from email or phone number
+      parameters:
+        - $ref: "#/components/parameters/api-key"
+        - $ref: "#/components/parameters/cdi-version"
+        - $ref: "#/components/parameters/userId"
+      responses:
+        "200":
+          description: The operation was successful
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: "#/components/schemas/statusOK"
+                      user:
+                        $ref: "#/components/schemas/authRecipeUser"
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["UNKNOWN_USER_ID_ERROR"]
   /appid-<appId>/<tenantId>/users/by-accountinfo:
+    get:
+      tags:
+        - Core
+      operationId: getUsersByAccountInfo
+      description: |
+        Get users by email, phoneNumber or thirdParty info
+      parameters:
+        - $ref: "#/components/parameters/api-key"
+        - $ref: "#/components/parameters/cdi-version"
+        - in: query
+          name: email
+          required: false
+          schema:
+            type: string
+            example: "test@example.com"
+        - in: query
+          name: phoneNumber
+          required: false
+          schema:
+            type: string
+            example: "+911234567890"
+        - in: query
+          name: thirdPartyId
+          required: false
+          schema:
+            type: string
+            example: "google"
+        - in: query
+          name: thirdPartyUserId
+          required: false
+          schema:
+            type: string
+            example: "1234567890"
+      responses:
+        "200":
+          description: The operation was successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: "#/components/schemas/statusOK"
+                  users:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/authRecipeUser"
 
   /recipe/multitenancy/connectionuridomain:
     put:
