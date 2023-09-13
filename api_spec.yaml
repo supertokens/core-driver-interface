@@ -1026,7 +1026,9 @@ paths:
                         type: boolean
                         example: true
                       user:
-                        $ref: "#/components/schemas/passwordlessUser"
+                        $ref: "#/components/schemas/authRecipeUser"
+                      recipeUserId:
+                        $ref: "#/components/schemas/recipeUserId"
                   - type: object
                     properties:
                       status:
@@ -1332,6 +1334,7 @@ paths:
       tags:
         - Passwordless Recipe
       operationId: passwordlessGetUser
+      deprecated: true
       description: |
         Get a user's information.
 
@@ -1494,7 +1497,10 @@ paths:
                       status:
                         $ref: "#/components/schemas/statusOK"
                       user:
-                        $ref: "#/components/schemas/user"
+                        $ref: "#/components/schemas/authRecipeUser"
+                      recipeUserId:
+                        $ref: "#/components/schemas/recipeUserId"
+
                   - $ref: "#/components/schemas/wrongCredentialsResponse"
 
         "400":
@@ -1541,7 +1547,9 @@ paths:
                       status:
                         $ref: "#/components/schemas/statusOK"
                       user:
-                        $ref: "#/components/schemas/user"
+                        $ref: "#/components/schemas/authRecipeUser"
+                      recipeUserId:
+                        $ref: "#/components/schemas/recipeUserId"
                   - type: object
                     properties:
                       status:
@@ -1564,6 +1572,7 @@ paths:
       tags:
         - EmailPassword Recipe
       operationId: emailPasswordGetUser
+      deprecated: true
       description: |
         Get a user's information
 
@@ -1597,7 +1606,7 @@ paths:
                       status:
                         $ref: "#/components/schemas/statusOK"
                       user:
-                        $ref: "#/components/schemas/user"
+                        $ref: "#/components/schemas/authRecipeUser"
                   - type: object
                     properties:
                       status:
@@ -1937,6 +1946,7 @@ paths:
       tags:
         - ThirdParty Recipe
       operationId: thirdPartyGetUser
+      deprecated: true
       description: |
         Get a user's information.
 
@@ -1997,6 +2007,7 @@ paths:
   /appid-<appId>/<tenantId>/recipe/users/by-email:
     get:
       operationId: thirdPartyGetUsersByEmail
+      deprecated: true
       tags:
         - ThirdParty Recipe
       description: |
@@ -5518,23 +5529,15 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - type: object
-                    required:
-                      - status
-                      - wasAssociated
-                    properties:
-                      status:
-                        $ref: "#/components/schemas/statusOK"
-                      wasAssociated:
-                        type: boolean
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ["DISASSOCIATION_NOT_ALLOWED_ERROR"]
-                      reason:
-                        type: string
+                type: object
+                required:
+                  - status
+                  - wasAssociated
+                properties:
+                  status:
+                    $ref: "#/components/schemas/statusOK"
+                  wasAssociated:
+                    type: boolean
 
         "400":
           $ref: "#/components/responses/400"
