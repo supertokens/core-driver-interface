@@ -8,6 +8,77 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [4.0.0]
+
+- Adds new APIs for account linking
+  - GET `/appid-<appId>/recipe/accountlinking/user/primary/check`
+  - GET `/appid-<appId>/recipe/accountlinking/user/link/check`
+  - POST `/appid-<appId>/recipe/accountlinking/user/primary`
+  - POST `/appid-<appId>/recipe/accountlinking/user/link`
+  - POST `/appid-<appId>/recipe/accountlinking/user/unlink`
+
+- Adds new APIs for query user
+  - GET `/appid-<appId>/user/id`
+  - GET `/appid-<appId>/<tenantId>/users/by-accountinfo`
+
+- Deprecates following APIs
+  - GET `/appid-<appId>/<tenantId>/recipe/user` (for all recipes)
+  - GET `/appid-<appId>/<tenantId>/recipe/users/by-email`
+
+- Updates to POST `/appid-<appId>/<tenantId>/recipe/signinup/code/consume`
+  - Response `user` object is updated
+  - Adds `recipeUserId` to the response
+
+- Updates GET `/appid-<appId>/<tenantId>/recipe/user` (for all recipes)
+  - Response `user` object is updated
+
+- Updates PUT `/appid-<appId>/<tenantId>/recipe/user` (emailpassword and passwordless)
+  - Renames input field `userId` to `recipeUserId`
+
+- Updates PUT `/appid-<appId>/<tenantId>/recipe/user` (passwordless)
+  - Returns new statuses `EMAIL_CHANGE_NOT_ALLOWED_ERROR` and `PHONE_NUMBER_CHANGE_NOT_ALLOWED_ERROR` along with `reason`
+
+- Updates POST `/appid-<appId>/<tenantId>/recipe/signin`
+  - Response `user` object is updated
+  - Adds `recipeUserId` to the response
+
+- Updates POST `/appid-<appId>/<tenantId>/recipe/signup`
+  - Response `user` object is updated
+  - Adds `recipeUserId` to the response
+
+- Updates PUT `/appid-<appId>/<tenantId>/recipe/user` (emailpassword)
+  - returns new status `EMAIL_CHANGE_NOT_ALLOWED_ERROR` along with `reason`
+
+- Updates POST `/appid-<appId>/<tenantId>/recipe/user/password/reset/token`
+  - Adds mandatory field `email` to the request body
+
+- Updates POST `/appid-<appId>/<tenantId>/recipe/user/passwordhash/import`
+  - Response `user` object is updated
+
+- Adds POST `/appid-<appId>/<tenantId>/recipe/user/password/reset/token/consume` API
+
+- Updates POST `/appid-<appId>/<tenantId>/recipe/signinup`
+  - Adds mandatory `isVerified` field to the request body
+  - Response `user` object is updated
+  - Adds `recipeUserId` to the response
+  - Returns new status `EMAIL_CHANGE_NOT_ALLOWED_ERROR` along with `reason`
+
+- Updates GET `/appid-<appId>/<tenantId>/recipe/users/by-email`
+  - Response `users` object is updated
+
+- Updates GET `/appid-<appId>/<tenantId>/users`
+  - Response `users` object is updated
+  - Removes `recipeId` from the response
+
+- Updates POST `/appid-<appId>/user/remove`
+  - Adds optional parameter `removeAllLinkedAccounts` to the request body
+
+- Updates POST `/appid-<appId>/<tenantId>/recipe/multitenancy/tenant/user`
+  - Renames `userId` to `recipeUserId` in the request body
+
+- Updates POST `/appid-<appId>/<tenantId>/recipe/multitenancy/tenant/user/remove`
+  - Renames `userId` to `recipeUserId` in the request body
+
 ## [3.0.4]
 - Updates `/appid-<appId>/<tenantId>/recipe/multitenancy/tenant` to also return `TENANT_NOT_FOUND_ERROR`
 

@@ -5,7 +5,7 @@ info:
 
     `appid-<appId>` and `<tenantId>` in all the APIs are optional. Their default values are `appid-public` and `public` respectively
 
-  version: 3.0.4
+  version: 4.0.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -22,8 +22,378 @@ tags:
   - name: Core
   - name: Dashboard Recipe
   - name: Totp Recipe
+  - name: Account Linking Recipe
 
 paths:
+  /appid-<appId>/recipe/accountlinking/user/primary/check:
+    get:
+      tags:
+        - Account Linking Recipe
+      operationId: canCreatePrimaryUser
+      description: |
+        Check if primary user can be created for given user id
+      parameters:
+        - $ref: '#/components/parameters/accountLinkingRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: recipeUserId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+      responses:
+        '200':
+          description: Indicates success with the status and canCreatePrimaryUser properties
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      wasAlreadyAPrimaryUser:
+                        type: boolean
+                        example: true
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          [
+                            'ACCOUNT_INFO_ALREADY_ASSOCIATED_WITH_ANOTHER_PRIMARY_USER_ID_ERROR',
+                          ]
+                      primaryUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      description:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          [
+                            'RECIPE_USER_ID_ALREADY_LINKED_WITH_PRIMARY_USER_ID_ERROR',
+                          ]
+                      primaryUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      description:
+                        type: string
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/accountlinking/user/link/check:
+    get:
+      tags:
+        - Account Linking Recipe
+      operationId: canLinkAccounts
+      description: |
+        Check if accounts can be linked for given primary and recipe user id
+      parameters:
+        - $ref: '#/components/parameters/accountLinkingRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: primaryUserId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+        - in: query
+          name: recipeUserId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+      responses:
+        '200':
+          description: Indicates success with the status prop
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      accountsAlreadyLinked:
+                        type: boolean
+                        example: true
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          [
+                            'ACCOUNT_INFO_ALREADY_ASSOCIATED_WITH_ANOTHER_PRIMARY_USER_ID_ERROR',
+                          ]
+                      primaryUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      description:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          [
+                            'RECIPE_USER_ID_ALREADY_LINKED_WITH_ANOTHER_PRIMARY_USER_ID_ERROR',
+                          ]
+                      primaryUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      description:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['INPUT_USER_IS_NOT_A_PRIMARY_USER']
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/accountlinking/user/primary:
+    post:
+      tags:
+        - Account Linking Recipe
+      operationId: createPrimaryUser
+      description: |
+        Create a primary user for given user id
+      parameters:
+        - $ref: '#/components/parameters/accountLinkingRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipeUserId:
+                  type: string
+                  example: fa7a0841-b533-4478-9253-0fde890c576
+              required:
+                - recipeUserId
+      responses:
+        '200':
+          description: Indicates success with the status and primaryUserId properties
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      wasAlreadyAPrimaryUser:
+                        type: boolean
+                        example: true
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          [
+                            'ACCOUNT_INFO_ALREADY_ASSOCIATED_WITH_ANOTHER_PRIMARY_USER_ID_ERROR',
+                          ]
+                      primaryUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      description:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          [
+                            'RECIPE_USER_ID_ALREADY_LINKED_WITH_PRIMARY_USER_ID_ERROR',
+                          ]
+                      primaryUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      description:
+                        type: string
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/accountlinking/user/link:
+    post:
+      tags:
+        - Account Linking Recipe
+      operationId: linkAccounts
+      description: |
+        Link accounts for given primary and recipe user id
+      parameters:
+        - $ref: '#/components/parameters/accountLinkingRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                primaryUserId:
+                  type: string
+                  example: fa7a0841-b533-4478-9253-0fde890c576
+                recipeUserId:
+                  type: string
+                  example: fa7a0841-b533-4478-9253-0fde890c576
+              required:
+                - primaryUserId
+                - recipeUserId
+      responses:
+        '200':
+          description: Indicates success with the status and accountsAlreadyLinked properties
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      accountsAlreadyLinked:
+                        type: boolean
+                        example: true
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          [
+                            'ACCOUNT_INFO_ALREADY_ASSOCIATED_WITH_ANOTHER_PRIMARY_USER_ID_ERROR',
+                          ]
+                      primaryUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      description:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          [
+                            'RECIPE_USER_ID_ALREADY_LINKED_WITH_ANOTHER_PRIMARY_USER_ID_ERROR',
+                          ]
+                      primaryUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
+                      description:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['INPUT_USER_IS_NOT_A_PRIMARY_USER']
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/accountlinking/user/unlink:
+    post:
+      tags:
+        - Account Linking Recipe
+      operationId: unlinkAccounts
+      description: |
+        Unlink accounts for given recipe user id
+      parameters:
+        - $ref: '#/components/parameters/accountLinkingRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipeUserId:
+                  type: string
+                  example: fa7a0841-b533-4478-9253-0fde890c576
+              required:
+                - recipeUserId
+      responses:
+        '200':
+          description: Indicates success with the status and accountsUnlinked properties
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      wasRecipeUserDeleted:
+                        type: boolean
+                        example: true
+                      wasLinked:
+                        type: boolean
+                        example: true
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
   /appid-<appId>/recipe/totp/device:
     post:
       tags:
@@ -737,7 +1107,9 @@ paths:
                         type: boolean
                         example: true
                       user:
-                        $ref: '#/components/schemas/passwordlessUser'
+                        $ref: '#/components/schemas/authRecipeUser'
+                      recipeUserId:
+                        $ref: '#/components/schemas/userId'
                   - type: object
                     properties:
                       status:
@@ -1040,6 +1412,7 @@ paths:
       tags:
         - Passwordless Recipe
       operationId: passwordlessGetUser
+      deprecated: true
       description: |
         Get a user's information.
 
@@ -1075,7 +1448,7 @@ paths:
                         status:
                           $ref: '#/components/schemas/statusOK'
                         user:
-                          $ref: '#/components/schemas/passwordlessUser'
+                          $ref: '#/components/schemas/authRecipeUser'
                     - type: object
                       properties:
                         status:
@@ -1109,7 +1482,7 @@ paths:
           application/json:
             schema:
               properties:
-                userId:
+                recipeUserId:
                   $ref: '#/components/schemas/userId'
                 email:
                   allOf:
@@ -1127,11 +1500,20 @@ paths:
           description: update user's information
           content:
             application/json:
-                schema: 
+              schema: 
+                oneOf:
+                - type: object
                   properties:
                     status:
                       type: string
                       enum: ['OK', 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR', 'PHONE_NUMBER_ALREADY_EXISTS_ERROR']
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      enum: [ 'EMAIL_CHANGE_NOT_ALLOWED_ERROR', 'PHONE_NUMBER_CHANGE_NOT_ALLOWED_ERROR' ]
+                    reason:
+                      type: string
           
         '400':
           $ref: '#/components/responses/400'
@@ -1178,9 +1560,12 @@ paths:
                     status:
                       $ref: '#/components/schemas/statusOK'
                     user:
-                      $ref: '#/components/schemas/user'
+                      $ref: '#/components/schemas/authRecipeUser'
+                    recipeUserId:
+                      $ref: '#/components/schemas/userId'
+
                 - $ref: '#/components/schemas/wrongCredentialsResponse'
-          
+
         '400':
           $ref: '#/components/responses/400'
         
@@ -1226,7 +1611,9 @@ paths:
                     status:
                       $ref: '#/components/schemas/statusOK'
                     user:
-                      $ref: '#/components/schemas/user' 
+                      $ref: '#/components/schemas/authRecipeUser'
+                    recipeUserId:
+                      $ref: '#/components/schemas/userId'
                 - type: object
                   properties:
                     status:
@@ -1250,6 +1637,7 @@ paths:
       tags:
         - EmailPassword Recipe
       operationId: emailPasswordGetUser
+      deprecated: true
       description: |
         Get a user's information
 
@@ -1283,7 +1671,7 @@ paths:
                       status:
                         $ref: '#/components/schemas/statusOK'
                       user:
-                        $ref: '#/components/schemas/user'
+                        $ref: '#/components/schemas/authRecipeUser'
                   - type: object
                     properties:
                       status:
@@ -1316,7 +1704,7 @@ paths:
           application/json:
             schema:
               properties:
-                userId:
+                recipeUserId:
                   $ref: '#/components/schemas/userId'
                 email:
                   $ref: '#/components/schemas/email'
@@ -1328,12 +1716,21 @@ paths:
           description: update user's information
           content:
             application/json:
-                schema: 
+              schema:
+                oneOf:
+                - type: object
                   properties:
                     status:
                       type: string
                       enum: ['OK', 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR']
-          
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      enum: ['EMAIL_CHANGE_NOT_ALLOWED_ERROR']
+                    reason:
+                      type: string
+
         '400':
           $ref: '#/components/responses/400'
         
@@ -1362,9 +1759,14 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - userId
+                - email
               properties:
                 userId:
                   $ref: '#/components/schemas/userId'
+                email:
+                  $ref: '#/components/schemas/email'
       responses:
         '200':
           description: Generate a new reset password token for this user
@@ -1397,6 +1799,7 @@ paths:
       tags:
         - EmailPassword Recipe
       operationId: emailPasswordGetPasswordReset
+      deprecated: true
       description: |
         Reset a password using password reset token
       parameters:
@@ -1487,22 +1890,73 @@ paths:
                   status:
                     $ref: '#/components/schemas/statusOK'
                   user:
-                    $ref: '#/components/schemas/user'
+                    $ref: '#/components/schemas/authRecipeUser'
                   didUserAlreadyExist:
                     type: boolean
           
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
   
+  /appid-<appId>/<tenantId>/recipe/user/password/reset/token/consume:
+    post:
+      tags:
+        - EmailPassword Recipe
+      operationId: emailPasswordResetPasswordConsumeToken
+      description: |
+        Consume a password reset token
+      parameters:
+        - $ref: '#/components/parameters/rid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  $ref: '#/components/schemas/token'
+      responses:
+        '200':
+          description: Consume a password reset token
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      userId:
+                        $ref: '#/components/schemas/userId'
+                      email:
+                        $ref: '#/components/schemas/email'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['RESET_PASSWORD_INVALID_TOKEN_ERROR']
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
   /appid-<appId>/<tenantId>/recipe/signinup:
     post:
       tags:
@@ -1526,13 +1980,16 @@ paths:
                   $ref: '#/components/schemas/thirdPartyUserId'
                 email:
                   $ref: '#/components/schemas/thirdPartyEmail'
+                isVerified:
+                  $ref: '#/components/schemas/isVerified'
       responses:
         '200':
           description: Signin/up a user
           content:
             application/json:
-                schema: 
-                  type: object
+              schema:
+                oneOf:
+                - type: object
                   properties:
                     status:
                       $ref: '#/components/schemas/statusOK'
@@ -1540,7 +1997,15 @@ paths:
                       type: boolean
                       example: true
                     user:
-                      $ref: '#/components/schemas/thirdPartyUser'
+                      $ref: '#/components/schemas/authRecipeUser'
+                    recipeUserId:
+                      $ref: '#/components/schemas/userId'
+                - type: object
+                  properties:
+                    status:
+                      enum: ['EMAIL_CHANGE_NOT_ALLOWED_ERROR']
+                    reason:
+                      type: string
           
         '400':
           $ref: '#/components/responses/400'
@@ -1559,6 +2024,7 @@ paths:
       tags:
         - ThirdParty Recipe
       operationId: thirdPartyGetUser
+      deprecated: true
       description: |
         Get a user's information.
 
@@ -1594,7 +2060,7 @@ paths:
                         status:
                           $ref: '#/components/schemas/statusOK'
                         user:
-                          $ref: '#/components/schemas/thirdPartyUser'
+                          $ref: '#/components/schemas/authRecipeUser'
                     - type: object
                       properties:
                         status:
@@ -1606,16 +2072,17 @@ paths:
         
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/users/by-email :
+  /appid-<appId>/<tenantId>/recipe/users/by-email:
     get:
       operationId: thirdPartyGetUsersByEmail
+      deprecated: true
       tags:
         - ThirdParty Recipe
       description: |
@@ -1647,7 +2114,7 @@ paths:
                     users:
                       type: array
                       items:
-                        $ref: '#/components/schemas/thirdPartyUser'
+                        $ref: '#/components/schemas/authRecipeUser'
           
         '400':
           $ref: '#/components/responses/400'
@@ -1657,35 +2124,7 @@ paths:
           
         '500':
           $ref: '#/components/responses/500'
-  
-  # /recipe/user/email/revoke/token:
-  #   post:
-  #     tags:
-  #       - EmailVerification Recipe
-  #     operationId: emailVerificationRevokeToken
-  #     description: |
-  #       Revoke a generated email verification token
-  #     parameters:
-  #       - $ref: '#/components/parameters/emailVerificationRid'
-  #       - $ref: '#/components/parameters/api-key'
-  #       - $ref: '#/components/parameters/cdi-version'
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/emailVerificationRevokeTokenRequest'
-  #     responses:
-  #       '200':
-  #         $ref: '#/components/responses/emailVerificationRevokeToken'
-  #       '400':
-  #         $ref: '#/components/responses/400'
-  #       '401':
-  #         $ref: '#/components/responses/401'
-  #       '404':
-  #         $ref: '#/components/responses/404'
-  #       '500':
-  #         $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/<tenantId>/recipe/user/email/verify/token:
     post:
       tags:
@@ -4026,15 +4465,8 @@ paths:
                     items:
                       type: object
                       properties:
-                        recipeId:
-                          type: string
-                          enum: ['emailpassword', 'thirdparty', 'passwordless']
                         user:
-                          anyOf:
-                            - $ref: '#/components/schemas/user'
-                            - $ref: '#/components/schemas/thirdPartyUser'
-                            - $ref: '#/components/schemas/passwordlessUser'
-                      required: [recipeId, user]
+                          $ref: '#/components/schemas/authRecipeUser'
                       additionalProperties: false
                   nextPaginationToken: 
                     $ref: '#/components/schemas/paginationToken'
@@ -4066,9 +4498,14 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - userId
               properties:
                 userId:
                   $ref: '#/components/schemas/userId'
+                removeAllLinkedAccounts:
+                  type: boolean
+                  example: true
       responses:
         '200':
           description:  Returns OK if the operation succeeded (even if the user didn't exist before the call)
@@ -4282,7 +4719,114 @@ paths:
           $ref: '#/components/responses/401'
         '500':
           $ref: '#/components/responses/500'
-    
+
+  /appid-<appId>/user/id:
+    get:
+      tags:
+        - Core
+      operationId: getUserId
+      description: |
+        Get user id from email or phone number
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/userId'
+      responses:
+        '200':
+          description: The operation was successful
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['UNKNOWN_USER_ID_ERROR']
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/users/by-accountinfo:
+    get:
+      tags:
+        - Core
+      operationId: getUsersByAccountInfo
+      description: |
+        Get users by email, phoneNumber or thirdParty info
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: email
+          required: false
+          schema:
+            type: string
+            example: 'test@example.com'
+        - in: query
+          name: phoneNumber
+          required: false
+          schema:
+            type: string
+            example: '+911234567890'
+        - in: query
+          name: thirdPartyId
+          required: false
+          schema:
+            type: string
+            example: 'google'
+        - in: query
+          name: thirdPartyUserId
+          required: false
+          schema:
+            type: string
+            example: '1234567890'
+        - in: query
+          name: doUnionOfAccountInfo
+          required: true
+          schema:
+            type: boolean
+            example: true
+      responses:
+        '200':
+          description: The operation was successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/authRecipeUser'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
   /recipe/multitenancy/connectionuridomain:
     put:
       tags:
@@ -5038,7 +5582,6 @@ paths:
 
         '500':
           $ref: '#/components/responses/500'
-
   /appid-<appId>/<tenantId>/recipe/multitenancy/tenant/user:
     post:
       tags:
@@ -5062,9 +5605,9 @@ paths:
             schema:
               type: object
               required:
-                - userId
+                - recipeUserId
               properties:
-                userId:
+                recipeUserId:
                   $ref: '#/components/schemas/userId'
       responses:
         200:
@@ -5089,6 +5632,13 @@ paths:
                     status:
                       type: string
                       enum: ['UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR', 'PHONE_NUMBER_ALREADY_EXISTS_ERROR', 'THIRD_PARTY_USER_ALREADY_EXISTS_ERROR']
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      enum: ['ASSOCIATION_NOT_ALLOWED_ERROR']
+                    reason:
+                      type: string
 
         '400':
           $ref: '#/components/responses/400'
@@ -5125,9 +5675,9 @@ paths:
             schema:
               type: object
               required:
-                - userId
+                - recipeUserId
               properties:
-                userId:
+                recipeUserId:
                   $ref: '#/components/schemas/userId'
 
       responses:
@@ -5266,12 +5816,20 @@ components:
       required: false
       schema:
         type: string
-        
+
+    accountLinkingRid:
+      name: rid
+      in: header
+      example: accountlinking
+      required: false
+      schema:
+        type: string
+
     cdi-version:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version. 
-      example: '3.0'
+      example: '4.0'
       schema:
         type: string
     
@@ -5394,9 +5952,74 @@ components:
           schema:
             $ref: '#/components/schemas/helloResponse'
 
-      
-
   schemas:
+    authRecipeUser:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/userId'
+        isPrimaryUser:
+          type: boolean
+          example: true
+        tenantIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/tenantId'
+        timeJoined:
+          $ref: '#/components/schemas/timeJoined'
+        emails:
+          type: array
+          items:
+            $ref: '#/components/schemas/email'
+        phoneNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/phoneNumber'
+        thirdParty:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                $ref: '#/components/schemas/thirdPartyId'
+              userId:
+                $ref: '#/components/schemas/thirdPartyUserId'
+        loginMethods:
+          type: array
+          items:
+            type: object
+            properties:
+              tenantIds:
+                type: array
+                items:
+                  $ref: '#/components/schemas/tenantId'
+              recipeUserId:
+                $ref: '#/components/schemas/userId'
+              verified:
+                type: boolean
+                example: true
+              timeJoined:
+                $ref: '#/components/schemas/timeJoined'
+              recipeId:
+                $ref: '#/components/schemas/recipeId'
+              email:
+                $ref: '#/components/schemas/email'
+              phoneNumber:
+                $ref: '#/components/schemas/phoneNumber'
+              thirdParty:
+                type: object
+                properties:
+                  id:
+                    $ref: '#/components/schemas/thirdPartyId'
+                  userId:
+                    $ref: '#/components/schemas/thirdPartyUserId'
+
+    recipeId:
+      type: string
+      enum:
+        - emailpassword
+        - passwordless
+        - thirdparty
     token:
       type: string
       example: ZTRiOTBjNz...jI5MTZlODkxw
@@ -5459,57 +6082,6 @@ components:
       type: string
       example: '+14155552671'
 
-    user:
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/userId'
-        email:
-          $ref: '#/components/schemas/email'
-        timeJoined:
-          $ref: '#/components/schemas/timeJoined'
-        tenantIds:
-          type: array
-          items:
-            $ref: '#/components/schemas/tenantId'
-
-    passwordlessUser:
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/userId'
-        email:
-          $ref: '#/components/schemas/email'
-        phoneNumber:
-          $ref: '#/components/schemas/phoneNumber'
-        timeJoined:
-          $ref: '#/components/schemas/timeJoined'
-        tenantIds:
-          type: array
-          items:
-            $ref: '#/components/schemas/tenantId'
-
-    thirdPartyUser:
-      type: object
-      properties:
-        id:
-          $ref: '#/components/schemas/userId'
-        timeJoined:
-          $ref: '#/components/schemas/timeJoined'
-        email:
-          $ref: '#/components/schemas/email'
-        thirdParty:
-          type: object
-          properties:
-            id:
-              $ref: '#/components/schemas/thirdPartyId'
-            userId:
-              $ref: '#/components/schemas/thirdPartyUserId'
-        tenantIds:
-          type: array
-          items:
-            $ref: '#/components/schemas/tenantId'
-
     codeId:
       type: string
       description: Uniquely identifies a code
@@ -5539,44 +6111,49 @@ components:
       type: number
       description: The maximum lifetime of the code in milliseconds
       example: 900000
-              
+
     statusOK:
       type: string
       enum:
         - OK
-    
+
     userMetadata:
       type: object
       description: should be a JSON object (not a JSON literal nor an array)
-      example: { "preferences": { "theme":"dark" }, "notifications": { "email": true }, "todos": ["example"] }
+      example:
+        {
+          'preferences': { 'theme': 'dark' },
+          'notifications': { 'email': true },
+          'todos': ['example'],
+        }
 
     userMetadataUpdate:
       type: object
       description: should be a JSON object (not a JSON literal nor an array)
-      example: { "notifications": { "sms": true }, "todos": null }
+      example: { 'notifications': { 'sms': true }, 'todos': null }
 
     userDataInJWT:
       type: object
       description: should be a JSON object (not a JSON literal nor an array)
-      example: {"test":123}
-    
+      example: { 'test': 123 }
+
     userDataInDatabase:
       type: object
       description: should be a JSON object (not a JSON literal nor an array)
-      example: {"test":123}
-      
+      example: { 'test': 123 }
+
     enableAntiCsrf:
       type: boolean
       example: false
-    
+
     handle:
       type: string
       example: 68en6gd6-865b-4af6-ba00-96e5c153257d
-    
+
     message:
       type: string
       example: Error Message
-      
+
     session:
       type: object
       properties:
@@ -5588,6 +6165,8 @@ components:
           $ref: '#/components/schemas/userDataInJWT'
         tenantId:
           $ref: '#/components/schemas/tenantId'
+        recipeUserId:
+          $ref: '#/components/schemas/userId'
     
     cookieInfo:
       type: object
