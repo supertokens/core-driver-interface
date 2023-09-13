@@ -93,6 +93,7 @@ paths:
 
         '500':
           $ref: '#/components/responses/500'
+
   /appid-<appId>/recipe/accountlinking/user/link/check:
     get:
       tags:
@@ -172,6 +173,7 @@ paths:
 
         '500':
           $ref: '#/components/responses/500'
+
   /appid-<appId>/recipe/accountlinking/user/primary:
     post:
       tags:
@@ -248,6 +250,7 @@ paths:
 
         '500':
           $ref: '#/components/responses/500'
+
   /appid-<appId>/recipe/accountlinking/user/link:
     post:
       tags:
@@ -333,6 +336,7 @@ paths:
 
         '500':
           $ref: '#/components/responses/500'
+
   /appid-<appId>/recipe/accountlinking/user/unlink:
     post:
       tags:
@@ -1295,7 +1299,7 @@ paths:
             $ref: '#/components/schemas/deviceId'
         - in: query
           name: preAuthSessionId
-          description: Use this parameter to get information about a single device (without the other query params)
+          description:  Use this parameter to get information about a single device (without the other query params)
           schema:
             $ref: '#/components/schemas/preAuthSessionId'
       responses:
@@ -1431,20 +1435,20 @@ paths:
           description: Get a user's information.
           content:
             application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      user:
-                        $ref: '#/components/schemas/authRecipeUser'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ["UNKNOWN_USER_ID_ERROR", "UNKNOWN_EMAIL_ERROR", "UNKNOWN_PHONE_NUMBER_ERROR"]
-
+                schema:
+                  oneOf:
+                    - type: object
+                      properties:
+                        status:
+                          $ref: '#/components/schemas/statusOK'
+                        user:
+                          $ref: '#/components/schemas/authRecipeUser'
+                    - type: object
+                      properties:
+                        status:
+                          type: string
+                          enum: ["UNKNOWN_USER_ID_ERROR", "UNKNOWN_EMAIL_ERROR", "UNKNOWN_PHONE_NUMBER_ERROR"]
+          
         '400':
           $ref: '#/components/responses/400'
         
@@ -1490,20 +1494,20 @@ paths:
           description: update user's information
           content:
             application/json:
-              schema:
+              schema: 
                 oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ['OK', 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR', 'PHONE_NUMBER_ALREADY_EXISTS_ERROR']
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: [ 'EMAIL_CHANGE_NOT_ALLOWED_ERROR', 'PHONE_NUMBER_CHANGE_NOT_ALLOWED_ERROR' ]
-                      reason:
-                        type: string
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      enum: ['OK', 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR', 'PHONE_NUMBER_ALREADY_EXISTS_ERROR']
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      enum: [ 'EMAIL_CHANGE_NOT_ALLOWED_ERROR', 'PHONE_NUMBER_CHANGE_NOT_ALLOWED_ERROR' ]
+                    reason:
+                      type: string
           
         '400':
           $ref: '#/components/responses/400'
@@ -1545,16 +1549,16 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      user:
-                        $ref: '#/components/schemas/authRecipeUser'
-                      recipeUserId:
-                        $ref: '#/components/schemas/userId'
+                - type: object
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+                    user:
+                      $ref: '#/components/schemas/authRecipeUser'
+                    recipeUserId:
+                      $ref: '#/components/schemas/userId'
 
-                  - $ref: '#/components/schemas/wrongCredentialsResponse'
+                - $ref: '#/components/schemas/wrongCredentialsResponse'
 
         '400':
           $ref: '#/components/responses/400'
@@ -1707,18 +1711,18 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ['OK', 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR']
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ['EMAIL_CHANGE_NOT_ALLOWED_ERROR']
-                      reason:
-                        type: string
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      enum: ['OK', 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR']
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      enum: ['EMAIL_CHANGE_NOT_ALLOWED_ERROR']
+                    reason:
+                      type: string
 
         '400':
           $ref: '#/components/responses/400'
@@ -1977,24 +1981,24 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      createdNewUser:
-                        type: boolean
-                        example: true
-                      user:
-                        $ref: '#/components/schemas/authRecipeUser'
-                      recipeUserId:
-                        $ref: '#/components/schemas/userId'
-                  - type: object
-                    properties:
-                      status:
-                        enum: ['EMAIL_CHANGE_NOT_ALLOWED_ERROR']
-                      reason:
-                        type: string
-
+                - type: object
+                  properties:
+                    status:
+                      $ref: '#/components/schemas/statusOK'
+                    createdNewUser:
+                      type: boolean
+                      example: true
+                    user:
+                      $ref: '#/components/schemas/authRecipeUser'
+                    recipeUserId:
+                      $ref: '#/components/schemas/userId'
+                - type: object
+                  properties:
+                    status:
+                      enum: ['EMAIL_CHANGE_NOT_ALLOWED_ERROR']
+                    reason:
+                      type: string
+          
         '400':
           $ref: '#/components/responses/400'
         
@@ -2690,6 +2694,7 @@ paths:
                     createdNewRole:
                       type: boolean
                       example: true
+
 
         '400':
           $ref: '#/components/responses/400'
@@ -4736,6 +4741,17 @@ paths:
                       status:
                         type: string
                         enum: ['UNKNOWN_USER_ID_ERROR']
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
 
   /appid-<appId>/<tenantId>/users/by-accountinfo:
     get:
@@ -4785,6 +4801,17 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/authRecipeUser'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
 
   /recipe/multitenancy/connectionuridomain:
     put:
