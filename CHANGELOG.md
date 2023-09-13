@@ -70,6 +70,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updates POST `/appid-<appId>/user/remove`
   - Adds optional parameter `removeAllLinkedAccounts` to the request body
 
+- Updates POST `/appid-<appId>/<tenantId>/recipe/multitenancy/tenant/user`
+  - Renames `userId` to `recipeUserId` in the request body
+
+- Updates POST `/appid-<appId>/<tenantId>/recipe/multitenancy/tenant/user/remove`
+  - Renames `userId` to `recipeUserId` in the request body
+
 ## [3.0.4]
 - Updates `/appid-<appId>/<tenantId>/recipe/multitenancy/tenant` to also return `TENANT_NOT_FOUND_ERROR`
 

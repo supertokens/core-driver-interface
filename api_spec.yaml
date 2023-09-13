@@ -5591,9 +5591,9 @@ paths:
             schema:
               type: object
               required:
-                - userId
+                - recipeUserId
               properties:
-                userId:
+                recipeUserId:
                   $ref: '#/components/schemas/userId'
       responses:
         200:
@@ -5661,9 +5661,9 @@ paths:
             schema:
               type: object
               required:
-                - userId
+                - recipeUserId
               properties:
-                userId:
+                recipeUserId:
                   $ref: '#/components/schemas/userId'
 
       responses:
