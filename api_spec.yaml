@@ -403,7 +403,7 @@ paths:
       description: |
         Create a primary user for given user id
       parameters:
-        - $ref: '#/components/parameters/accountLinkingRid'
+        - $ref: '#/components/parameters/mfaRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
       requestBody:
@@ -482,7 +482,7 @@ paths:
       description: |
         Link accounts for given primary and recipe user id
       parameters:
-        - $ref: '#/components/parameters/accountLinkingRid'
+        - $ref: '#/components/parameters/mfaRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
       requestBody:
@@ -5973,6 +5973,14 @@ components:
       name: rid
       in: header
       example: accountlinking
+      required: false
+      schema:
+        type: string
+
+    mfaRid:
+      name: rid
+      in: header
+      example: mfa
       required: false
       schema:
         type: string
