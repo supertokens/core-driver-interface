@@ -1280,6 +1280,8 @@ paths:
                         $ref: '#/components/schemas/authRecipeUser'
                       recipeUserId:
                         $ref: '#/components/schemas/userId'
+                      isFirstFactorForTenant:
+                        type: boolean
                   - type: object
                     properties:
                       status:
@@ -1733,6 +1735,8 @@ paths:
                       $ref: '#/components/schemas/authRecipeUser'
                     recipeUserId:
                       $ref: '#/components/schemas/userId'
+                    isFirstFactorForTenant:
+                      type: boolean
 
                 - $ref: '#/components/schemas/wrongCredentialsResponse'
 
@@ -1784,6 +1788,8 @@ paths:
                       $ref: '#/components/schemas/authRecipeUser'
                     recipeUserId:
                       $ref: '#/components/schemas/userId'
+                    isFirstFactorForTenant:
+                      type: boolean
                 - type: object
                   properties:
                     status:
@@ -2170,6 +2176,8 @@ paths:
                       $ref: '#/components/schemas/authRecipeUser'
                     recipeUserId:
                       $ref: '#/components/schemas/userId'
+                    isFirstFactorForTenant:
+                      type: boolean
                 - type: object
                   properties:
                     status:
