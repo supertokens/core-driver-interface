@@ -5,7 +5,7 @@ info:
 
     `appid-<appId>` and `<tenantId>` in all the APIs are optional. Their default values are `appid-public` and `public` respectively
 
-  version: 4.0.0
+  version: 4.0.1
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -1980,8 +1980,6 @@ paths:
                   $ref: '#/components/schemas/thirdPartyUserId'
                 email:
                   $ref: '#/components/schemas/thirdPartyEmail'
-                isVerified:
-                  $ref: '#/components/schemas/isVerified'
       responses:
         '200':
           description: Signin/up a user
@@ -6049,6 +6047,8 @@ components:
       properties:
         id:
           $ref: '#/components/schemas/email'
+        isVerified:
+          $ref: '#/components/schemas/isVerified'
     
     isVerified:
           type: boolean
