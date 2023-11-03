@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [4.0.2]
+
+- Adds GET `/appid-<appId>/requests/stats` API
+
 ## [4.0.1]
 
 - Fixes location of `isVerified` boolean in the third party signinup API request body.

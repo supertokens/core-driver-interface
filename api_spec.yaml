@@ -5,7 +5,7 @@ info:
 
     `appid-<appId>` and `<tenantId>` in all the APIs are optional. Their default values are `appid-public` and `public` respectively
 
-  version: 4.0.1
+  version: 4.0.2
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -4824,6 +4824,56 @@ paths:
 
         '500':
           $ref: '#/components/responses/500'
+
+  /appid-<appId>/requests/stats:
+    get:
+      tags:
+        - Core
+      operationId: getRequestsStats
+      description: |
+        Get requests stats for last 24 hours
+
+        `averageRequestsPerSecond` and `peakRequestsPerSecond` would countain `1440` values corresponding to `now - 1440 minutes` until `now - 1 minute`.
+
+        A value of `-1` would mean that there is no data for that minute.
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        '200':
+          description: The operation was successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  atMinute:
+                    type: number
+                    example: 16382348
+                  averageRequestsPerSecond:
+                    type: array
+                    items:
+                      type: number
+                      example: 10.5
+                  peakRequestsPerSecond:
+                    type: array
+                    items:
+                      type: number
+                      example: 20
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
 
   /recipe/multitenancy/connectionuridomain:
     put:
