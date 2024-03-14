@@ -5,7 +5,7 @@ info:
 
     `appid-<appId>` and `<tenantId>` in all the APIs are optional. Their default values are `appid-public` and `public` respectively
 
-  version: 4.0.0
+  version: 5.0.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -388,175 +388,6 @@ paths:
 
         '401':
           $ref: '#/components/responses/401'
-
-        '404':
-          $ref: '#/components/responses/404'
-
-        '500':
-          $ref: '#/components/responses/500'
-
-  /appid-<appId>/recipe/mfa/user/primary:
-    post:
-      tags:
-        - MFA Recipe
-      operationId: createPrimaryUser
-      description: |
-        Create a primary user for given user id
-      parameters:
-        - $ref: '#/components/parameters/mfaRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                recipeUserId:
-                  type: string
-                  example: fa7a0841-b533-4478-9253-0fde890c576
-              required:
-                - recipeUserId
-      responses:
-        '200':
-          description: Indicates success with the status and primaryUserId properties
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      wasAlreadyAPrimaryUser:
-                        type: boolean
-                        example: true
-                      user:
-                        $ref: '#/components/schemas/authRecipeUser'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum:
-                          [
-                            'ACCOUNT_INFO_ALREADY_ASSOCIATED_WITH_ANOTHER_PRIMARY_USER_ID_ERROR',
-                          ]
-                      primaryUserId:
-                        type: string
-                        example: fa7a0841-b533-4478-9253-0fde890c576
-                      description:
-                        type: string
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum:
-                          [
-                            'RECIPE_USER_ID_ALREADY_LINKED_WITH_PRIMARY_USER_ID_ERROR',
-                          ]
-                      primaryUserId:
-                        type: string
-                        example: fa7a0841-b533-4478-9253-0fde890c576
-                      description:
-                        type: string
-        '400':
-          $ref: '#/components/responses/400'
-
-        '401':
-          $ref: '#/components/responses/401'
-
-        '402':
-          $ref: '#/components/responses/402'
-
-        '404':
-          $ref: '#/components/responses/404'
-
-        '500':
-          $ref: '#/components/responses/500'
-
-  /appid-<appId>/recipe/mfa/user/link:
-    post:
-      tags:
-        - MFA Recipe
-      operationId: linkAccounts
-      description: |
-        Link accounts for given primary and recipe user id
-      parameters:
-        - $ref: '#/components/parameters/mfaRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                primaryUserId:
-                  type: string
-                  example: fa7a0841-b533-4478-9253-0fde890c576
-                recipeUserId:
-                  type: string
-                  example: fa7a0841-b533-4478-9253-0fde890c576
-              required:
-                - primaryUserId
-                - recipeUserId
-      responses:
-        '200':
-          description: Indicates success with the status and accountsAlreadyLinked properties
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      accountsAlreadyLinked:
-                        type: boolean
-                        example: true
-                      user:
-                        $ref: '#/components/schemas/authRecipeUser'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum:
-                          [
-                            'ACCOUNT_INFO_ALREADY_ASSOCIATED_WITH_ANOTHER_PRIMARY_USER_ID_ERROR',
-                          ]
-                      primaryUserId:
-                        type: string
-                        example: fa7a0841-b533-4478-9253-0fde890c576
-                      description:
-                        type: string
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum:
-                          [
-                            'RECIPE_USER_ID_ALREADY_LINKED_WITH_ANOTHER_PRIMARY_USER_ID_ERROR',
-                          ]
-                      primaryUserId:
-                        type: string
-                        example: fa7a0841-b533-4478-9253-0fde890c576
-                      user:
-                        $ref: '#/components/schemas/authRecipeUser'
-                      description:
-                        type: string
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ['INPUT_USER_IS_NOT_A_PRIMARY_USER']
-        '400':
-          $ref: '#/components/responses/400'
-
-        '401':
-          $ref: '#/components/responses/401'
-        
-        '402':
-          $ref: '#/components/responses/402'
 
         '404':
           $ref: '#/components/responses/404'
@@ -1280,8 +1111,6 @@ paths:
                         $ref: '#/components/schemas/authRecipeUser'
                       recipeUserId:
                         $ref: '#/components/schemas/userId'
-                      isFirstFactorForTenant:
-                        type: boolean
                   - type: object
                     properties:
                       status:
@@ -1735,8 +1564,6 @@ paths:
                       $ref: '#/components/schemas/authRecipeUser'
                     recipeUserId:
                       $ref: '#/components/schemas/userId'
-                    isFirstFactorForTenant:
-                      type: boolean
 
                 - $ref: '#/components/schemas/wrongCredentialsResponse'
 
@@ -1788,8 +1615,6 @@ paths:
                       $ref: '#/components/schemas/authRecipeUser'
                     recipeUserId:
                       $ref: '#/components/schemas/userId'
-                    isFirstFactorForTenant:
-                      type: boolean
                 - type: object
                   properties:
                     status:
@@ -2176,8 +2001,6 @@ paths:
                       $ref: '#/components/schemas/authRecipeUser'
                     recipeUserId:
                       $ref: '#/components/schemas/userId'
-                    isFirstFactorForTenant:
-                      type: boolean
                 - type: object
                   properties:
                     status:
@@ -6563,18 +6386,9 @@ components:
     firstFactors:
       type: array
       items:
-        oneOf:
-          - type: string
-            enum: ["emailpassword", "thirdparty", "otp-email", "otp-phone", "link-email", "link-phone"]
-          - type: object
-            properties:
-              type:
-                type: string
-                enum: ["custom"]
-              id:
-                type: string
-                example: biometric
-    defaultRequiredFactors:
+        type: string
+        example: "emailpassword"
+    requiredSecondaryFactors:
       type: array
       items:
         type: string
@@ -6592,8 +6406,8 @@ components:
           type: boolean
         firstFactors:
           $ref: '#/components/schemas/firstFactors'
-        defaultRequiredFactors:
-          $ref: '#/components/schemas/defaultRequiredFactors'
+        requiredSecondaryFactors:
+          $ref: '#/components/schemas/requiredSecondaryFactors'
         coreConfig:
           type: object
 
@@ -6646,11 +6460,11 @@ components:
           type: object
           required:
             - firstFactors
-            - defaultRequiredFactors
+            - requiredSecondaryFactors
           properties:
             firstFactors:
               $ref: '#/components/schemas/firstFactors'
-            defaultRequiredFactors:
-              $ref: '#/components/schemas/defaultRequiredFactors'
+            requiredSecondaryFactors:
+              $ref: '#/components/schemas/requiredSecondaryFactors'
         coreConfig:
           type: object
