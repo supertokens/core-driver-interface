@@ -3,7 +3,9 @@ info:
   description: |
     This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
 
-    `appid-<appId>` and `<tenantId>` in all the APIs are optional. Their default values are `appid-public` and `public` respectively
+    `appid-<appId>` and `<tenantId>` in all the APIs are optional. Their default values are `appid-public` and `public` respectively.
+
+    Those that do not have `<tenantId>` in the path will enforce that the API is called from `public` tenant only.
 
   version: 5.0.0
   title: Core Driver Interface
@@ -3248,6 +3250,9 @@ paths:
         Delete a sesion
         
         If revoking session by `userId`, the sessions are cleared across all tenants by default.
+
+        Note: If `revokeAcrossAllTenants` is set to `true`, this API can only be called from `public` tenant.
+
       parameters:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
@@ -3439,6 +3444,8 @@ paths:
         Get session handles for a user
         
         By default, the session handles are fetched across all tenants. Set `fetchAcrossAllTenants` to `false` to get sessionHandles for the user for a particular tenant.
+
+        Note: If `fetchAcrossAllTenants` is set to `true`, this API can only be called from `public` tenant.
       parameters:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
