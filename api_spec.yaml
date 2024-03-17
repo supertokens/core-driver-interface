@@ -5,7 +5,7 @@ info:
 
     `appid-<appId>` and `<tenantId>` in all the APIs are optional. Their default values are `appid-public` and `public` respectively
 
-  version: 4.0.2
+  version: 4.0.3
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -3193,6 +3193,8 @@ paths:
                   $ref: '#/components/schemas/enableAntiCsrf'
                 antiCsrfToken:
                   $ref: '#/components/schemas/token'
+                useDynamicSigningKey:
+                  type: boolean
               required: [refreshToken, enableAntiCsrf]
       responses:
         '200':

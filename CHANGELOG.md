@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [4.0.3]
+
+- Adds an optional `useDynamicSigningKey` to the session refresh (`POST` `/appid-<appId>/recipe/session/refresh`) request body
+
 ## [4.0.2]
 
 - Adds GET `/appid-<appId>/requests/stats` API
