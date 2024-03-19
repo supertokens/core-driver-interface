@@ -3,9 +3,11 @@ info:
   description: |
     This is the API exposed by the SuperTokens Core. To be consumed by your backend only.
 
-    `appid-<appId>` and `<tenantId>` in all the APIs are optional. Their default values are `appid-public` and `public` respectively
+    `appid-<appId>` and `<tenantId>` in all the APIs are optional. Their default values are `appid-public` and `public` respectively.
 
-  version: 4.0.3
+    Those that do not have `<tenantId>` in the path will enforce that the API is called from `public` tenant only.
+
+  version: 5.0.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -424,7 +426,6 @@ paths:
                   example: 30
               required:
                 - userId
-                - deviceName
                 - skew
                 - period
                     
@@ -442,6 +443,9 @@ paths:
                       secret:
                         type: string
                         example: "JBSWY3DPEHPK3PXP"
+                      deviceName:
+                        type: string
+                        example: d1
 
                   - type: object
                     properties:
@@ -501,11 +505,6 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ["TOTP_NOT_ENABLED_ERROR"]
                   - type: object
                     properties:
                       status:
@@ -572,12 +571,76 @@ paths:
                               type: boolean
                     required:
                       - status
+                  
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+  /recipe/totp/device/import:
+    post:
+      tags:
+         - Totp Recipe
+      operationId: importTotpDevice
+      description: |
+        Add a TOTP device for a user and enable TOTP if not already enabled.
+      parameters:
+        - $ref: '#/components/parameters/totpRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+                deviceName:
+                  type: string
+                  example: "My Authy App"
+                skew:
+                  type: number
+                  example: 0
+                period:
+                  type: number
+                  example: 30
+                secretKey:
+                  type: string
+                  example: "BSWY3DPEMOWNFUWJLDIWNDNDPONBIUFG"
+              required:
+                - userId
+                - skew
+                - period
+                - secretKey
+      responses:
+        '200':
+          description: Indicates success with the status and secret properties
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      deviceName:
+                        type: string
+                        example: d1
+
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ["TOTP_NOT_ENABLED_ERROR"]
-                  
+                        enum: ['DEVICE_ALREADY_EXISTS_ERROR']
+                        
+
         '400':
           $ref: '#/components/responses/400'
         
@@ -630,12 +693,6 @@ paths:
                       didDeviceExist:
                         type: boolean
                         example: true
-
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: ['TOTP_NOT_ENABLED_ERROR']
 
         '400':
           $ref: '#/components/responses/400'
@@ -695,13 +752,19 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['TOTP_NOT_ENABLED_ERROR']
+                        enum: ['INVALID_TOTP_ERROR']
+                      currentNumberOfFailedAttempts:
+                        type: number
+                        example: 2
+                      maxNumberOfFailedAttempts:
+                        type: number
+                        example: 5
 
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ['INVALID_TOTP_ERROR']
+                        enum: ['UNKNOWN_USER_ID_ERROR']
 
                   - type: object
                     properties:
@@ -711,6 +774,12 @@ paths:
                       retryAfterMs:
                         type: number
                         example: 90000
+                      currentNumberOfFailedAttempts:
+                        type: number
+                        example: 2
+                      maxNumberOfFailedAttempts:
+                        type: number
+                        example: 5
 
 
         '400':
@@ -774,12 +843,6 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['TOTP_NOT_ENABLED_ERROR']
-
-                  - type: object
-                    properties:
-                      status:
-                        type: string
                         enum: ['UNKNOWN_DEVICE_ERROR']
 
                   - type: object
@@ -787,6 +850,12 @@ paths:
                       status:
                         type: string
                         enum: ['INVALID_TOTP_ERROR']
+                      currentNumberOfFailedAttempts:
+                        type: number
+                        example: 2
+                      maxNumberOfFailedAttempts:
+                        type: number
+                        example: 5
 
                   - type: object
                     properties:
@@ -796,6 +865,12 @@ paths:
                       retryAfterMs:
                         type: number
                         example: 90000
+                      currentNumberOfFailedAttempts:
+                        type: number
+                        example: 2
+                      maxNumberOfFailedAttempts:
+                        type: number
+                        example: 5
 
 
         '400':
@@ -1055,6 +1130,99 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
+  /appid-<appId>/<tenantId>/recipe/signinup/code/check:
+    post:
+      tags:
+        - Passwordless Recipe
+      operationId: passwordlessCheckCode
+      description: |
+        Tries to check if the passed userInputCode+deviceId combo or the linkCode is valid
+      parameters:
+        - $ref: '#/components/parameters/passwordlessRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    preAuthSessionId:
+                      $ref: '#/components/schemas/preAuthSessionId'
+                    linkCode:
+                      $ref: '#/components/schemas/linkCode'
+                  required:
+                    - preAuthSessionId
+                    - linkCode
+                - type: object
+                  properties:
+                    preAuthSessionId:
+                      $ref: '#/components/schemas/preAuthSessionId'
+                    deviceId:
+                      $ref: '#/components/schemas/deviceId'
+                    userInputCode:
+                      $ref: '#/components/schemas/userInputCode'
+                  required:
+                    - preAuthSessionId
+                    - deviceId
+                    - userInputCode
+      responses:
+        '200':
+          description: Indicates success with the status property
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      consumedDevice:
+                        type: object
+                        required:
+                          - preAuthSessionId
+                          - failedCodeInputAttemptCount
+                        properties:
+                          preAuthSessionId:
+                            $ref: '#/components/schemas/preAuthSessionId'
+                          failedCodeInputAttemptCount:
+                            type: number
+                            example: 2
+                          email:
+                            $ref: '#/components/schemas/email'
+                          phoneNumber:
+                            $ref: '#/components/schemas/phoneNumber'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['INCORRECT_USER_INPUT_CODE_ERROR', 'EXPIRED_USER_INPUT_CODE_ERROR']
+                      failedCodeInputAttemptCount:
+                        type: number
+                        example: 2
+                      maximumCodeInputAttempts:
+                        type: number
+                        example: 5
+
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['RESTART_FLOW_ERROR']
+
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
   /appid-<appId>/<tenantId>/recipe/signinup/code/consume:
     post:
       tags:
@@ -1110,6 +1278,21 @@ paths:
                         $ref: '#/components/schemas/authRecipeUser'
                       recipeUserId:
                         $ref: '#/components/schemas/userId'
+                      consumedDevice:
+                        type: object
+                        required:
+                          - preAuthSessionId
+                          - failedCodeInputAttemptCount
+                        properties:
+                          preAuthSessionId:
+                            $ref: '#/components/schemas/preAuthSessionId'
+                          failedCodeInputAttemptCount:
+                            type: number
+                            example: 2
+                          email:
+                            $ref: '#/components/schemas/email'
+                          phoneNumber:
+                            $ref: '#/components/schemas/phoneNumber'
                   - type: object
                     properties:
                       status:
@@ -1248,12 +1431,19 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                codeId: 
-                  $ref: '#/components/schemas/codeId'
-              required:
-                - codeId
+              oneOf:
+                - type: object
+                  properties:
+                    codeId: 
+                      $ref: '#/components/schemas/codeId'
+                  required:
+                    - codeId
+                - type: object
+                  properties:
+                    preAuthSessionId:
+                      $ref: '#/components/schemas/preAuthSessionId'
+                  required:
+                    - preAuthSessionId
       responses:
         '200':
           description: 'The operation was successful'
@@ -3058,6 +3248,9 @@ paths:
         Delete a sesion
         
         If revoking session by `userId`, the sessions are cleared across all tenants by default.
+
+        Note: If `revokeAcrossAllTenants` is set to `true`, this API can only be called from `public` tenant.
+
       parameters:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
@@ -3195,7 +3388,7 @@ paths:
                   $ref: '#/components/schemas/token'
                 useDynamicSigningKey:
                   type: boolean
-              required: [refreshToken, enableAntiCsrf]
+              required: [refreshToken, enableAntiCsrf, useDynamicSigningKey]
       responses:
         '200':
           description: Refresh a session
@@ -3249,6 +3442,8 @@ paths:
         Get session handles for a user
         
         By default, the session handles are fetched across all tenants. Set `fetchAcrossAllTenants` to `false` to get sessionHandles for the user for a particular tenant.
+
+        Note: If `fetchAcrossAllTenants` is set to `true`, this API can only be called from `public` tenant.
       parameters:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
@@ -4892,6 +5087,10 @@ paths:
 
         If creating a new connection uri domain, only the login methods set to true will be enabled and rest will be disabled by default.
 
+        `firstFactors` and `requiredSecondaryFactors` can be set to null to remove all entries in the core, or a non empty string array to be updated in the core. Setting of empty array is disallowed.
+
+        Note: the create/update will fail if a login method is not enabled and a relavant factor is added to either `firstFactors` or `requiredSecondaryFactors`. For example, `emailPasswordEnabled` cannot be set to `false` if `emailpassword` is present in the `firstFactors` array.
+
         If updating an existing connection uri domain,
         1. core will keep the existing state of login methods and only update the ones that are specified in the request body.
         2. Core config will be merged into existing config. To delete a key in the config, use a null value
@@ -4909,21 +5108,15 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - connectionUriDomain
-              properties:
-                connectionUriDomain:
-                  type: string
-                  example: core-1234.supertokens.io:3567
-                emailPasswordEnabled:
-                  type: boolean
-                thirdPartyEnabled:
-                  type: boolean
-                passwordlessEnabled:
-                  type: boolean
-                coreConfig:
-                  type: object
+              allOf:
+              - type: object
+                required:
+                  - connectionUriDomain
+                properties:
+                  connectionUriDomain:
+                    type: string
+                    example: core-1234.supertokens.io:3567
+              - $ref: '#/components/schemas/tenantInput'
       responses:
         200:
           description: Create or Update connection uri domain result
@@ -5086,6 +5279,10 @@ paths:
 
         If creating a new app, only the login methods set to true will be enabled and rest will be disabled by default.
 
+        `firstFactors` and `requiredSecondaryFactors` can be set to null to remove all entries in the core, or a non empty string array to be updated in the core. Setting of empty array is disallowed.
+
+        Note: the create/update will fail if a login method is not enabled and a relavant factor is added to either `firstFactors` or `requiredSecondaryFactors`. For example, `emailPasswordEnabled` cannot be set to `false` if `emailpassword` is present in the `firstFactors` array.
+
         If updating an existing app,
         1. core will keep the existing state of login methods and only update the ones that are specified in the request body.
         2. Core config will be merged into existing config. To delete a key in the config, use a null value
@@ -5104,21 +5301,15 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - appId
-              properties:
-                appId:
-                  type: string
-                  example: app1
-                emailPasswordEnabled:
-                  type: boolean
-                thirdPartyEnabled:
-                  type: boolean
-                passwordlessEnabled:
-                  type: boolean
-                coreConfig:
-                  type: object
+              allOf:
+              - type: object
+                required:
+                  - appId
+                properties:
+                  appId:
+                    type: string
+                    example: app1
+              - $ref: '#/components/schemas/tenantInput'
       responses:
         200:
           description: Create or Update app result
@@ -5269,6 +5460,10 @@ paths:
 
         If creating a new tenant, only the login methods set to true will be enabled and rest will be disabled by default.
 
+        `firstFactors` and `requiredSecondaryFactors` can be set to null to remove all entries in the core, or a non empty string array to be updated in the core. Setting of empty array is disallowed.
+
+        Note: the create/update will fail if a login method is not enabled and a relavant factor is added to either `firstFactors` or `requiredSecondaryFactors`. For example, `emailPasswordEnabled` cannot be set to `false` if `emailpassword` is present in the `firstFactors` array.
+
         If updating an existing tenant,
         1. core will keep the existing state of login methods and only update the ones that are specified in the request body.
         2. Core config will be merged into existing config. To delete a key in the config, use a null value
@@ -5286,20 +5481,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - tenantId
-              properties:
-                tenantId:
-                  $ref: '#/components/schemas/tenantId'
-                emailPasswordEnabled:
-                  type: boolean
-                thirdPartyEnabled:
-                  type: boolean
-                passwordlessEnabled:
-                  type: boolean
-                coreConfig:
-                  type: object
+              allOf:
+              - type: object
+                required:
+                  - tenantId
+                properties:
+                  tenantId:
+                    $ref: '#/components/schemas/tenantId'
+              - $ref: '#/components/schemas/tenantInput'
       responses:
         200:
           description: Create or Update tenant result
@@ -5879,7 +6068,7 @@ components:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version. 
-      example: '4.0'
+      example: '5.0'
       schema:
         type: string
     
@@ -6444,6 +6633,32 @@ components:
                 emailVerified:
                   type: string
 
+    firstFactors:
+      type: array
+      items:
+        type: string
+        example: "emailpassword"
+    requiredSecondaryFactors:
+      type: array
+      items:
+        type: string
+        example: otp-phone
+    tenantInput:
+      type: object
+      properties:
+        emailPasswordEnabled:
+          type: boolean
+        thirdPartyEnabled:
+          type: boolean
+        passwordlessEnabled:
+          type: boolean
+        firstFactors:
+          $ref: '#/components/schemas/firstFactors'
+        requiredSecondaryFactors:
+          $ref: '#/components/schemas/requiredSecondaryFactors'
+        coreConfig:
+          type: object
+
     tenantConfig:
       type: object
       required:
@@ -6480,5 +6695,9 @@ components:
           properties:
             enabled:
               type: boolean
+        firstFactors:
+          $ref: '#/components/schemas/firstFactors'
+        requiredSecondaryFactors:
+          $ref: '#/components/schemas/requiredSecondaryFactors'
         coreConfig:
           type: object
