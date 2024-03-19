@@ -6665,8 +6665,6 @@ components:
         - emailPassword
         - thirdParty
         - passwordless
-        - totp
-        - mfa
         - coreConfig
         - tenantId
       properties:
