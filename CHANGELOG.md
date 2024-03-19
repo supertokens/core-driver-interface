@@ -8,6 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [5.0.0] - 2024-03-19
+
+- `TOTP_NOT_ENABLED_ERROR` status is removed from the totp related APIs.
+- In `/appid-<appId>/recipe/totp/device` POST, `deviceName` input is now optional. The response also includes `deviceName`.
+- Adds `/recipe/totp/device/import` POST API.
+- `INVALID_TOTP_ERROR`, `LIMIT_REACHED_ERROR` responses now include `currentNumberOfFailedAttempts` and `maxNumberOfFailedAttempts` in the response.
+- Adds `/appid-<appId>/<tenantId>/recipe/signinup/code/check` POST API.
+- Adds `consumedDevice` in the success response for `/appid-<appId>/<tenantId>/recipe/signinup/code/consume` POST API.
+- `/appid-<appId>/<tenantId>/recipe/signinup/code/remove` POST API now accepts `preAuthSessionId` as input which can be used to remove code for a device.
+- `/appid-<appId>/<tenantId>/recipe/session/remove` POST API can now only be called using public tenant if `revokeAcrossAllTenants` is set to true.
+- `/appid-<appId>/<tenantId>/recipe/session/user` GET API can now only be called using public tenant if `fetchAcrossAllTenants` is set to true.
+- Adds mandatory input `useDynamicSigningKey` to `/appid-<appId>/recipe/session/refresh` POST API.
+- Adds `firstFactors` and `requiredSecondaryFactors` to the input of `/recipe/multitenancy/connectionuridomain` PUT, `/recipe/multitenancy/app` PUT and `/appid-<appId>/recipe/multitenancy/tenant` PUT APIs.
+- Adds `firstFactors` and `requiredSecondaryFacrors` to the response of `/appid-<appId>/<tenantId>/recipe/multitenancy/tenant` GET API.
+
 ## [4.0.0]
 
 - Adds new APIs for account linking

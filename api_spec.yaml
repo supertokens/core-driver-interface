@@ -6602,8 +6602,6 @@ components:
           type: boolean
         passwordlessEnabled:
           type: boolean
-        totpEnabled:
-          type: boolean
         firstFactors:
           $ref: '#/components/schemas/firstFactors'
         requiredSecondaryFactors:
