@@ -23,6 +23,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adds `firstFactors` and `requiredSecondaryFactors` to the input of `/recipe/multitenancy/connectionuridomain` PUT, `/recipe/multitenancy/app` PUT and `/appid-<appId>/recipe/multitenancy/tenant` PUT APIs.
 - Adds `firstFactors` and `requiredSecondaryFacrors` to the response of `/appid-<appId>/<tenantId>/recipe/multitenancy/tenant` GET API.
 
+## [4.0.3]
+
+- Adds an optional `useDynamicSigningKey` to the session refresh (`POST` `/appid-<appId>/recipe/session/refresh`) request body
+
+## [4.0.2]
+
+- Adds GET `/appid-<appId>/requests/stats` API
+
+## [4.0.1]
+
+- Fixes location of `isVerified` boolean in the third party signinup API request body.
+
 ## [4.0.0]
 
 - Adds new APIs for account linking
