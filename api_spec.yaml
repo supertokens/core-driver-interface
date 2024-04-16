@@ -6977,8 +6977,6 @@ components:
     bulkImportUser:
       type: object
       properties:
-        id:
-          $ref: '#/components/schemas/bulkImportUserId'
         externalUserId:
           $ref: '#/components/schemas/userId'
         userMetadata:
@@ -7002,13 +7000,15 @@ components:
               - $ref: '#/components/schemas/bulkImportUserPasswordlessLoginMethod'
 
     bulkImportUserResponse:
+      properties:
+        id:
+          $ref: '#/components/schemas/bulkImportUserId'
+        status:
+          $ref: '#/components/schemas/bulkImportUserStatus'
+        createdAt:
+          $ref: '#/components/schemas/timeJoined'
+        updatedAt:
+          $ref: '#/components/schemas/timeJoined'
       allOf:
       - $ref: '#/components/schemas/bulkImportUser'
       - type: object
-        properties:
-          status:
-            $ref: '#/components/schemas/bulkImportUserStatus'
-          createdAt:
-            $ref: '#/components/schemas/timeJoined'
-          updatedAt:
-            $ref: '#/components/schemas/timeJoined'
