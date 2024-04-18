@@ -6937,6 +6937,9 @@ components:
       - $ref: '#/components/schemas/bulkImportUserLoginMethodFields'
       - type: object
         properties:
+          recipeId:
+            type: string
+            example: "emailpassword"
           email:
             $ref: '#/components/schemas/email'
           passwordHash:
@@ -6953,6 +6956,9 @@ components:
       - $ref: '#/components/schemas/bulkImportUserLoginMethodFields'
       - type: object
         properties:
+          recipeId:
+            type: string
+            example: "thirdparty"
           thirdPartyId:
             $ref: '#/components/schemas/thirdPartyId'
           thirdPartyUserId:
@@ -6966,13 +6972,12 @@ components:
       - $ref: '#/components/schemas/bulkImportUserLoginMethodFields'
       - type: object
         properties:
-          email:
-            $ref: '#/components/schemas/email'
-          phoneNumber:
-            $ref: '#/components/schemas/phoneNumber'
-        oneOf:
-          - required: ["email"]
-          - required: ["phoneNumber"]
+          recipeId:
+            type: string
+            example: "passwordless"
+      oneOf:
+        - $ref: '#/components/schemas/email'
+        - $ref: '#/components/schemas/phoneNumber'
 
     bulkImportUser:
       type: object
