@@ -6058,7 +6058,8 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-    delete:
+  /appid-<appId>/bulk-import/users/remove:
+    post:
       tags:
         - Bulk Import
       operationId: deleteBulkImportUsers
