@@ -5849,7 +5849,7 @@ paths:
                 properties:
                   tenantId:
                     $ref: '#/components/schemas/tenantId'
-              - $ref: '#/components/schemas/tenantInput'
+              - $ref: '#/components/schemas/tenantInputV2'
       responses:
         200:
           description: Create or Update tenant result
@@ -5960,7 +5960,7 @@ paths:
                       properties:
                         status:
                           $ref: '#/components/schemas/statusOK'
-                    - $ref: '#/components/schemas/tenantConfig'
+                    - $ref: '#/components/schemas/tenantConfigV2'
                 - type: object
                   properties:
                     status:
@@ -6113,7 +6113,7 @@ paths:
                   tenants:
                     type: array
                     items:
-                      $ref: '#/components/schemas/tenantConfig'
+                      $ref: '#/components/schemas/tenantConfigV2'
         '400':
           $ref: '#/components/responses/400'
 
