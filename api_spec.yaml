@@ -5981,6 +5981,93 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
+  /appid-<appId>/<tenantId>/recipe/multitenancy/tenant/core-config:
+    get:
+      tags:
+        - Multitenancy Recipe
+      description: |
+        Get the core config of the tenant specified by the url prefix, along with the metadata of each of the fields.
+
+      operationId: tenantCoreConfigGET
+      parameters:
+        - $ref: '#/components/parameters/multitenancyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        '200':
+          description: Tenant core config result
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - config
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  config:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        key:
+                          type: string
+                          example: password_reset_token_lifetime
+                        valueType:
+                          type: string
+                          enum: ["string", "number", "boolean"]
+                          nullable: true
+                          example: "number"
+                        value:
+                          nullable: true
+                          oneOf:
+                            - type: string
+                            - type: number
+                            - type: boolean
+                          example: 3600000
+                        description:
+                          type: string
+                          example: "Time in milliseconds for how long a password reset token / link is valid for. [Default: 3600000 (1 hour)]"
+                        isDifferentAcrossTenants:
+                          type: boolean
+                        possibleValues:
+                          nullable: true
+                          type: array
+                          items:
+                            type: string
+                        isNullable:
+                          type: boolean
+                          example: false
+                        defaultValue:
+                          nullable: true
+                          oneOf:
+                            - type: string
+                            - type: number
+                            - type: boolean
+                          example: 3600000
+                        isPluginProperty:
+                          type: boolean
+                          example: false
+                        isPluginPropertyEditable:
+                          type: boolean
+                          example: false
+
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
   /appid-<appId>/recipe/multitenancy/tenant/remove:
     post:
       tags:
