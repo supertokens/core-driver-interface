@@ -5508,8 +5508,6 @@ paths:
 
         `requiredSecondaryFactors` can be set to null to remove all entries in the core, or a non empty string array to be updated in the core. Setting of empty array is disallowed.
 
-        Note: the create/update will fail if a login method is not enabled and a relavant factor is added to either `firstFactors` or `requiredSecondaryFactors`. For example, `emailPasswordEnabled` cannot be set to `false` if `emailpassword` is present in the `firstFactors` array.
-
         If updating an existing app,
         1. core will keep the existing state of login methods and only update the ones that are specified in the request body.
         2. Core config will be merged into existing config. To delete a key in the config, use a null value
@@ -5822,8 +5820,6 @@ paths:
         - non-empty array: The first factors that are enabled for the tenant
 
         `requiredSecondaryFactors` can be set to null to remove all entries in the core, or a non empty string array to be updated in the core. Setting of empty array is disallowed.
-
-        Note: the create/update will fail if a login method is not enabled and a relavant factor is added to either `firstFactors` or `requiredSecondaryFactors`. For example, `emailPasswordEnabled` cannot be set to `false` if `emailpassword` is present in the `firstFactors` array.
 
         If updating an existing tenant,
         1. core will keep the existing state of login methods and only update the ones that are specified in the request body.
