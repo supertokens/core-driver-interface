@@ -5362,6 +5362,11 @@ paths:
       description: |
         Get a list of all connection uri domains.
 
+        The value of `firstFactors` can be as follows:
+        - `null`: When set to `null`, the SDK will use firstFactors defined in the SDK
+        - `[]` (empty array): No first factors would be enabled for the tenant
+        - non-empty array: The first factors that are enabled for the tenant
+
         Request must originate from base connection uri domain and public app and tenant.
 
       operationId: connectionUriDomainListV2GET
@@ -5692,6 +5697,11 @@ paths:
       description: |
         Get a list of all apps in a connection uri domain.
 
+        The value of `firstFactors` can be as follows:
+        - `null`: When set to `null`, the SDK will use firstFactors defined in the SDK
+        - `[]` (empty array): No first factors would be enabled for the tenant
+        - non-empty array: The first factors that are enabled for the tenant
+
         Request must originate from public app and tenant.
 
       operationId: appListV2GET
@@ -5947,6 +5957,11 @@ paths:
       description: |
         Get a tenant config of the tenant specified by the url prefix.
 
+        The value of `firstFactors` can be as follows:
+        - `null`: When set to `null`, the SDK will use firstFactors defined in the SDK
+        - `[]` (empty array): No first factors would be enabled for the tenant
+        - non-empty array: The first factors that are enabled for the tenant
+
         SuperTokens subscription license key is required if querying any tenant other than the base tenant.
 
         Returns recipes with their enabled flag and recipe specific configs saved in core
@@ -6185,6 +6200,11 @@ paths:
         - Multitenancy Recipe
       description: |
         Get a list of all tenants in an app.
+
+        The value of `firstFactors` can be as follows:
+        - `null`: When set to `null`, the SDK will use firstFactors defined in the SDK
+        - `[]` (empty array): No first factors would be enabled for the tenant
+        - non-empty array: The first factors that are enabled for the tenant
 
         Request must originate from public tenant.
 
