@@ -6612,7 +6612,7 @@ components:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version.
-      example: '5.0'
+      example: '5.1'
       schema:
         type: string
 
