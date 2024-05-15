@@ -5716,7 +5716,7 @@ paths:
                         tenants:
                           type: array
                           items:
-                            $ref: '#/components/schemas/tenantConfig'
+                            $ref: '#/components/schemas/tenantConfigV2'
         '400':
           $ref: '#/components/responses/400'
 
