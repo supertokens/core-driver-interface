@@ -4340,6 +4340,18 @@ paths:
         Get a list of compatible CDI versions
       parameters:
         - $ref: '#/components/parameters/api-key'
+        - in: query
+          name: websiteDomain
+          schema:
+            type: string
+            example: https://example.com
+          required: false
+        - in: query
+          name: apiDomain
+          schema:
+            type: string
+            example: https://api.example.com
+          required: false
       responses:
         '200':
           description: get api version
@@ -5164,13 +5176,13 @@ paths:
         This request must originate from public app and public tenant on the base
         connection uri domain.
 
-        If creating a new connection uri domain, only the login methods set to true will be enabled and rest will be disabled by default.
-
         This `firstFactors` can be set to following values:
 
         - `null`: When set to `null`, the SDK will use firstFactors defined in the SDK
         - `[]` (empty array): No first factors would be enabled for the tenant
         - non-empty array: The first factors that are enabled for the tenant
+
+        If first factors are not specified while creating a new connection uri domain, all the login methods will be enabled by default.
 
         `requiredSecondaryFactors` can be set to null to remove all entries in the core, or a non empty string array to be updated in the core. Setting of empty array is disallowed.
 
@@ -5509,13 +5521,13 @@ paths:
 
         SuperTokens subscription license key is required.
 
-        If creating a new app, only the login methods set to true will be enabled and rest will be disabled by default.
-
         This `firstFactors` can be set to following values:
 
         - `null`: When set to `null`, the SDK will use firstFactors defined in the SDK
         - `[]` (empty array): No first factors would be enabled for the tenant
         - non-empty array: The first factors that are enabled for the tenant
+
+        If `firstFactors` is not specified while creating an app, all the login methods will be enabled by default.
 
         `requiredSecondaryFactors` can be set to null to remove all entries in the core, or a non empty string array to be updated in the core. Setting of empty array is disallowed.
 
@@ -5831,13 +5843,13 @@ paths:
 
         SuperTokens subscription license key is required.
 
-        If creating a new tenant, only the login methods set to true will be enabled and rest will be disabled by default.
-
         This `firstFactors` can be set to following values:
 
         - `null`: When set to `null`, the SDK will use firstFactors defined in the SDK
         - `[]` (empty array): No first factors would be enabled for the tenant
         - non-empty array: The first factors that are enabled for the tenant
+
+        If `firstFactors` is not specified while creating a new tenant, none of the login methods will be enabled by default.
 
         `requiredSecondaryFactors` can be set to null to remove all entries in the core, or a non empty string array to be updated in the core. Setting of empty array is disallowed.
 
@@ -6004,14 +6016,14 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/multitenancy/tenant/core-config:
+  /appid-<appId>/<tenantId>/recipe/dashboard/tenant/core-config:
     get:
       tags:
-        - Multitenancy Recipe
+        - Dashboard Recipe
       description: |
         Get the core config of the tenant specified by the url prefix, along with the metadata of each of the fields.
 
-      operationId: tenantCoreConfigGET
+      operationId: tenantCoreConfigForDashboardGET
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
@@ -6539,7 +6551,7 @@ components:
       schema:
         type: string
     api-key:
-      name: api-key
+      name: Authorization
       in: header
       example: ajs30Nlbs0DjvsdFIne934n8NVee5n
       required: false

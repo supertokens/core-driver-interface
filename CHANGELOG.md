@@ -10,7 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [5.1.0]
 
-- Adds `/appid-<appid>/<tenantid>/recipe/multitenancy/tenant/core-config` GET API.
+- Adds `/appid-<appid>/<tenantid>/recipe/dashboard/tenant/core-config` GET API.
+- Adds optional `websiteDomain` and `apiDomain` query param to GET `/appid-<appId>/apiversion` API.
 - Deprecates the recipe enabled booleans for ConnectionURIDomains, Apps and Tenants and now the `firstFactors` and `requiredSecondaryFactors` are used to control the login methods.
   - Deprecated APIs:
     - PUT `/recipe/multitenancy/connectionuridomain`
