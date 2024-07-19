@@ -5176,15 +5176,38 @@ paths:
         This request must originate from public app and public tenant on the base
         connection uri domain.
 
-        This `firstFactors` can be set to following values:
+        The `firstFactors` can be set to following values:
 
-        - `null`: When set to `null`, the SDK will use firstFactors defined in the SDK
-        - `[]` (empty array): No first factors would be enabled for the tenant
-        - non-empty array: The first factors that are enabled for the tenant
+        - `null`: When set to `null`, all the login methods will be available for the connection URI domain (public app, public tenant).
+        - `[]` (empty array): No login methods will be enabled for the connection URI domain (public app, public tenant).
+        - `['factor1', 'factor2', ...]` (non-empty array): The list of login methods to enable for the connection URI domain (public app, public tenant). For eg. if this is set to `['emailpassword', 'thirdparty']`, the users of the tenant will be able to login using emailpassword and third party providers.
+
+        List of built-in first factors are as follows:
+
+        - Email password auth: `emailpassword`
+        - Social login / enterprise SSO auth: `thirdparty`
+        - Passwordless:
+          - With email OTP: `otp-email`
+          - With SMS OTP: `otp-phone`
+          - With email magic link: `link-email`
+          - With SMS magic link: `link-phone`
 
         If first factors are not specified while creating a new connection uri domain, all the login methods will be enabled by default.
 
-        `requiredSecondaryFactors` can be set to null to remove all entries in the core, or a non empty string array to be updated in the core. Setting of empty array is disallowed.
+        The `requiredSecondaryFactors` can be set to following values:
+        - `null`: When set to `null`, no secondary factors will be required for the users of the connection URI domain (public app, public tenant).
+        - `['factor1', 'factor2', ...]` (non-empty array): The list of factors that the users of the connection URI domain (public app, public tenant) must complete post the first factor login. For eg. if this is set to `['otp-phone', 'totp']`, the users of the tenant will be required to complete either phone OTP or TOTP post the first factor login.
+
+        List of built-in secondary factors are as follows:
+
+        - Email password auth: `emailpassword`
+        - Social login / enterprise SSO auth: `thirdparty`
+        - Passwordless:
+          - With email OTP: `otp-email`
+          - With SMS OTP: `otp-phone`
+          - With email magic link: `link-email`
+          - With SMS magic link: `link-phone`
+        - Time based OTP: `totp`
 
         If updating an existing connection uri domain,
         1. core will keep the existing state of login methods and only update the ones that are specified in the request body.
@@ -5521,15 +5544,38 @@ paths:
 
         SuperTokens subscription license key is required.
 
-        This `firstFactors` can be set to following values:
+        The `firstFactors` can be set to following values:
 
-        - `null`: When set to `null`, the SDK will use firstFactors defined in the SDK
-        - `[]` (empty array): No first factors would be enabled for the tenant
-        - non-empty array: The first factors that are enabled for the tenant
+        - `null`: When set to `null`, all the login methods will be available for the app (public tenant).
+        - `[]` (empty array): No login methods will be enabled for the app (public tenant).
+        - `['factor1', 'factor2', ...]` (non-empty array): The list of login methods to enable for the app (public tenant). For eg. if this is set to `['emailpassword', 'thirdparty']`, the users of the tenant will be able to login using emailpassword and third party providers.
 
-        If `firstFactors` is not specified while creating an app, all the login methods will be enabled by default.
+        List of built-in first factors are as follows:
 
-        `requiredSecondaryFactors` can be set to null to remove all entries in the core, or a non empty string array to be updated in the core. Setting of empty array is disallowed.
+        - Email password auth: `emailpassword`
+        - Social login / enterprise SSO auth: `thirdparty`
+        - Passwordless:
+          - With email OTP: `otp-email`
+          - With SMS OTP: `otp-phone`
+          - With email magic link: `link-email`
+          - With SMS magic link: `link-phone`
+
+        If first factors are not specified while creating a new app, all the login methods will be enabled by default.
+
+        The `requiredSecondaryFactors` can be set to following values:
+        - `null`: When set to `null`, no secondary factors will be required for the users of the app (public tenant).
+        - `['factor1', 'factor2', ...]` (non-empty array): The list of factors that the users of the app (public tenant) must complete post the first factor login. For eg. if this is set to `['otp-phone', 'totp']`, the users of the tenant will be required to complete either phone OTP or TOTP post the first factor login.
+
+        List of built-in secondary factors are as follows:
+
+        - Email password auth: `emailpassword`
+        - Social login / enterprise SSO auth: `thirdparty`
+        - Passwordless:
+          - With email OTP: `otp-email`
+          - With SMS OTP: `otp-phone`
+          - With email magic link: `link-email`
+          - With SMS magic link: `link-phone`
+        - Time based OTP: `totp`
 
         If updating an existing app,
         1. core will keep the existing state of login methods and only update the ones that are specified in the request body.
@@ -5843,15 +5889,38 @@ paths:
 
         SuperTokens subscription license key is required.
 
-        This `firstFactors` can be set to following values:
+        The `firstFactors` can be set to following values:
 
-        - `null`: When set to `null`, the SDK will use firstFactors defined in the SDK
-        - `[]` (empty array): No first factors would be enabled for the tenant
-        - non-empty array: The first factors that are enabled for the tenant
+        - `null`: When set to `null`, all the login methods will be available for the tenant.
+        - `[]` (empty array): No login methods will be enabled for the tenant.
+        - `['factor1', 'factor2', ...]` (non-empty array): The list of login methods to enable for the tenant. For eg. if this is set to `['emailpassword', 'thirdparty']`, the users of the tenant will be able to login using emailpassword and third party providers.
 
-        If `firstFactors` is not specified while creating a new tenant, none of the login methods will be enabled by default.
+        List of built-in first factors are as follows:
 
-        `requiredSecondaryFactors` can be set to null to remove all entries in the core, or a non empty string array to be updated in the core. Setting of empty array is disallowed.
+        - Email password auth: `emailpassword`
+        - Social login / enterprise SSO auth: `thirdparty`
+        - Passwordless:
+          - With email OTP: `otp-email`
+          - With SMS OTP: `otp-phone`
+          - With email magic link: `link-email`
+          - With SMS magic link: `link-phone`
+
+        If first factors are not specified while creating a new tenant, all the login methods will be disabled by default.
+
+        The `requiredSecondaryFactors` can be set to following values:
+        - `null`: When set to `null`, no secondary factors will be required for the users of the tenant.
+        - `['factor1', 'factor2', ...]` (non-empty array): The list of factors that the users of the tenant must complete post the first factor login. For eg. if this is set to `['otp-phone', 'totp']`, the users of the tenant will be required to complete either phone OTP or TOTP post the first factor login.
+
+        List of built-in secondary factors are as follows:
+
+        - Email password auth: `emailpassword`
+        - Social login / enterprise SSO auth: `thirdparty`
+        - Passwordless:
+          - With email OTP: `otp-email`
+          - With SMS OTP: `otp-phone`
+          - With email magic link: `link-email`
+          - With SMS magic link: `link-phone`
+        - Time based OTP: `totp`
 
         If updating an existing tenant,
         1. core will keep the existing state of login methods and only update the ones that are specified in the request body.
