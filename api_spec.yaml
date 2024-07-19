@@ -7,7 +7,7 @@ info:
 
     Those that do not have `<tenantId>` in the path will enforce that the API is called from `public` tenant only.
 
-  version: 5.0.0
+  version: 5.1.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -335,7 +335,7 @@ paths:
 
         '401':
           $ref: '#/components/responses/401'
-        
+
         '402':
           $ref: '#/components/responses/402'
 
@@ -428,7 +428,7 @@ paths:
                 - userId
                 - skew
                 - period
-                    
+
       responses:
         '200':
           description: Indicates success with the status and secret properties
@@ -452,17 +452,17 @@ paths:
                       status:
                         type: string
                         enum: ['DEVICE_ALREADY_EXISTS_ERROR']
-                        
+
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
     put:
@@ -493,7 +493,7 @@ paths:
                 - userId
                 - existingDeviceName
                 - newDeviceName
-                    
+
       responses:
         '200':
           description: Indicates success with the status property
@@ -518,13 +518,13 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -550,7 +550,7 @@ paths:
           description: Retrives all TOTP devices
           content:
             application/json:
-                schema: 
+                schema:
                   oneOf:
                   - type: object
                     properties:
@@ -571,16 +571,16 @@ paths:
                               type: boolean
                     required:
                       - status
-                  
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
   /recipe/totp/device/import:
@@ -639,17 +639,17 @@ paths:
                       status:
                         type: string
                         enum: ['DEVICE_ALREADY_EXISTS_ERROR']
-                        
+
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -678,7 +678,7 @@ paths:
               required:
                 - userId
                 - deviceName
-                    
+
       responses:
         '200':
           description: Indicates success with the status property
@@ -696,13 +696,13 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -735,7 +735,7 @@ paths:
                 - userId
                 - totp
                 - allowUnverifiedDevices
-                    
+
       responses:
         '200':
           description: Indicates success with the status property
@@ -784,13 +784,13 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -823,7 +823,7 @@ paths:
                 - userId
                 - deviceName
                 - totp
-                    
+
       responses:
         '200':
           description: Indicates success with the status property
@@ -875,13 +875,13 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -915,7 +915,7 @@ paths:
               required:
                 - superTokensUserId
                 - externalUserId
-                    
+
       responses:
         '200':
           description: Indicates success with the status property
@@ -943,17 +943,17 @@ paths:
                         type: boolean
                       doesExternalUserIdExist:
                         type: boolean
-                        
+
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
     get:
@@ -982,7 +982,7 @@ paths:
           description: Retrives a userId mapping
           content:
             application/json:
-                schema: 
+                schema:
                   oneOf:
                   - type: object
                     properties:
@@ -994,7 +994,7 @@ paths:
                         type: string
                         example: "externalId"
                       externalUserIdInfo:
-                        type: string 
+                        type: string
                         example: "Info about external userId"
                     required:
                       - status
@@ -1008,16 +1008,16 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/recipe/userid/map/remove:
     post:
       tags:
@@ -1042,10 +1042,10 @@ paths:
                   enum: ["SUPERTOKENS", "EXTERNAL", "ANY"]
                 force:
                   type: boolean
-                  
+
               required:
                 - userId
-                    
+
       responses:
         '200':
           description: Indicates success with the status property
@@ -1058,19 +1058,19 @@ paths:
                     $ref: '#/components/schemas/statusOK'
                   didMappingExist:
                     type: boolean
-                        
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/recipe/userid/external-user-id-info:
     put:
       tags:
@@ -1100,7 +1100,7 @@ paths:
               required:
                 - userId
                 - externalUserIdInfo
-                    
+
       responses:
         '200':
           description: Indicates success with the status property
@@ -1117,16 +1117,16 @@ paths:
                       status:
                         type: string
                         enum: ["UNKNOWN_MAPPING_ERROR"]
-                        
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -1213,13 +1213,13 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -1313,13 +1313,13 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -1342,7 +1342,7 @@ paths:
               oneOf:
                 - type: object
                   properties:
-                    email: 
+                    email:
                       $ref: '#/components/schemas/email'
                     userInputCode:
                       $ref: '#/components/schemas/userInputCode'
@@ -1403,16 +1403,16 @@ paths:
                         status:
                           type: string
                           enum: ["RESTART_FLOW_ERROR", "USER_INPUT_CODE_ALREADY_USED_ERROR"]
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -1434,7 +1434,7 @@ paths:
               oneOf:
                 - type: object
                   properties:
-                    codeId: 
+                    codeId:
                       $ref: '#/components/schemas/codeId'
                   required:
                     - codeId
@@ -1449,21 +1449,21 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-                schema: 
+                schema:
                   type: object
                   properties:
                     status:
                       $ref: '#/components/schemas/statusOK'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -1503,7 +1503,7 @@ paths:
           description: List of all active passwordless codes of the user
           content:
             application/json:
-                schema: 
+                schema:
                   type: object
                   properties:
                     status:
@@ -1533,16 +1533,16 @@ paths:
                                   $ref: '#/components/schemas/timeCreated'
                                 codeLifetime:
                                   $ref: '#/components/schemas/codeLifetime'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -1564,7 +1564,7 @@ paths:
               oneOf:
                 - type: object
                   properties:
-                    email: 
+                    email:
                       $ref: '#/components/schemas/email'
                   required:
                     - email
@@ -1579,21 +1579,21 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-                schema: 
+                schema:
                   type: object
                   properties:
                     status:
                       $ref: '#/components/schemas/statusOK'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -1609,7 +1609,7 @@ paths:
         API is tenant specific if querying by email or phone number.
         If querying by userId, tenantId will be ignored.
 
-        Note that there is an invisible character at the end of the path, this was to avoid a conflict with the OpenAPI spec. 
+        Note that there is an invisible character at the end of the path, this was to avoid a conflict with the OpenAPI spec.
 
       parameters:
         - $ref: '#/components/parameters/passwordlessRid'
@@ -1644,16 +1644,16 @@ paths:
                         status:
                           type: string
                           enum: ["UNKNOWN_USER_ID_ERROR", "UNKNOWN_EMAIL_ERROR", "UNKNOWN_PHONE_NUMBER_ERROR"]
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
     put:
@@ -1661,7 +1661,7 @@ paths:
         - Passwordless Recipe
       operationId: passwordlessPutUser
       description: |
-        Update a user's information. 
+        Update a user's information.
         If the email or phoneNumber is set to null the previous value will be deleted. If they are not set (i.e., undefined/missing from the request), they are left as-is.
       parameters:
         - $ref: '#/components/parameters/passwordlessRid'
@@ -1684,13 +1684,13 @@ paths:
                     - nullable: true
               required:
                 - userId
-      
+
       responses:
         '200':
           description: update user's information
           content:
             application/json:
-              schema: 
+              schema:
                 oneOf:
                 - type: object
                   properties:
@@ -1704,16 +1704,16 @@ paths:
                       enum: [ 'EMAIL_CHANGE_NOT_ALLOWED_ERROR', 'PHONE_NUMBER_CHANGE_NOT_ALLOWED_ERROR' ]
                     reason:
                       type: string
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -1758,13 +1758,13 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -1809,19 +1809,19 @@ paths:
                     status:
                       type: string
                       enum: ['EMAIL_ALREADY_EXISTS_ERROR']
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-          
+
   /appid-<appId>/<tenantId>/recipe/user:
     get:
       tags:
@@ -1848,13 +1848,13 @@ paths:
           description: use either email or userId, not both
           schema:
             $ref: '#/components/schemas/userId'
-      
+
       responses:
         '200':
           description: get user's information
           content:
             application/json:
-                schema: 
+                schema:
                   oneOf:
                   - type: object
                     properties:
@@ -1867,16 +1867,16 @@ paths:
                       status:
                         type: string
                         enum: ['UNKNOWN_USER_ID_ERROR', 'UNKNOWN_EMAIL_ERROR']
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
     put:
@@ -1900,7 +1900,7 @@ paths:
                   $ref: '#/components/schemas/email'
                 password:
                   $ref: '#/components/schemas/password'
-      
+
       responses:
         '200':
           description: update user's information
@@ -1923,16 +1923,16 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-        
+
   /appid-<appId>/<tenantId>/recipe/user/password/reset/token:
     post:
       tags:
@@ -1962,7 +1962,7 @@ paths:
           description: Generate a new reset password token for this user
           content:
             application/json:
-                schema: 
+                schema:
                   oneOf:
                   - type: object
                     properties:
@@ -1971,19 +1971,19 @@ paths:
                       token:
                         $ref: '#/components/schemas/token'
                   - $ref: '#/components/schemas/unknownUserIdResponse'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/<tenantId>/recipe/user/password/reset:
     post:
       tags:
@@ -2004,7 +2004,7 @@ paths:
               properties:
                 method:
                   type: string
-                  enum: 
+                  enum:
                     - token
                 token:
                   $ref: '#/components/schemas/token'
@@ -2016,7 +2016,7 @@ paths:
           description: Reset a password using password reset token
           content:
             application/json:
-                schema: 
+                schema:
                   oneOf:
                   - type: object
                     properties:
@@ -2029,19 +2029,19 @@ paths:
                       status:
                         type: string
                         enum: ['RESET_PASSWORD_INVALID_TOKEN_ERROR']
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-          
+
   /appid-<appId>/<tenantId>/recipe/user/passwordhash/import:
     post:
       tags:
@@ -2067,8 +2067,8 @@ paths:
                 hashingAlgorithm:
                   type: string
                   enum: ["argon2", "bcrypt", "firebase_scrypt"]
-                  
-                  
+
+
       responses:
         '200':
           description: import user response
@@ -2083,7 +2083,7 @@ paths:
                     $ref: '#/components/schemas/authRecipeUser'
                   didUserAlreadyExist:
                     type: boolean
-          
+
         '400':
           $ref: '#/components/responses/400'
 
@@ -2095,7 +2095,7 @@ paths:
 
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/<tenantId>/recipe/user/password/reset/token/consume:
     post:
       tags:
@@ -2194,19 +2194,19 @@ paths:
                       enum: ['EMAIL_CHANGE_NOT_ALLOWED_ERROR']
                     reason:
                       type: string
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/<tenantId>/recipe/user⠀:
     get:
       tags:
@@ -2219,8 +2219,8 @@ paths:
         API is tenant specific if querying by email.
         If querying by userId, tenantId will be ignored.
 
-        Note that there is an invisible character at the end of the path, this was to avoid a conflict with the OpenAPI spec. 
-        
+        Note that there is an invisible character at the end of the path, this was to avoid a conflict with the OpenAPI spec.
+
       parameters:
         - $ref: '#/components/parameters/thirdPartyRid'
         - $ref: '#/components/parameters/api-key'
@@ -2254,10 +2254,10 @@ paths:
                         status:
                           type: string
                           enum: ["UNKNOWN_USER_ID_ERROR", "UNKNOWN_THIRD_PARTY_USER_ERROR"]
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
 
@@ -2275,7 +2275,7 @@ paths:
         - ThirdParty Recipe
       description: |
         Get all users accounts associated with given email
-        
+
       parameters:
         - $ref: '#/components/parameters/thirdPartyRid'
         - $ref: '#/components/parameters/api-key'
@@ -2287,8 +2287,8 @@ paths:
           schema:
             type: string
             example: john.doe@example.com
-            
-        
+
+
       responses:
         '200':
           description: Get all users associated with given email
@@ -2303,13 +2303,13 @@ paths:
                       type: array
                       items:
                         $ref: '#/components/schemas/authRecipeUser'
-          
+
         '400':
           $ref: '#/components/responses/400'
-          
+
         '401':
           $ref: '#/components/responses/401'
-          
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -2334,7 +2334,7 @@ paths:
           description: Generate a new email verification token for this user
           content:
             application/json:
-                schema: 
+                schema:
                   oneOf:
                   - type: object
                     properties:
@@ -2347,16 +2347,16 @@ paths:
                       status:
                         type: string
                         enum: ['EMAIL_ALREADY_VERIFIED_ERROR']
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -2381,24 +2381,24 @@ paths:
           description: OK response
           content:
             application/json:
-                schema: 
+                schema:
                   properties:
                     status:
                       type: string
                       enum: ['OK']
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/<tenantId>/recipe/user/email/verify:
     post:
       tags:
@@ -2418,17 +2418,17 @@ paths:
               properties:
                 method:
                   type: string
-                  enum: 
+                  enum:
                     - token
                 token:
                   $ref: '#/components/schemas/token'
-      
+
       responses:
         '200':
           description: Verify an email
           content:
             application/json:
-                schema: 
+                schema:
                   oneOf:
                   - type: object
                     properties:
@@ -2443,16 +2443,16 @@ paths:
                       status:
                         type: string
                         enum: ['EMAIL_VERIFICATION_INVALID_TOKEN_ERROR']
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -2474,26 +2474,26 @@ paths:
           description: Verify an email
           content:
             application/json:
-                schema: 
+                schema:
                   type: object
                   properties:
                     status:
                       $ref: '#/components/schemas/statusOK'
                     isVerified:
                       $ref: '#/components/schemas/isVerified'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/recipe/user/email/verify/remove:
     post:
       tags:
@@ -2510,7 +2510,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/emailVerificationVerifyTokenRequest'
-      
+
       responses:
         '200':
           description: OK response
@@ -2521,19 +2521,19 @@ paths:
                     status:
                       type: string
                       enum: ['OK']
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
-          $ref: '#/components/responses/500'  
-  
+          $ref: '#/components/responses/500'
+
   /appid-<appId>/recipe/user/metadata:
     get:
       tags:
@@ -2551,7 +2551,7 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-                schema: 
+                schema:
                   type: object
                   properties:
                     status:
@@ -2560,13 +2560,13 @@ paths:
                       $ref: '#/components/schemas/userMetadata'
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -2603,7 +2603,7 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-                schema: 
+                schema:
                   type: object
                   properties:
                     status:
@@ -2613,13 +2613,13 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -2649,7 +2649,7 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-                schema: 
+                schema:
                   type: object
                   properties:
                     status:
@@ -2657,16 +2657,16 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/<tenantId>/recipe/user/role:
     put:
       tags:
@@ -2696,7 +2696,7 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-                schema: 
+                schema:
                   oneOf:
                   - type: object
                     properties:
@@ -2709,16 +2709,16 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/<tenantId>/recipe/user/role/remove:
     post:
       tags:
@@ -2748,7 +2748,7 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-                schema: 
+                schema:
                   oneOf:
                   - type: object
                     properties:
@@ -2761,16 +2761,16 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/<tenantId>/recipe/user/roles:
     get:
       tags:
@@ -2788,27 +2788,27 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   status:
                     $ref: '#/components/schemas/statusOK'
                   roles:
                     type: array
-                    items: 
+                    items:
                       $ref: '#/components/schemas/role'
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/<tenantId>/recipe/role/users:
     get:
       tags:
@@ -2826,7 +2826,7 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-              schema: 
+              schema:
                   oneOf:
                   - type: object
                     properties:
@@ -2834,22 +2834,22 @@ paths:
                         $ref: '#/components/schemas/statusOK'
                       users:
                         type: array
-                        items: 
+                        items:
                           $ref: '#/components/schemas/userId'
                   - $ref: '#/components/schemas/unknownRoleResponse'
-                  
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/recipe/role:
     put:
       tags:
@@ -2882,7 +2882,7 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-                schema: 
+                schema:
                   type: object
                   properties:
                     status:
@@ -2894,16 +2894,16 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/recipe/role/permissions:
     get:
       tags:
@@ -2921,7 +2921,7 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-              schema: 
+              schema:
                   oneOf:
                   - type: object
                     properties:
@@ -2929,23 +2929,23 @@ paths:
                         $ref: '#/components/schemas/statusOK'
                       permissions:
                         type: array
-                        items: 
+                        items:
                           type: string
                           example: permission
                   - $ref: '#/components/schemas/unknownRoleResponse'
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/recipe/role/permissions/remove:
     post:
       tags:
@@ -2978,7 +2978,7 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-                schema: 
+                schema:
                   oneOf:
                   - type: object
                     properties:
@@ -2988,16 +2988,16 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/recipe/permission/roles:
     get:
       tags:
@@ -3015,29 +3015,29 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-              schema: 
+              schema:
                 type: object
                 properties:
                   status:
                     $ref: '#/components/schemas/statusOK'
                   roles:
                     type: array
-                    items: 
+                    items:
                       type: string
                       example: admin
-                  
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-          
+
   /appid-<appId>/recipe/role/remove:
     post:
       tags:
@@ -3065,7 +3065,7 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-                schema: 
+                schema:
                   type: object
                   properties:
                     status:
@@ -3076,16 +3076,16 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/recipe/roles:
     get:
       tags:
@@ -3102,36 +3102,36 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-              schema: 
+              schema:
                   type: object
                   properties:
                     status:
                       $ref: '#/components/schemas/statusOK'
                     roles:
                       type: array
-                      items: 
+                      items:
                         type: string
                         example: admin
-                    
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/<tenantId>/recipe/session:
     post:
       tags:
         - Session Recipe
       operationId: createNewSession
       description: |
-        Create a new Session 
+        Create a new Session
       parameters:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
@@ -3159,7 +3159,7 @@ paths:
           description: Create a new Session
           content:
             application/json:
-                schema: 
+                schema:
                   type: object
                   properties:
                     status:
@@ -3172,16 +3172,16 @@ paths:
                       $ref: '#/components/schemas/cookieInfo'
                     antiCsrfToken:
                       $ref: '#/components/schemas/token'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -3219,26 +3219,26 @@ paths:
                         $ref: '#/components/schemas/userId'
                       expiry:
                         $ref: '#/components/schemas/expiry'
-                      timeCreated: 
+                      timeCreated:
                         $ref: '#/components/schemas/timeCreated'
                       sessionHandle:
                         $ref: '#/components/schemas/handle'
                       tenantId:
                         $ref: '#/components/schemas/tenantId'
                   - $ref: '#/components/schemas/unauthorisedMessageResponse'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/<tenantId>/recipe/session/remove:
     post:
       tags:
@@ -3246,7 +3246,7 @@ paths:
       operationId: deleteSession
       description: |
         Delete a sesion
-        
+
         If revoking session by `userId`, the sessions are cleared across all tenants by default.
 
         Note: If `revokeAcrossAllTenants` is set to `true`, this API can only be called from `public` tenant.
@@ -3272,32 +3272,32 @@ paths:
                       $ref: '#/components/schemas/userId'
                     revokeAcrossAllTenants:
                       type: boolean
-                
+
       responses:
         '200':
           description: Delete a session
           content:
             application/json:
-                schema: 
+                schema:
                   type: object
                   properties:
-                    status: 
+                    status:
                       $ref: '#/components/schemas/statusOK'
                     sessionHandlesRevoked:
                       $ref: '#/components/schemas/sessionHandles'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/recipe/session/verify:
     post:
       tags:
@@ -3333,11 +3333,11 @@ paths:
           description: Verify a session
           content:
             application/json:
-                schema: 
+                schema:
                   oneOf:
                     - type: object
                       properties:
-                        status: 
+                        status:
                           $ref: '#/components/schemas/statusOK'
                         session:
                           $ref: '#/components/schemas/session'
@@ -3350,19 +3350,19 @@ paths:
                           $ref: '#/components/schemas/tryRefreshTokenResponse'
                         message:
                           $ref: '#/components/schemas/message'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-      
+
   /appid-<appId>/recipe/session/refresh:
     post:
       tags:
@@ -3394,11 +3394,11 @@ paths:
           description: Refresh a session
           content:
             application/json:
-                schema: 
+                schema:
                   oneOf:
                     - type: object
                       properties:
-                        status: 
+                        status:
                           $ref: '#/components/schemas/statusOK'
                         session:
                           $ref: '#/components/schemas/session'
@@ -3406,7 +3406,7 @@ paths:
                           $ref: '#/components/schemas/cookieInfo'
                         refreshToken:
                           $ref: '#/components/schemas/cookieInfo'
-                        antiCsrfToken: 
+                        antiCsrfToken:
                           $ref: '#/components/schemas/token'
                     - type: object
                       properties:
@@ -3420,19 +3420,19 @@ paths:
                             userId:
                               $ref: '#/components/schemas/userId'
                     - $ref: '#/components/schemas/unauthorisedMessageResponse'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/<tenantId>/recipe/session/user:
     get:
       tags:
@@ -3440,7 +3440,7 @@ paths:
       operationId: getUserSessionHandles
       description: |
         Get session handles for a user
-        
+
         By default, the session handles are fetched across all tenants. Set `fetchAcrossAllTenants` to `false` to get sessionHandles for the user for a particular tenant.
 
         Note: If `fetchAcrossAllTenants` is set to `true`, this API can only be called from `public` tenant.
@@ -3462,24 +3462,24 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: 
-                  status: 
+                properties:
+                  status:
                     $ref: '#/components/schemas/statusOK'
                   sessionHandles:
                     $ref: '#/components/schemas/sessionHandles'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/recipe/session/regenerate:
     post:
       tags:
@@ -3497,7 +3497,7 @@ paths:
             schema:
               type: object
               properties:
-                accessToken: 
+                accessToken:
                   $ref: '#/components/schemas/token'
                 userDataInJWT:
                   $ref: '#/components/schemas/userDataInJWT'
@@ -3512,24 +3512,24 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      session:  
+                      session:
                         $ref: '#/components/schemas/session'
                       accessToken:
                         $ref: '#/components/schemas/cookieInfo'
                   - $ref: '#/components/schemas/unauthorisedMessageResponse'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/recipe/session/data:
     get:
       deprecated: true
@@ -3561,19 +3561,19 @@ paths:
                       userDataInDatabase:
                         $ref: '#/components/schemas/userDataInDatabase'
                   - $ref: '#/components/schemas/unauthorisedMessageResponse'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-    
+
     put:
       tags:
         - Session Recipe
@@ -3590,7 +3590,7 @@ paths:
             schema:
               type: object
               properties:
-                sessionHandle:  
+                sessionHandle:
                   $ref: '#/components/schemas/handle'
                 userDataInDatabase:
                   $ref: '#/components/schemas/userDataInDatabase'
@@ -3603,19 +3603,19 @@ paths:
                 oneOf:
                   - $ref: '#/components/schemas/statusOKResponse'
                   - $ref: '#/components/schemas/unauthorisedMessageResponse'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-          
+
   /appid-<appId>/recipe/jwt:
     post:
       tags:
@@ -3645,7 +3645,7 @@ paths:
                   type: boolean
                   description: Decides if the token should be signed with a dynamic or static key, defaults to true
                   example: true
-                  
+
       responses:
         '200':
           description: Create a signed JWT
@@ -3665,13 +3665,13 @@ paths:
                       status:
                         type: string
                         enum: ['UNSUPPORTED_ALGORITHM_ERROR']
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -3699,15 +3699,15 @@ paths:
                     enum: ["OK"]
                   keys:
                     type: array
-                    items: 
+                    items:
                       $ref: '#/components/schemas/jwk'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -3727,15 +3727,15 @@ paths:
                 properties:
                   keys:
                     type: array
-                    items: 
+                    items:
                       $ref: '#/components/schemas/jwk'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -3771,19 +3771,19 @@ paths:
                       userDataInJWT:
                         $ref: '#/components/schemas/userDataInJWT'
                   - $ref: '#/components/schemas/unauthorisedMessageResponse'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-    
+
     put:
       tags:
         - Session Recipe
@@ -3813,19 +3813,19 @@ paths:
                 oneOf:
                   - $ref: '#/components/schemas/statusOKResponse'
                   - $ref: '#/components/schemas/unauthorisedMessageResponse'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/recipe/dashboard/user:
     post:
       tags:
@@ -3891,13 +3891,13 @@ paths:
                       status:
                         type: string
                         enum: ["INVALID_EMAIL_ERROR"]
-                  
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-          
+
         '402':
           description: Indicates ayment required
           content:
@@ -3911,10 +3911,10 @@ paths:
                   message:
                     type: string
                     example: "You have reached the free limit for creating users, please purchase the dashboard feature to create new users"
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
     put:
@@ -3937,7 +3937,7 @@ paths:
                     email:
                       type: string
                       example: test@example.com
-                    newPassword: 
+                    newPassword:
                       type: string
                       example: password@123
                     newEmail:
@@ -4002,16 +4002,16 @@ paths:
                         type: string
                         enum: ["UNKNOWN_USER_ERROR"]
 
-                  
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
     delete:
@@ -4030,14 +4030,14 @@ paths:
             type: string
             example: "test@example.com"
           required: false
-            
+
         - in: query
           name: userId
           schema:
             type: string
             example: "ue1231-f32f290f2-f23r23f-323f2"
           required: false
-    
+
       responses:
         '200':
           description: Indicates success with the status property
@@ -4050,20 +4050,20 @@ paths:
                     $ref: '#/components/schemas/statusOK'
                   didUserExist:
                     type: boolean
-                    
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
-  
+
+
   /appid-<appId>/recipe/dashboard/users:
     get:
       tags:
@@ -4103,26 +4103,26 @@ paths:
                         isSuspended:
                           type: boolean
                           example: false
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/recipe/dashboard/session/verify:
     post:
       tags:
          - Dashboard Recipe
       operationId: verifyDashboardUserSession
       description: |
-        Verify a Dashboard user's sessionId 
+        Verify a Dashboard user's sessionId
       parameters:
         - $ref: '#/components/parameters/dashboardRid'
         - $ref: '#/components/parameters/api-key'
@@ -4165,23 +4165,23 @@ paths:
                         enum: ["INVAlID_SESSION_ERROR"]
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-                        
+
   /appid-<appId>/recipe/dashboard/session:
     delete:
       tags:
          - Dashboard Recipe
       operationId: RevokeDashboardUsersSession
       description: |
-        Revoke a Dashboard user's session 
+        Revoke a Dashboard user's session
       parameters:
         - $ref: '#/components/parameters/dashboardRid'
         - $ref: '#/components/parameters/api-key'
@@ -4204,23 +4204,23 @@ paths:
                     $ref: '#/components/schemas/statusOK'
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-    
+
   /appid-<appId>/recipe/dashboard/signin:
     post:
       tags:
          - Dashboard Recipe
       operationId: signInDashboardUser
       description: |
-        Signin a Dashboard user 
+        Signin a Dashboard user
       parameters:
         - $ref: '#/components/parameters/dashboardRid'
         - $ref: '#/components/parameters/api-key'
@@ -4231,7 +4231,7 @@ paths:
             schema:
               type: object
               properties:
-                email: 
+                email:
                   type: string
                   example: test@example.com
                 password:
@@ -4251,7 +4251,7 @@ paths:
                         enum: ["OK"]
                       sessionId:
                         type: string
-                        example: 
+                        example:
                   - type: object
                     properties:
                       status:
@@ -4267,23 +4267,23 @@ paths:
                         enum: ["INVAlID_CREDENTIALS_ERROR"]
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/recipe/dashboard/user/sessions:
     get:
       tags:
         - Dashboard Recipe
       operationId: getAllSessionsForDashboardUser
       description: |
-        Get a list of the sessions for the dashboard user 
+        Get a list of the sessions for the dashboard user
       parameters:
         - $ref: '#/components/parameters/dashboardRid'
         - $ref: '#/components/parameters/api-key'
@@ -4318,19 +4318,19 @@ paths:
                         expiry:
                           type: number
                           example: 16382348324
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/apiversion:
     get:
       tags:
@@ -4340,6 +4340,18 @@ paths:
         Get a list of compatible CDI versions
       parameters:
         - $ref: '#/components/parameters/api-key'
+        - in: query
+          name: websiteDomain
+          schema:
+            type: string
+            example: https://example.com
+          required: false
+        - in: query
+          name: apiDomain
+          schema:
+            type: string
+            example: https://api.example.com
+          required: false
       responses:
         '200':
           description: get api version
@@ -4353,19 +4365,19 @@ paths:
                     items:
                       type: string
                       example: ['2.13']
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /config:
     get:
       tags:
@@ -4373,7 +4385,7 @@ paths:
       operationId: getConfig
       description: |
         Get path to the loaded config file
-      parameters: 
+      parameters:
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
         - in: query
@@ -4381,7 +4393,7 @@ paths:
           schema:
             type: string
             example: 21307
-          
+
       responses:
         '200':
           description: get api version
@@ -4391,9 +4403,9 @@ paths:
                 oneOf:
                   - type: object
                     properties:
-                      status: 
+                      status:
                         $ref: '#/components/schemas/statusOK'
-                      path: 
+                      path:
                         type: string
                         example: /usr/lib/supertokens/config.yaml
                   - type: object
@@ -4401,19 +4413,19 @@ paths:
                       status:
                         type: string
                         enum: ['NOT_ALLOWED']
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/<tenantId>/:
     get:
       tags:
@@ -4426,7 +4438,7 @@ paths:
           $ref: '#/components/responses/hello'
         '500':
           $ref: '#/components/responses/500'
-    
+
   /appid-<appId>/<tenantId>/hello:
     get:
       tags:
@@ -4450,7 +4462,7 @@ paths:
           $ref: '#/components/responses/hello'
         '500':
           $ref: '#/components/responses/500'
-    
+
     post:
       tags:
         - Core
@@ -4462,7 +4474,7 @@ paths:
           $ref: '#/components/responses/hello'
         '500':
           $ref: '#/components/responses/500'
-          
+
     delete:
       tags:
         - Core
@@ -4474,7 +4486,7 @@ paths:
           $ref: '#/components/responses/hello'
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/telemetry:
     get:
       tags:
@@ -4505,19 +4517,19 @@ paths:
                       exists:
                         type: boolean
                         example: [false]
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-          
+
   /appid-<appId>/<tenantId>/users/count:
     get:
       tags:
@@ -4552,16 +4564,16 @@ paths:
                   count:
                     type: number
                     example: 1000000
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -4594,19 +4606,19 @@ paths:
                   count:
                     type: number
                     example: 100000
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-        
+
   /appid-<appId>/<tenantId>/users:
     get:
       tags:
@@ -4663,21 +4675,21 @@ paths:
                         user:
                           $ref: '#/components/schemas/authRecipeUser'
                       additionalProperties: false
-                  nextPaginationToken: 
+                  nextPaginationToken:
                     $ref: '#/components/schemas/paginationToken'
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/user/remove:
     post:
       tags:
@@ -4717,7 +4729,7 @@ paths:
           $ref: '#/components/responses/401'
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/user/search/tags:
     get:
       tags:
@@ -4728,7 +4740,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        
+
       responses:
         '200':
           description: Returns available tags for search
@@ -4744,20 +4756,20 @@ paths:
                     items:
                       type: string
                       example: ['email', 'phone', 'provider']
-          
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
-  
+
+
   /appid-<appId>/ee/featureflag:
     get:
       tags:
@@ -4785,20 +4797,20 @@ paths:
                     example: ["feature_1", "feature_2"]
                   usageStats:
                     type: object
-                    
-          
+
+
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
   /appid-<appId>/ee/license:
     put:
       tags:
@@ -4835,20 +4847,20 @@ paths:
                       status:
                         type: string
                         enum: ['MISSING_EE_FOLDER_ERROR']
-                        
+
                   - type: object
                     properties:
                       status:
                         type: string
                         enum: ['INVALID_LICENSE_KEY_ERROR']
-                    
+
         '400':
           $ref: '#/components/responses/400'
         '401':
           $ref: '#/components/responses/401'
         '500':
           $ref: '#/components/responses/500'
-    
+
     delete:
       tags:
         - Core
@@ -4858,7 +4870,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        
+
       responses:
         '200':
           description:  The operation was successful
@@ -4869,14 +4881,14 @@ paths:
                 properties:
                   status:
                     $ref: '#/components/schemas/statusOK'
-                    
+
         '400':
           $ref: '#/components/responses/400'
         '401':
           $ref: '#/components/responses/401'
         '500':
           $ref: '#/components/responses/500'
-    
+
     get:
       tags:
         - Core
@@ -4886,7 +4898,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
-        
+
       responses:
         '200':
           description:  The operation was successful
@@ -4907,7 +4919,7 @@ paths:
                       status:
                         type: string
                         enum: ['NO_LICENSE_KEY_FOUND_ERROR']
-                    
+
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -5071,13 +5083,16 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-
   /recipe/multitenancy/connectionuridomain:
     put:
       tags:
         - Multitenancy Recipe
-      
+
       description: |
+        This API is deprecated. Please use the v2 version of this API. In the v2 version of the API, the login methods are no longer enabled using the `emailPasswordEnabled`, `thirdPartyEnabled` and `passwordlessEnabled` inputs. Instead, they are enabled using factorIds (such as emailpassword, otp-email, etc) specified in the `firstFactors` and `requiredSecondaryFactors` inputs. Please refer [Multitenancy Docs](https://supertokens.com/docs/multitenancy/new-tenant) to know the list of factorIds available.
+
+        Note: This deprecated API still accepts those `emailPasswordEnabled`, `thirdPartyEnabled` and `passwordlessEnabled` inputs for backward compatibility.
+
         Create or update a connection uri domain.
 
         SuperTokens subscription license key is required, if not using the base connection uri domain.
@@ -5100,6 +5115,7 @@ paths:
         Note: Updation of core config is not allowed for the default connectionUriDomain. In order to update config for the default connectionUriDomain, you must edit the config.yaml or the docker env directly.
 
       operationId: createOrUpdateConnectionURIDomainPUT
+      deprecated: true
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
@@ -5134,16 +5150,118 @@ paths:
                     type: boolean
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '402':
           $ref: '#/components/responses/402'
 
         '404':
           $ref: '#/components/responses/404'
-        
+
+        '500':
+          $ref: '#/components/responses/500'
+
+  /recipe/multitenancy/connectionuridomain/v2:
+    put:
+      tags:
+        - Multitenancy Recipe
+
+      description: |
+        Create or update a connection uri domain.
+
+        SuperTokens subscription license key is required, if not using the base connection uri domain.
+
+        This request must originate from public app and public tenant on the base
+        connection uri domain.
+
+        The `firstFactors` can be set to following values:
+
+        - `null`: When set to `null`, all the login methods will be available for the connection URI domain (public app, public tenant).
+        - `[]` (empty array): No login methods will be enabled for the connection URI domain (public app, public tenant).
+        - `['factor1', 'factor2', ...]` (non-empty array): The list of login methods to enable for the connection URI domain (public app, public tenant). For eg. if this is set to `['emailpassword', 'thirdparty']`, the users of the tenant will be able to login using emailpassword and third party providers.
+
+        List of built-in first factors are as follows:
+
+        - Email password auth: `emailpassword`
+        - Social login / enterprise SSO auth: `thirdparty`
+        - Passwordless:
+          - With email OTP: `otp-email`
+          - With SMS OTP: `otp-phone`
+          - With email magic link: `link-email`
+          - With SMS magic link: `link-phone`
+
+        If first factors are not specified while creating a new connection uri domain, all the login methods will be enabled by default.
+
+        The `requiredSecondaryFactors` can be set to following values:
+        - `null`: When set to `null`, no secondary factors will be required for the users of the connection URI domain (public app, public tenant).
+        - `['factor1', 'factor2', ...]` (non-empty array): The list of factors that the users of the connection URI domain (public app, public tenant) must complete post the first factor login. For eg. if this is set to `['otp-phone', 'totp']`, the users of the tenant will be required to complete either phone OTP or TOTP post the first factor login.
+
+        List of built-in secondary factors are as follows:
+
+        - Email password auth: `emailpassword`
+        - Social login / enterprise SSO auth: `thirdparty`
+        - Passwordless:
+          - With email OTP: `otp-email`
+          - With SMS OTP: `otp-phone`
+          - With email magic link: `link-email`
+          - With SMS magic link: `link-phone`
+        - Time based OTP: `totp`
+
+        If updating an existing connection uri domain,
+        1. core will keep the existing state of login methods and only update the ones that are specified in the request body.
+        2. Core config will be merged into existing config. To delete a key in the config, use a null value
+
+        Note: The core config must contain a unique connection to the storage layer, because sharing of database between 2 different connection uri domains is not allowed.
+
+        Note: Updation of core config is not allowed for the default connectionUriDomain. In order to update config for the default connectionUriDomain, you must edit the config.yaml or the docker env directly.
+
+      operationId: createOrUpdateConnectionURIDomainV2PUT
+      parameters:
+        - $ref: '#/components/parameters/multitenancyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - type: object
+                required:
+                  - connectionUriDomain
+                properties:
+                  connectionUriDomain:
+                    type: string
+                    example: core-1234.supertokens.io:3567
+              - $ref: '#/components/schemas/tenantInputV2'
+      responses:
+        200:
+          description: Create or Update connection uri domain result
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - createdNew
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  createdNew:
+                    type: boolean
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -5193,16 +5311,16 @@ paths:
                     type: boolean
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '402':
           $ref: '#/components/responses/402'
 
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -5211,11 +5329,16 @@ paths:
       tags:
         - Multitenancy Recipe
       description: |
+        This API is deprecated. Please use the v2 version of this API. In the v2 version of the API, the login methods are no longer enabled using the `emailPasswordEnabled`, `thirdPartyEnabled` and `passwordlessEnabled` inputs. Instead, they are enabled using factorIds (such as emailpassword, otp-email, etc) specified in the `firstFactors` and `requiredSecondaryFactors` inputs. Please refer [Multitenancy Docs](https://supertokens.com/docs/multitenancy/new-tenant) to know the list of factorIds available.
+
+        Note: This deprecated API still returns `emailPasswordEnabled`, `thirdPartyEnabled` and `passwordlessEnabled` values for backward compatibility, and it's values are derived from the `firstFactors` and `requiredSecondaryFactors` configured for the tenant. The detailed computation of the values as per CDI version is described here: https://github.com/supertokens/supertokens-core/issues/979#issuecomment-2099971371
+
         Get a list of all connection uri domains.
 
         Request must originate from base connection uri domain and public app and tenant.
 
       operationId: connectionUriDomainListGET
+      deprecated: true
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
@@ -5267,12 +5390,82 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
+  /recipe/multitenancy/connectionuridomain/list/v2:
+    get:
+      tags:
+        - Multitenancy Recipe
+      description: |
+        Get a list of all connection uri domains.
+
+        The value of `firstFactors` can be as follows:
+        - `null`: When set to `null`, the SDK will use firstFactors defined in the SDK
+        - `[]` (empty array): No first factors would be enabled for the tenant
+        - non-empty array: The first factors that are enabled for the tenant
+
+        Request must originate from base connection uri domain and public app and tenant.
+
+      operationId: connectionUriDomainListV2GET
+      parameters:
+        - $ref: '#/components/parameters/multitenancyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        200:
+          description: List of connection uri domains
+
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - connectionUriDomains
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  connectionUriDomains:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        connectionUriDomain:
+                          type: string
+                          example: core-1234.supertokens.io:3567
+                        apps:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              appId:
+                                type: string
+                                example: app1
+                              tenants:
+                                type: array
+                                items:
+                                  $ref: '#/components/schemas/tenantConfigV2'
+
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
   /recipe/multitenancy/app:
     put:
       tags:
         - Multitenancy Recipe
-      
+
       description: |
+        This API is deprecated. Please use the v2 version of this API. In the v2 version of the API, the login methods are no longer enabled using the `emailPasswordEnabled`, `thirdPartyEnabled` and `passwordlessEnabled` inputs. Instead, they are enabled using factorIds (such as emailpassword, otp-email, etc) specified in the `firstFactors` and `requiredSecondaryFactors` inputs. Please refer [Multitenancy Docs](https://supertokens.com/docs/multitenancy/new-tenant) to know the list of factorIds available.
+
+        Note: This deprecated API still accepts those `emailPasswordEnabled`, `thirdPartyEnabled` and `passwordlessEnabled` inputs for backward compatibility.
+
         Create or update an app.
 
         SuperTokens subscription license key is required.
@@ -5293,6 +5486,7 @@ paths:
         Note: Updation of core config is not allowed for the default connectionUriDomain, public app. In order to update config for the default connectionUriDomain and public app, you must edit the config.yaml or the docker env directly.
 
       operationId: createOrUpdateAppPUT
+      deprecated: true
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
@@ -5327,19 +5521,119 @@ paths:
                     type: boolean
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '402':
           $ref: '#/components/responses/402'
 
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
-  
+
+  /recipe/multitenancy/app/v2:
+    put:
+      tags:
+        - Multitenancy Recipe
+
+      description: |
+        Create or update an app.
+
+        SuperTokens subscription license key is required.
+
+        The `firstFactors` can be set to following values:
+
+        - `null`: When set to `null`, all the login methods will be available for the app (public tenant).
+        - `[]` (empty array): No login methods will be enabled for the app (public tenant).
+        - `['factor1', 'factor2', ...]` (non-empty array): The list of login methods to enable for the app (public tenant). For eg. if this is set to `['emailpassword', 'thirdparty']`, the users of the tenant will be able to login using emailpassword and third party providers.
+
+        List of built-in first factors are as follows:
+
+        - Email password auth: `emailpassword`
+        - Social login / enterprise SSO auth: `thirdparty`
+        - Passwordless:
+          - With email OTP: `otp-email`
+          - With SMS OTP: `otp-phone`
+          - With email magic link: `link-email`
+          - With SMS magic link: `link-phone`
+
+        If first factors are not specified while creating a new app, all the login methods will be enabled by default.
+
+        The `requiredSecondaryFactors` can be set to following values:
+        - `null`: When set to `null`, no secondary factors will be required for the users of the app (public tenant).
+        - `['factor1', 'factor2', ...]` (non-empty array): The list of factors that the users of the app (public tenant) must complete post the first factor login. For eg. if this is set to `['otp-phone', 'totp']`, the users of the tenant will be required to complete either phone OTP or TOTP post the first factor login.
+
+        List of built-in secondary factors are as follows:
+
+        - Email password auth: `emailpassword`
+        - Social login / enterprise SSO auth: `thirdparty`
+        - Passwordless:
+          - With email OTP: `otp-email`
+          - With SMS OTP: `otp-phone`
+          - With email magic link: `link-email`
+          - With SMS magic link: `link-phone`
+        - Time based OTP: `totp`
+
+        If updating an existing app,
+        1. core will keep the existing state of login methods and only update the ones that are specified in the request body.
+        2. Core config will be merged into existing config. To delete a key in the config, use a null value
+
+        Note: the newly created app will use the same connection uri domain from which
+        this request originates and the request must originate from public app and public tenant.
+
+        Note: Updation of core config is not allowed for the default connectionUriDomain, public app. In order to update config for the default connectionUriDomain and public app, you must edit the config.yaml or the docker env directly.
+
+      operationId: createOrUpdateAppV2PUT
+      parameters:
+        - $ref: '#/components/parameters/multitenancyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - type: object
+                required:
+                  - appId
+                properties:
+                  appId:
+                    type: string
+                    example: app1
+              - $ref: '#/components/schemas/tenantInputV2'
+      responses:
+        200:
+          description: Create or Update app result
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - createdNew
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  createdNew:
+                    type: boolean
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
   /recipe/multitenancy/app/remove:
     post:
       tags:
@@ -5384,16 +5678,16 @@ paths:
                     type: boolean
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '402':
           $ref: '#/components/responses/402'
 
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -5402,11 +5696,16 @@ paths:
       tags:
         - Multitenancy Recipe
       description: |
+        This API is deprecated. Please use the v2 version of this API. In the v2 version of the API, the login methods are no longer enabled using the `emailPasswordEnabled`, `thirdPartyEnabled` and `passwordlessEnabled` inputs. Instead, they are enabled using factorIds (such as emailpassword, otp-email, etc) specified in the `firstFactors` and `requiredSecondaryFactors` inputs. Please refer [Multitenancy Docs](https://supertokens.com/docs/multitenancy/new-tenant) to know the list of factorIds available.
+
+        Note: This deprecated API still returns `emailPasswordEnabled`, `thirdPartyEnabled` and `passwordlessEnabled` values for backward compatibility, and it's values are derived from the `firstFactors` and `requiredSecondaryFactors` configured for the tenant. The detailed computation of the values as per CDI version is described here: https://github.com/supertokens/supertokens-core/issues/979#issuecomment-2099971371
+
         Get a list of all apps in a connection uri domain.
 
         Request must originate from public app and tenant.
 
       operationId: appListGET
+      deprecated: true
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
@@ -5449,11 +5748,72 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
+  /recipe/multitenancy/app/list/v2:
+    get:
+      tags:
+        - Multitenancy Recipe
+      description: |
+        Get a list of all apps in a connection uri domain.
+
+        The value of `firstFactors` can be as follows:
+        - `null`: When set to `null`, the SDK will use firstFactors defined in the SDK
+        - `[]` (empty array): No first factors would be enabled for the tenant
+        - non-empty array: The first factors that are enabled for the tenant
+
+        Request must originate from public app and tenant.
+
+      operationId: appListV2GET
+      parameters:
+        - $ref: '#/components/parameters/multitenancyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        200:
+          description: List of apps
+
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - apps
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  apps:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        appId:
+                          type: string
+                          example: app1
+                        tenants:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/tenantConfigV2'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
   /appid-<appId>/recipe/multitenancy/tenant:
     put:
       tags:
         - Multitenancy Recipe
       description: |
+        This API is deprecated. Please use the v2 version of this API. In the v2 version of the API, the login methods are no longer enabled using the `emailPasswordEnabled`, `thirdPartyEnabled` and `passwordlessEnabled` inputs. Instead, they are enabled using factorIds (such as emailpassword, otp-email, etc) specified in the `firstFactors` and `requiredSecondaryFactors` inputs. Please refer [Multitenancy Docs](https://supertokens.com/docs/multitenancy/new-tenant) to know the list of factorIds available.
+
+        Note: This deprecated API still accepts those `emailPasswordEnabled`, `thirdPartyEnabled` and `passwordlessEnabled` inputs for backward compatibility.
+
         Creates or updates a tenant.
 
         SuperTokens subscription license key is required.
@@ -5473,6 +5833,7 @@ paths:
         Note: Updation of core config is not allowed for the default connectionUriDomain, public app and tenant. In order to update config for the default connectionUriDomain, public app and tenant, you must edit the config.yaml or the docker env directly.
 
       operationId: createOrUpdateTenantPUT
+      deprecated: true
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
@@ -5506,16 +5867,113 @@ paths:
                     type: boolean
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '402':
           $ref: '#/components/responses/402'
 
         '404':
           $ref: '#/components/responses/404'
-        
+
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/multitenancy/tenant/v2:
+    put:
+      tags:
+        - Multitenancy Recipe
+      description: |
+        Creates or updates a tenant.
+
+        SuperTokens subscription license key is required.
+
+        The `firstFactors` can be set to following values:
+
+        - `null`: When set to `null`, all the login methods will be available for the tenant.
+        - `[]` (empty array): No login methods will be enabled for the tenant.
+        - `['factor1', 'factor2', ...]` (non-empty array): The list of login methods to enable for the tenant. For eg. if this is set to `['emailpassword', 'thirdparty']`, the users of the tenant will be able to login using emailpassword and third party providers.
+
+        List of built-in first factors are as follows:
+
+        - Email password auth: `emailpassword`
+        - Social login / enterprise SSO auth: `thirdparty`
+        - Passwordless:
+          - With email OTP: `otp-email`
+          - With SMS OTP: `otp-phone`
+          - With email magic link: `link-email`
+          - With SMS magic link: `link-phone`
+
+        If first factors are not specified while creating a new tenant, all the login methods will be disabled by default.
+
+        The `requiredSecondaryFactors` can be set to following values:
+        - `null`: When set to `null`, no secondary factors will be required for the users of the tenant.
+        - `['factor1', 'factor2', ...]` (non-empty array): The list of factors that the users of the tenant must complete post the first factor login. For eg. if this is set to `['otp-phone', 'totp']`, the users of the tenant will be required to complete either phone OTP or TOTP post the first factor login.
+
+        List of built-in secondary factors are as follows:
+
+        - Email password auth: `emailpassword`
+        - Social login / enterprise SSO auth: `thirdparty`
+        - Passwordless:
+          - With email OTP: `otp-email`
+          - With SMS OTP: `otp-phone`
+          - With email magic link: `link-email`
+          - With SMS magic link: `link-phone`
+        - Time based OTP: `totp`
+
+        If updating an existing tenant,
+        1. core will keep the existing state of login methods and only update the ones that are specified in the request body.
+        2. Core config will be merged into existing config. To delete a key in the config, use a null value
+
+        The request must originate from public tenant, and the new tenant will use connectionUriDomain and app from which the request originates.
+
+        Note: Updation of core config is not allowed for the default connectionUriDomain, public app and tenant. In order to update config for the default connectionUriDomain, public app and tenant, you must edit the config.yaml or the docker env directly.
+
+      operationId: createOrUpdateTenantV2PUT
+      parameters:
+        - $ref: '#/components/parameters/multitenancyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - type: object
+                required:
+                  - tenantId
+                properties:
+                  tenantId:
+                    $ref: '#/components/schemas/tenantId'
+              - $ref: '#/components/schemas/tenantInputV2'
+      responses:
+        200:
+          description: Create or Update tenant result
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - createdNew
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  createdNew:
+                    type: boolean
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -5524,6 +5982,10 @@ paths:
       tags:
         - Multitenancy Recipe
       description: |
+        This API is deprecated. Please use the v2 version of this API. In the v2 version of the API, the login methods are no longer enabled using the `emailPasswordEnabled`, `thirdPartyEnabled` and `passwordlessEnabled` inputs. Instead, they are enabled using factorIds (such as emailpassword, otp-email, etc) specified in the `firstFactors` and `requiredSecondaryFactors` inputs. Please refer [Multitenancy Docs](https://supertokens.com/docs/multitenancy/new-tenant) to know the list of factorIds available.
+
+        Note: This deprecated API still returns `emailPasswordEnabled`, `thirdPartyEnabled` and `passwordlessEnabled` values for backward compatibility, and it's values are derived from the `firstFactors` and `requiredSecondaryFactors` configured for the tenant. The detailed computation of the values as per CDI version is described here: https://github.com/supertokens/supertokens-core/issues/979#issuecomment-2099971371
+
         Get a tenant config of the tenant specified by the url prefix.
 
         SuperTokens subscription license key is required if querying any tenant other than the base tenant.
@@ -5531,6 +5993,7 @@ paths:
         Returns recipes with their enabled flag and recipe specific configs saved in core
 
       operationId: tenantConfigGet
+      deprecated: true
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
@@ -5555,16 +6018,157 @@ paths:
                       enum: [TENANT_NOT_FOUND_ERROR]
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '402':
           $ref: '#/components/responses/402'
 
         '404':
           $ref: '#/components/responses/404'
-        
+
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/multitenancy/tenant/v2:
+    get:
+      tags:
+        - Multitenancy Recipe
+      description: |
+        Get a tenant config of the tenant specified by the url prefix.
+
+        The value of `firstFactors` can be as follows:
+        - `null`: When set to `null`, the SDK will use firstFactors defined in the SDK
+        - `[]` (empty array): No first factors would be enabled for the tenant
+        - non-empty array: The first factors that are enabled for the tenant
+
+        SuperTokens subscription license key is required if querying any tenant other than the base tenant.
+
+        Returns recipes with their enabled flag and recipe specific configs saved in core
+
+      operationId: tenantConfigV2Get
+      parameters:
+        - $ref: '#/components/parameters/multitenancyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        200:
+          description: Tenant config result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - allOf:
+                    - type: object
+                      properties:
+                        status:
+                          $ref: '#/components/schemas/statusOK'
+                    - $ref: '#/components/schemas/tenantConfigV2'
+                - type: object
+                  properties:
+                    status:
+                      type: string
+                      enum: [TENANT_NOT_FOUND_ERROR]
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/dashboard/tenant/core-config:
+    get:
+      tags:
+        - Dashboard Recipe
+      description: |
+        Get the core config of the tenant specified by the url prefix, along with the metadata of each of the fields.
+
+      operationId: tenantCoreConfigForDashboardGET
+      parameters:
+        - $ref: '#/components/parameters/multitenancyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        '200':
+          description: Tenant core config result
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - config
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  config:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        key:
+                          type: string
+                          example: password_reset_token_lifetime
+                        valueType:
+                          type: string
+                          enum: ["string", "number", "boolean"]
+                          nullable: true
+                          example: "number"
+                        value:
+                          nullable: true
+                          oneOf:
+                            - type: string
+                            - type: number
+                            - type: boolean
+                          example: 3600000
+                        description:
+                          type: string
+                          example: "Time in milliseconds for how long a password reset token / link is valid for. [Default: 3600000 (1 hour)]"
+                        isDifferentAcrossTenants:
+                          type: boolean
+                        possibleValues:
+                          nullable: true
+                          type: array
+                          items:
+                            type: string
+                        isNullable:
+                          type: boolean
+                          example: false
+                        defaultValue:
+                          nullable: true
+                          oneOf:
+                            - type: string
+                            - type: number
+                            - type: boolean
+                          example: 3600000
+                        isPluginProperty:
+                          type: boolean
+                          example: false
+                        isPluginPropertyEditable:
+                          type: boolean
+                          example: false
+
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -5609,16 +6213,16 @@ paths:
                     type: boolean
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '402':
           $ref: '#/components/responses/402'
 
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -5627,11 +6231,16 @@ paths:
       tags:
         - Multitenancy Recipe
       description: |
+        This API is deprecated. Please use the v2 version of this API. In the v2 version of the API, the login methods are no longer enabled using the `emailPasswordEnabled`, `thirdPartyEnabled` and `passwordlessEnabled` inputs. Instead, they are enabled using factorIds (such as emailpassword, otp-email, etc) specified in the `firstFactors` and `requiredSecondaryFactors` inputs. Please refer [Multitenancy Docs](https://supertokens.com/docs/multitenancy/new-tenant) to know the list of factorIds available.
+
+        Note: This deprecated API still returns `emailPasswordEnabled`, `thirdPartyEnabled` and `passwordlessEnabled` values for backward compatibility, and it's values are derived from the `firstFactors` and `requiredSecondaryFactors` configured for the tenant. The detailed computation of the values as per CDI version is described here: https://github.com/supertokens/supertokens-core/issues/979#issuecomment-2099971371
+
         Get a list of all tenants in an app.
 
         Request must originate from public tenant.
 
       operationId: tenantListGET
+      deprecated: true
       parameters:
         - $ref: '#/components/parameters/multitenancyRid'
         - $ref: '#/components/parameters/api-key'
@@ -5654,6 +6263,55 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/tenantConfig'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/multitenancy/tenant/list/v2:
+    get:
+      tags:
+        - Multitenancy Recipe
+      description: |
+        Get a list of all tenants in an app.
+
+        The value of `firstFactors` can be as follows:
+        - `null`: When set to `null`, the SDK will use firstFactors defined in the SDK
+        - `[]` (empty array): No first factors would be enabled for the tenant
+        - non-empty array: The first factors that are enabled for the tenant
+
+        Request must originate from public tenant.
+
+      operationId: tenantListV2GET
+      parameters:
+        - $ref: '#/components/parameters/multitenancyRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        200:
+          description: List of tenants
+
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - status
+                  - tenants
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  tenants:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/tenantConfigV2'
         '400':
           $ref: '#/components/responses/400'
 
@@ -5758,16 +6416,16 @@ paths:
                       type: string
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '402':
           $ref: '#/components/responses/402'
 
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -5821,6 +6479,7 @@ paths:
 
         '500':
           $ref: '#/components/responses/500'
+
   /appid-<appId>/<tenantId>/recipe/multitenancy/tenant/user:
     post:
       tags:
@@ -5881,16 +6540,16 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '402':
           $ref: '#/components/responses/402'
 
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -5937,16 +6596,16 @@ paths:
 
         '400':
           $ref: '#/components/responses/400'
-        
+
         '401':
           $ref: '#/components/responses/401'
-        
+
         '402':
           $ref: '#/components/responses/402'
 
         '404':
           $ref: '#/components/responses/404'
-        
+
         '500':
           $ref: '#/components/responses/500'
 
@@ -5961,13 +6620,13 @@ components:
       schema:
         type: string
     api-key:
-      name: api-key
+      name: Authorization
       in: header
       example: ajs30Nlbs0DjvsdFIne934n8NVee5n
       required: false
       schema:
         type: string
-    
+
     thirdPartyRid:
       name: rid
       in: header
@@ -5975,7 +6634,7 @@ components:
       required: false
       schema:
         type: string
-    
+
     passwordlessRid:
       name: rid
       in: header
@@ -5999,7 +6658,7 @@ components:
       required: false
       schema:
         type: string
-    
+
     userMetadataRid:
       name: rid
       in: header
@@ -6007,7 +6666,7 @@ components:
       required: false
       schema:
         type: string
-    
+
     userRolesRid:
       name: rid
       in: header
@@ -6015,7 +6674,7 @@ components:
       required: false
       schema:
         type: string
-        
+
     sessionRid:
       name: rid
       in: header
@@ -6031,7 +6690,7 @@ components:
       required: false
       schema:
         type: string
-    
+
     userIdMappingRid:
       name: rid
       in: header
@@ -6039,7 +6698,7 @@ components:
       required: false
       schema:
         type: string
-    
+
     dashboardRid:
       name: rid
       in: header
@@ -6067,33 +6726,33 @@ components:
     cdi-version:
       name: cdi-version
       in: header
-      description: X.Y of the X.Y.Z CDI version. 
-      example: '5.0'
+      description: X.Y of the X.Y.Z CDI version.
+      example: '5.1'
       schema:
         type: string
-    
-    
+
+
     paginationToken:
       name: paginationToken
       in: query
       example: ZmE3YTA4NDEtY...MjM5MTgwMzIyMzE=
       schema:
         type: string
-    
+
     limit:
       name: limit
       in: query
       example: 1
       schema:
         type: number
-    
+
     timeJoinedOrder:
       name: timeJoinedOrder
       in: query
       schema:
         type: string
         enum: ["ASC", "DESC"]
-    
+
 
     email:
       name: email
@@ -6102,7 +6761,7 @@ components:
       schema:
          type: string
          example: johndoe@gmail.com
-    
+
     userId:
       name: userId
       in: query
@@ -6118,7 +6777,7 @@ components:
       schema:
          type: string
          example: fa7a0841-b533-4478-9253-0fde890c576
-    
+
     roleRequired:
       name: role
       in: query
@@ -6126,7 +6785,7 @@ components:
       schema:
          type: string
          example: admin
-    
+
     permissionRequired:
       name: permission
       in: query
@@ -6134,7 +6793,7 @@ components:
       schema:
         type: string
         example: permission
-    
+
     includeRecipeIds:
       name: includeRecipeIds
       in: query
@@ -6143,8 +6802,8 @@ components:
       schema:
         type: string
         example: val1,val2,val3..
-      
-    
+
+
   responses:
     500:
       description: error code 500
@@ -6262,9 +6921,9 @@ components:
     token:
       type: string
       example: ZTRiOTBjNz...jI5MTZlODkxw
-      
-    
-    
+
+
+
     emailVerificationVerifyTokenRequest:
       type: object
       properties:
@@ -6273,12 +6932,12 @@ components:
         email:
           $ref: '#/components/schemas/email'
 
-    
-  
+
+
     thirdPartyId:
       type: string
       example: google
-      
+
     thirdPartyUserId:
       type: string
       example: 106347997792363865062
@@ -6290,31 +6949,31 @@ components:
           $ref: '#/components/schemas/email'
         isVerified:
           $ref: '#/components/schemas/isVerified'
-    
+
     isVerified:
           type: boolean
           example: true
-          
+
     email:
       type: string
       example: johndoe@gmail.com
-      
+
     password:
       type: string
       example: password123
-    
+
     userId:
       type: string
       example: fa7a0841-b533-4478-95533-0fde890c3483
-    
+
     role:
       type: string
       example: admin
-    
+
     timeJoined:
       type: number
       example: 1623918032231
-    
+
     paginationToken:
       type: string
       example: ZmE3YTA4ND...OzE2MjM5MTgwMzIyMzE=
@@ -6408,7 +7067,7 @@ components:
           $ref: '#/components/schemas/tenantId'
         recipeUserId:
           $ref: '#/components/schemas/userId'
-    
+
     cookieInfo:
       type: object
       properties:
@@ -6418,16 +7077,16 @@ components:
           $ref: '#/components/schemas/expiry'
         createdTime:
           $ref: '#/components/schemas/timeCreated'
-    
+
     expiry:
       type: number
       example: 1637262633029
-      
+
     timeCreated:
       type: number
       example: 1637262633029
-      
-          
+
+
     sessionHandles:
       type: array
       items:
@@ -6479,20 +7138,20 @@ components:
           $ref: '#/components/schemas/unauthorisedResponse'
         message:
           $ref: '#/components/schemas/message'
-    
+
     helloResponse:
       type: string
       enum: ['Hello']
-    
-   
+
+
     statusOKResponse:
       type: object
       properties:
         status:
           type: string
           enum: ['OK']
-          
-        
+
+
     wrongCredentialsResponse:
       type: object
       properties:
@@ -6506,40 +7165,40 @@ components:
         status:
           type: string
           enum: ['UNKNOWN_USER_ID_ERROR']
-    
+
     unknownRoleResponse:
       type: object
       properties:
         status:
           type: string
           enum: ['UNKNOWN_ROLE_ERROR']
-          
-          
-          
+
+
+
     tokenTheftResponse:
         type: string
         enum: ['TOKEN_THEFT_DETECTED']
-    
+
     unauthorisedResponse:
         type: string
         enum: ['UNAUTHORISED']
-    
+
     tryRefreshTokenResponse:
         type: string
         enum: ['TRY_REFRESH_TOKEN']
-    
-    
-    
+
+
+
     internalError:
       type: string
-      enum: 
+      enum:
         - Internal Error
-    
+
     notFound:
       type: string
       enum:
         - Not Found
-        
+
     methodNotSupported:
       type: string
       enum:
@@ -6643,6 +7302,7 @@ components:
       items:
         type: string
         example: otp-phone
+
     tenantInput:
       type: object
       properties:
@@ -6652,6 +7312,16 @@ components:
           type: boolean
         passwordlessEnabled:
           type: boolean
+        firstFactors:
+          $ref: '#/components/schemas/firstFactors'
+        requiredSecondaryFactors:
+          $ref: '#/components/schemas/requiredSecondaryFactors'
+        coreConfig:
+          type: object
+
+    tenantInputV2:
+      type: object
+      properties:
         firstFactors:
           $ref: '#/components/schemas/firstFactors'
         requiredSecondaryFactors:
@@ -6695,6 +7365,29 @@ components:
           properties:
             enabled:
               type: boolean
+        firstFactors:
+          $ref: '#/components/schemas/firstFactors'
+        requiredSecondaryFactors:
+          $ref: '#/components/schemas/requiredSecondaryFactors'
+        coreConfig:
+          type: object
+
+    tenantConfigV2:
+      type: object
+      required:
+        - thirdParty
+        - coreConfig
+        - tenantId
+      properties:
+        tenantId:
+          $ref: '#/components/schemas/tenantId'
+        thirdParty:
+          type: object
+          properties:
+            providers:
+              type: array
+              items:
+                $ref: '#/components/schemas/thirdPartyProviderConfig'
         firstFactors:
           $ref: '#/components/schemas/firstFactors'
         requiredSecondaryFactors:
