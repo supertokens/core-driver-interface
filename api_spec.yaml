@@ -2191,6 +2191,7 @@ paths:
                 - type: object
                   properties:
                     status:
+                      type: string
                       enum: ['EMAIL_CHANGE_NOT_ALLOWED_ERROR']
                     reason:
                       type: string
