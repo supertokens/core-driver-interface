@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [5.1.1]
+
+- Fixes response schema of thirdparty signInUp POST
+
 ## [5.1.0]
 
 - Adds `/appid-<appid>/<tenantid>/recipe/dashboard/tenant/core-config` GET API.
