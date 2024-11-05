@@ -3161,18 +3161,27 @@ paths:
           content:
             application/json:
                 schema:
-                  type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    session:
-                      $ref: '#/components/schemas/session'
-                    accessToken:
-                      $ref: '#/components/schemas/cookieInfo'
-                    refreshToken:
-                      $ref: '#/components/schemas/cookieInfo'
-                    antiCsrfToken:
-                      $ref: '#/components/schemas/token'
+                  oneOf:
+                    - type: object
+                      properties:
+                        status:
+                          $ref: '#/components/schemas/statusOK'
+                        session:
+                          $ref: '#/components/schemas/session'
+                        accessToken:
+                          $ref: '#/components/schemas/cookieInfo'
+                        refreshToken:
+                          $ref: '#/components/schemas/cookieInfo'
+                        antiCsrfToken:
+                          $ref: '#/components/schemas/token'
+                          
+                    - type: object
+                      properties:
+                        status: 
+                          type: string
+                          enum: ['USER_DOES_NOT_BELONG_TO_TENANT_ERROR']
+                        message:
+                          type: string
 
         '400':
           $ref: '#/components/responses/400'
