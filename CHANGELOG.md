@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+- Adds new response for `/appid-<appId>/<tenantId>/recipe/session` when the user is not in the tenant
+
 ## [5.1.1]
 
 - Fixes response schema of thirdparty signInUp POST
