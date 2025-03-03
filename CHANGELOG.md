@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [5.2.0]
+
+- Adds APIs related to OAuth2 Provider
+
 ## [5.1.1]
 
 - Fixes response schema of thirdparty signInUp POST
