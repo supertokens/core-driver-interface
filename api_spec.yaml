@@ -6631,12 +6631,14 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                  - $ref: '#/components/schemas/oauthClient'
+                oneOf:
+                  - allOf:
+                      - type: object
+                        properties:
+                          status:
+                            $ref: '#/components/schemas/statusOK'
+                      - $ref: '#/components/schemas/oauthClient'
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -6672,12 +6674,14 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                  - $ref: '#/components/schemas/oauthClient'
+                oneOf:
+                  - allOf:
+                      - type: object
+                        properties:
+                          status:
+                            $ref: '#/components/schemas/statusOK'
+                      - $ref: '#/components/schemas/oauthClient'
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -6713,12 +6717,14 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                  - $ref: '#/components/schemas/oauthClient'
+                oneOf:
+                  - allOf:
+                      - type: object
+                        properties:
+                          status:
+                            $ref: '#/components/schemas/statusOK'
+                      - $ref: '#/components/schemas/oauthClient'
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -6750,14 +6756,16 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  clients:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/oauthClient'
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      clients:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/oauthClient'
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -6798,13 +6806,15 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  didExist:
-                    type: boolean
-                    example: true
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      didExist:
+                        type: boolean
+                        example: true
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -6842,58 +6852,116 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  client:
-                    $ref: '#/components/schemas/oauthClient'
-                  acr:
-                    type: string
-                  amr:
-                    type: array
-                    items:
-                      type: string
-                  challenge:
-                    type: string
-                  context:
-                    type: object
-                  loginChallenge:
-                    type: string
-                  loginSessionId:
-                    type: string
-                  oidcContext:
-                    type: object
+                oneOf:
+                  - type: object
                     properties:
-                      acrValues:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      client:
+                        $ref: '#/components/schemas/oauthClient'
+                      requestedScope:
                         type: array
                         items:
                           type: string
-                      display:
-                        type: string
-                      idTokenHintClaims:
+                      requestedAudience:
+                        type: array
+                        items:
+                          type: string
+                      requestedClaims:
                         type: object
-                        additionalProperties: true
+                        properties:
+                          idToken:
+                            type: object
+                            properties:
+                              property1:
+                                type: string
+                              property2:
+                                type: string
                       loginHint:
                         type: string
                       uiLocales:
                         type: array
                         items:
                           type: string
-                  requestUrl:
-                    type: string
-                  requestedAccessTokenAudience:
-                    type: array
-                    items:
-                      type: string
-                  requestedScope:
-                    type: array
-                    items:
-                      type: string
-                  skip:
-                    type: boolean
-                  subject:
-                    type: string
+                      acrValues:
+                        type: array
+                        items:
+                          type: string
+                      subject:
+                        type: string
+                      requestUrl:
+                        type: string
+                      skip:
+                        type: boolean
+                      clientId:
+                        type: string
+                      redirectUri:
+                        type: string
+                      forceSubjectIdentifier:
+                        type: string
+                      requestedAccessTokenAudience:
+                        type: array
+                        items:
+                          type: string
+                      context:
+                        type: object
+                      sessionId:
+                        type: string
+                      loginSessionId:
+                        type: string
+                      loginChallenge:
+                        type: string
+                      loginRequestedAt:
+                        type: string
+                      consentRequestedAt:
+                        type: string
+                      consentChallenge:
+                        type: string
+                      consentSkip:
+                        type: boolean
+                      consentRemember:
+                        type: boolean
+                      consentRememberFor:
+                        type: integer
+                      consentError:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          description:
+                            type: string
+                      consentErrorDebug:
+                        type: string
+                      consentErrorDescription:
+                        type: string
+                      consentErrorHint:
+                        type: string
+                      consentErrorCode:
+                        type: string
+                      consentStatusCode:
+                        type: integer
+                      sessionIdToken:
+                        type: object
+                        properties:
+                          property1:
+                            type: string
+                          property2:
+                            type: string
+                      sessionAccessToken:
+                        type: object
+                        properties:
+                          property1:
+                            type: string
+                          property2:
+                            type: string
+                      sessionToken:
+                        type: object
+                        properties:
+                          property1:
+                            type: string
+                          property2:
+                            type: string
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -6964,13 +7032,15 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  redirectTo:
-                    type: string
-                    example: "{apiDomain}/oauth/consent?..."
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      redirectTo:
+                        type: string
+                        example: "{apiDomain}/oauth/consent?..."
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7026,13 +7096,15 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  redirectTo:
-                    type: string
-                    example: "{apiDomain}/oauth/consent?..."
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      redirectTo:
+                        type: string
+                        example: "{apiDomain}/oauth/consent?..."
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7070,52 +7142,68 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  challenge:
-                    type: string
-                  client:
-                    $ref: '#/components/schemas/oauthClient'
-                  oidcContext:
-                    type: object
+                oneOf:
+                  - type: object
                     properties:
-                      acrValues:
-                        type: array
-                        items:
-                          type: string
-                      display:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      challenge:
                         type: string
-                      idTokenHintClaims:
+                      client:
+                        $ref: '#/components/schemas/oauthClient'
+                      oidcContext:
                         type: object
                         properties:
-                          property1:
-                            type: null
-                          property2:
-                            type: null
-                      loginHint:
-                        type: string
-                      uiLocales:
-                        type: array
-                        items:
-                          type: string
-                  requestUrl:
-                    type: string
-                  requestedAccessTokenAudience:
-                    type: array
-                    items:
-                      type: string
-                  requestedScope:
-                    type: array
-                    items:
-                      type: string
-                  sessionId:
-                    type: string
-                  skip:
-                    type: boolean
-                  subject:
-                    type: string
+                          acrValues:
+                            type: array
+                            items:
+                              type: string
+                          display:
+                            type: string
+                          idTokenHintClaims:
+                            type: object
+                            properties:
+                              property1:
+                                type: null
+                              property2:
+                                type: null
+                          loginHint:
+                            type: string
+                          uiLocales:
+                            type: array
+                            items:
+                              type: string
+                          requestUrl:
+                            type: string
+                          requestedAccessTokenAudience:
+                            type: array
+                            items:
+                              type: string
+                          requestedScope:
+                            type: array
+                            items:
+                              type: string
+                          sessionId:
+                            type: string
+                          skip:
+                            type: boolean
+                          subject:
+                            type: string
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
   /appid-<appId>/recipe/oauth/auth/requests/login/accept:
     put:
       tags:
@@ -7172,13 +7260,15 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  redirectTo:
-                    type: string
-                    example: "{apiDomain}/oauth/login?..."
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      redirectTo:
+                        type: string
+                        example: "{apiDomain}/oauth/login?..."
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7233,13 +7323,15 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  redirectTo:
-                    type: string
-                    example: "{apiDomain}/oauth/login?..."
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      redirectTo:
+                        type: string
+                        example: "{apiDomain}/oauth/login?..."
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7279,13 +7371,15 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  redirectTo:
-                    type: string
-                    example: "{apiDomain}/oauth/logout?..."
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      redirectTo:
+                        type: string
+                        example: "{apiDomain}/oauth/logout?..."
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7325,10 +7419,12 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7368,10 +7464,15 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      didExist:
+                        type: boolean
+                        example: true
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7411,10 +7512,15 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      didExist:
+                        type: boolean
+                        example: true
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7435,7 +7541,7 @@ paths:
         - OAuth2Provider Recipe
       description: |
         Revoke OAuth2 Token
-      operationId: revokeOAuth2Token
+      operationId: revokeOAuth2Tokens
       parameters:
         - $ref: '#/components/parameters/oauthRid'
         - $ref: '#/components/parameters/api-key'
@@ -7455,10 +7561,15 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      didExist:
+                        type: boolean
+                        example: true
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7490,17 +7601,14 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  redirectTo:
-                    type: string
-                    example: "{apiDomain}/oauth/login?..."
-                  cookies:
-                    type: array
-                    items:
-                      type: string
+                oneOf:
+                  - allOf:
+                      - type: object
+                        properties:
+                          status:
+                            $ref: '#/components/schemas/statusOK'
+                      - $ref: '#/components/schemas/oauthClient'
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7550,28 +7658,33 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  access_token:
-                    type: string
-                    example: "eyJraWQiOiJzLTBjZmVmMDdkLWQ2NDktNGIwOC04MTVjLWJkYjZlYTczNWQyZCIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2In0.eyJpYXQiOjE3NDAzODU5MzcsImV4cCI6MTc0MDM4OTUzOCwiY2xpZW50X2lkIjoic3RjbF82NWUwODc1Mi0yYzU5LTQ5NjQtOTM0Yy02OTIwZDJmMDZlNjIiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDEvYXV0aCIsImp0aSI6Ijc1NTc2MmFmLTUwYTUtNDc1ZS04YWRkLTg3MDA1ZmU3YWJlNiIsIm5iZiI6MTc0MDM4NTkzNywic2NwIjpbIm9wZW5pZCIsIm9mZmxpbmVfYWNjZXNzIl0sInN1YiI6InNvbWV1c2VyaWQiLCJzdHQiOjEsImdpZCI6ImRjOGQ0OGUzLTcwOTgtNDhhNi1hYjU0LTgxMWMyODQ4N2I4MiIsInRJZCI6InB1YmxpYyIsInJzdWIiOiJzb21ldXNlcmlkIiwic2Vzc2lvbkhhbmRsZSI6InNlc3Npb24taGFuZGxlIn0.DgVgtD2gXgzHrDsC2lIUBa-wsYm8KO4Pg8L1Ov3aSBVgjwtjiCO40ldjBZ9qKdQBq5Qqk0ElAZNj6Bzc40ESfQumLH3_N2XtOj568s71JPuEOIg5hs9XAdK4vYfXMhVQRWn9iPUKHKrpRVf73IIH0mpkN8i6_MhcDoMMOuG5XPlXajG9VOyoY_5saHA61-uTafZLdAgKqnmYGvS8KmNEcEbBWLGwFB4QQKiDAUvatIi5n3juFBUxyt9t6DrqT1D04shesRppa0XhCZbCFBv1dixSrprdtqKhlPOrMgvOGNZ3cBLbYBOG9zoJRD5YlVMGw-j_pE7IbvpDWKL7tTJS1Q"
-                  expires_in:
-                    type: integer
-                    example: 3599
-                  id_token:
-                    type: string
-                    example: "eyJraWQiOiJzLTBjZmVmMDdkLWQ2NDktNGIwOC04MTVjLWJkYjZlYTczNWQyZCIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2In0.eyJpYXQiOjE3NDAzODU5MzgsImV4cCI6MTc0MDM4OTUzOCwiYXRfaGFzaCI6IkNxOGNCSk01Nm5FcG9aaWREcnZvLVEiLCJhdWQiOiJzdGNsXzY1ZTA4NzUyLTJjNTktNDk2NC05MzRjLTY5MjBkMmYwNmU2MiIsImF1dGhfdGltZSI6MTc0MDM4NTkzNywiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAxL2F1dGgiLCJqdGkiOiIxZDA5OGUxZi04ZGIxLTQyNzUtYmMzYS0zYTA4NjdjOWE2NTAiLCJyYXQiOjE3NDAzODU3MzEsInNpZCI6InNlc3Npb24taGFuZGxlIiwic3ViIjoic29tZXVzZXJpZCIsInN0dCI6MiwiZ2lkIjoiYzk1OTVjYjItMWFjOS00MDI0LWFjNjMtNDJlZDEyODliY2RmIn0.PGsemf1qpLF-cE_616NHvKsRmanFiyba0yqF2j5fy87AWD5McI405A4eqi-wAlKsDxC-MPpuW8bx-08YUhs3x6ku4aFaDyA-M-Xhc65fJJ4SCPVaUL7qlUwl7wJwNs2rMRW3Ayyj4MDSlW5uqm39_K_bBqod2Qj1yqck-N0g78qh86uEcyX6Al3d5KSln1B21nwDsEgegk3xzE8lFMCQUTpZEYb5-1v2D0Bu_PblBfOCjA6mBtT1IIQkmSE27FvkTUS1H50EUyhFP4JH30kP3bUnQ9pOqGMTe405N2ruKtPyWsXHLPlQ4hcJCLO5GT5ZgtUjfz6Y3mCM9l69uDYDHg"
-                  refresh_token:
-                    type: string
-                    example: "st_rt_d7LI9mGYHF2TAaVEFJi7fqOWo8ZQ8zEGpuxhHQs0R18.UZ0nbTuuYuDD8G54PCD8AKHdsh9cezu8BTxVlTy7pYw"
-                  scope:
-                    type: string
-                    example: "openid offline_access"
-                  token_type:
-                    type: string
-                    example: "bearer"
+                oneOf:
+                  - type: object
+                    required:
+                      - status
+                      - access_token
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      access_token:
+                        type: string
+                        example: "eyJraWQiOiJzLTBjZmVmMDdkLWQ2NDktNGIwOC04MTVjLWJkYjZlYTczNWQyZCIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2In0.eyJpYXQiOjE3NDAzODU5MzcsImV4cCI6MTc0MDM4OTUzOCwiY2xpZW50X2lkIjoic3RjbF82NWUwODc1Mi0yYzU5LTQ5NjQtOTM0Yy02OTIwZDJmMDZlNjIiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDEvYXV0aCIsImp0aSI6Ijc1NTc2MmFmLTUwYTUtNDc1ZS04YWRkLTg3MDA1ZmU3YWJlNiIsIm5iZiI6MTc0MDM4NTkzNywic2NwIjpbIm9wZW5pZCIsIm9mZmxpbmVfYWNjZXNzIl0sInN1YiI6InNvbWV1c2VyaWQiLCJzdHQiOjEsImdpZCI6ImRjOGQ0OGUzLTcwOTgtNDhhNi1hYjU0LTgxMWMyODQ4N2I4MiIsInRJZCI6InB1YmxpYyIsInJzdWIiOiJzb21ldXNlcmlkIiwic2Vzc2lvbkhhbmRsZSI6InNlc3Npb24taGFuZGxlIn0.DgVgtD2gXgzHrDsC2lIUBa-wsYm8KO4Pg8L1Ov3aSBVgjwtjiCO40ldjBZ9qKdQBq5Qqk0ElAZNj6Bzc40ESfQumLH3_N2XtOj568s71JPuEOIg5hs9XAdK4vYfXMhVQRWn9iPUKHKrpRVf73IIH0mpkN8i6_MhcDoMMOuG5XPlXajG9VOyoY_5saHA61-uTafZLdAgKqnmYGvS8KmNEcEbBWLGwFB4QQKiDAUvatIi5n3juFBUxyt9t6DrqT1D04shesRppa0XhCZbCFBv1dixSrprdtqKhlPOrMgvOGNZ3cBLbYBOG9zoJRD5YlVMGw-j_pE7IbvpDWKL7tTJS1Q"
+                      expires_in:
+                        type: integer
+                        example: 3599
+                      id_token:
+                        type: string
+                        example: "eyJraWQiOiJzLTBjZmVmMDdkLWQ2NDktNGIwOC04MTVjLWJkYjZlYTczNWQyZCIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2In0.eyJpYXQiOjE3NDAzODU5MzgsImV4cCI6MTc0MDM4OTUzOCwiYXRfaGFzaCI6IkNxOGNCSk01Nm5FcG9aaWREcnZvLVEiLCJhdWQiOiJzdGNsXzY1ZTA4NzUyLTJjNTktNDk2NC05MzRjLTY5MjBkMmYwNmU2MiIsImF1dGhfdGltZSI6MTc0MDM4NTkzNywiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAxL2F1dGgiLCJqdGkiOiIxZDA5OGUxZi04ZGIxLTQyNzUtYmMzYS0zYTA4NjdjOWE2NTAiLCJyYXQiOjE3NDAzODU3MzEsInNpZCI6InNlc3Npb24taGFuZGxlIiwic3ViIjoic29tZXVzZXJpZCIsInN0dCI6MiwiZ2lkIjoiYzk1OTVjYjItMWFjOS00MDI0LWFjNjMtNDJlZDEyODliY2RmIn0.PGsemf1qpLF-cE_616NHvKsRmanFiyba0yqF2j5fy87AWD5McI405A4eqi-wAlKsDxC-MPpuW8bx-08YUhs3x6ku4aFaDyA-M-Xhc65fJJ4SCPVaUL7qlUwl7wJwNs2rMRW3Ayyj4MDSlW5uqm39_K_bBqod2Qj1yqck-N0g78qh86uEcyX6Al3d5KSln1B21nwDsEgegk3xzE8lFMCQUTpZEYb5-1v2D0Bu_PblBfOCjA6mBtT1IIQkmSE27FvkTUS1H50EUyhFP4JH30kP3bUnQ9pOqGMTe405N2ruKtPyWsXHLPlQ4hcJCLO5GT5ZgtUjfz6Y3mCM9l69uDYDHg"
+                      refresh_token:
+                        type: string
+                        example: "st_rt_d7LI9mGYHF2TAaVEFJi7fqOWo8ZQ8zEGpuxhHQs0R18.UZ0nbTuuYuDD8G54PCD8AKHdsh9cezu8BTxVlTy7pYw"
+                      scope:
+                        type: string
+                        example: "openid offline_access"
+                      token_type:
+                        type: string
+                        example: "bearer"
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7624,13 +7737,15 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  redirectTo:
-                    type: string
-                    example: "{apiDomain}/oauth/logout?..."
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      redirectTo:
+                        type: string
+                        example: "{apiDomain}/oauth/logout?..."
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7672,62 +7787,61 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - status
-                  - active
-                properties:
-                  status:
-                    $ref: '#/components/schemas/statusOK'
-                  active:
-                    type: boolean
-                  iat:
-                    type: integer
-                    example: 1740992368
-                  exp:
-                    type: integer
-                    example: 1740995969
-                  client_id:
-                    type: string
-                    example: "stcl_fed7cff0-cc6e-406e-b7a6-766148675a4a"
-                  iss:
-                    type: string
-                    example: "http://localhost:3001/auth"
-                  jti:
-                    type: string
-                    example: "1c229efe-c55b-44c1-98cf-9fa3a366502e"
-                  nbf:
-                    type: integer
-                    example: 1740992368
-                  scp:
-                    type: array
-                    items:
-                      type: string
-                    example: ["openid", "offline_access"]
-                  sub:
-                    type: string
-                    example: "137d053d-0d69-4dea-8a19-06ddbdfa4f96"
-                  stt:
-                    type: integer
-                    example: 1
-                  sessionHandle:
-                    type: string
-                    example: "87bcc2d8-f159-4e10-a097-0898179a2d7d"
-                  rsub:
-                    type: string
-                    example: "137d053d-0d69-4dea-8a19-06ddbdfa4f96"
-                  tId:
-                    type: string
-                    example: "public"
-                  gid:
-                    type: string
-                    example: "575b7130-d982-4945-be49-3ecde2a49eaa"
-                  token_type:
-                    type: string
-                    example: "Bearer"
-                  token_use:
-                    type: string
-                    example: "access_token"
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      active:
+                        type: boolean
+                      iat:
+                        type: integer
+                        example: 1740992368
+                      exp:
+                        type: integer
+                        example: 1740995969
+                      client_id:
+                        type: string
+                        example: "stcl_fed7cff0-cc6e-406e-b7a6-766148675a4a"
+                      iss:
+                        type: string
+                        example: "http://localhost:3001/auth"
+                      jti:
+                        type: string
+                        example: "1c229efe-c55b-44c1-98cf-9fa3a366502e"
+                      nbf:
+                        type: integer
+                        example: 1740992368
+                      scp:
+                        type: array
+                        items:
+                          type: string
+                        example: ["openid", "offline_access"]
+                      sub:
+                        type: string
+                        example: "137d053d-0d69-4dea-8a19-06ddbdfa4f96"
+                      stt:
+                        type: integer
+                        example: 1
+                      sessionHandle:
+                        type: string
+                        example: "87bcc2d8-f159-4e10-a097-0898179a2d7d"
+                      rsub:
+                        type: string
+                        example: "137d053d-0d69-4dea-8a19-06ddbdfa4f96"
+                      tId:
+                        type: string
+                        example: "public"
+                      gid:
+                        type: string
+                        example: "575b7130-d982-4945-be49-3ecde2a49eaa"
+                      token_type:
+                        type: string
+                        example: "Bearer"
+                      token_use:
+                        type: string
+                        example: "access_token"
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -8646,3 +8760,21 @@ components:
           $ref: '#/components/schemas/requiredSecondaryFactors'
         coreConfig:
           type: object
+
+    oauthError:
+      type: object
+      required:
+        - status
+        - error
+        - errorDescription
+        - statusCode
+      properties:
+        status:
+          type: string
+          enum: [OAUTH_ERROR]
+        error:
+          type: string
+        errorDescription:
+          type: string
+        statusCode:
+          type: integer
