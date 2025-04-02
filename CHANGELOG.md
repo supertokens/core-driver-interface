@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [5.1.0]
+
+- Adds APIs to bulk import users
+  - GET `/bulk-import/users`
+  - POST `/bulk-import/users`
+  - GET `/bulk-import/users/count`
+  - POST `/bulk-import/users/remove`
+  - POST `/bulk-import/users/import`
+
 ## [5.0.0] - 2024-03-19
 
 - `TOTP_NOT_ENABLED_ERROR` status is removed from the totp related APIs.

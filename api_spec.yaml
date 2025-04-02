@@ -6023,6 +6023,8 @@ paths:
                 properties:
                   status:
                     $ref: '#/components/schemas/statusOK'
+                  users:
+                    $ref: '#/components/schemas/addBulkImportUserResponse'
         '400':
           description: One or more users have invalid schema
           content:
@@ -6945,12 +6947,42 @@ components:
             $ref: '#/components/schemas/email'
           passwordHash:
             $ref: '#/components/schemas/passwordHash'
+          plainTextPassword:
+            type: string
+            example: passwordExample
           hashingAlgorithm:
             $ref: '#/components/schemas/hashingAlgorithm'
         required:
           - email
           - passwordHash
           - hashingAlgorithm
+
+    addBulkImportUserLoginMethodResponse:
+        type: object
+        properties:
+          recipeId:
+            type: string
+            example: "emailpassword"
+          userId:
+            $ref: '#/components/schemas/userId'
+          tenants:
+              type: array
+              items:
+                  $ref: '#/components/schemas/tenantId'
+          email:
+            $ref: '#/components/schemas/email'
+          thirdpartyId:
+            $ref: '#/components/schemas/thirdPartyId'
+          thirdpartyUserId:
+            $ref: '#/components/schemas/thirdPartyUserId'
+          phoneNumber:
+            $ref: '#/components/schemas/phoneNumber'
+        required:
+          - recipeId
+          - userId
+          - tenants
+          - email
+
 
     bulkImportUserThirdPartyLoginMethod:
       allOf:
@@ -7004,6 +7036,16 @@ components:
               - $ref: '#/components/schemas/bulkImportUserEmailPasswordLoginMethod'
               - $ref: '#/components/schemas/bulkImportUserThirdPartyLoginMethod'
               - $ref: '#/components/schemas/bulkImportUserPasswordlessLoginMethod'
+
+    addBulkImportUserResponse:
+      type: object
+      properties:
+        userId:
+          $ref: '#/components/schemas/userId'
+        loginMethods:
+          type: array
+          items:
+            $ref: '#/components/schemas/addBulkImportUserLoginMethodResponse'
 
     bulkImportUserResponse:
       properties:
