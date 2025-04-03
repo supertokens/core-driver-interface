@@ -6750,6 +6750,24 @@ paths:
         - $ref: '#/components/parameters/oauthRid'
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: integer
+            example: 250
+        - name: pageToken
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "1234567890"
+        - name: clientName
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "My App"
       responses:
         '200':
           description: OAuth2 Client Result
@@ -6765,6 +6783,8 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/oauthClient'
+                      nextPaginationToken:
+                        type: string
                   - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
