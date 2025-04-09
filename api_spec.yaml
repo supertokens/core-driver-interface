@@ -8,7 +8,6 @@ info:
     Those that do not have `<tenantId>` in the path will enforce that the API is called from `public` tenant only.
 
   version: 5.3.0
-
   title: Core Driver Interface
   contact:
     email: team@supertokens.io

@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-## [5.1.0]
+## [5.3.0]
 
 - Adds APIs to bulk import users
   - GET `/bulk-import/users`
@@ -46,7 +46,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - PUT `/appid-<appid>/recipe/multitenancy/tenant/v2`
     - GET `/appid-<appid>/<tenantid>/recipe/multitenancy/tenant/v2`
     - GET `/appid-<appid>/<tenantid>/recipe/multitenancy/tenant/list/v2`
-
 
 ## [5.0.0] - 2024-03-19
 
