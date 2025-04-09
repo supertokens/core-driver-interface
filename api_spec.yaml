@@ -6609,952 +6609,6 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-
-  /appid-<appId>/<tenantId>/recipe/webauthn/user/credential:
-    get:
-      tags:
-        - WebAuthn Recipe
-      description:
-        Get the WebAuthn credential for the user.
-
-      operationId: getWebAuthNCredential
-      parameters:
-        - $ref: '#/components/parameters/webauthnRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-        - in: query
-          name: recipeUserId
-          schema:
-            type: string
-            example: fa7a0841-b533-4478-9253-0fde890c576
-          required: true
-        - in: query
-          name: webauthnCredentialId
-          schema:
-            type: string
-            example: ea7a0931-b533-4478-9253-0fde890ca23
-          required: true
-      responses:
-        '200':
-          description: WebAuthn credential result
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      credential:
-                        type: object
-                        properties:
-                          webauthnCredentialId:
-                            type: string
-                            example: ea7a0931-b533-4478-9253-0fde890ca23
-                          recipeUserId:
-                            type: string
-                            example: fa7a0841-b533-4478-9253-0fde890c576
-                          relyingPartyId:
-                            type: string
-                            example: example.com
-                          createdAt:
-                            type: number
-                            example: 1741793746
-                          updatedAt:
-                            type: number
-                            example: 1741793746
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum:
-                          [
-                            'CREDENTIAL_NOT_FOUND_ERROR',
-                          ]
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-
-  /appid-<appId>/<tenantId>/recipe/webauthn/user/credential/list:
-    get:
-      tags:
-        - WebAuthn Recipe
-      description:
-        List credentials that were created by the user.
-      operationId: listWebAuthNCredentials
-      parameters:
-        - $ref: '#/components/parameters/webauthnRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-        - in: query
-          name: recipeUserId
-          schema:
-            type: string
-            example: fa7a0841-b533-4478-9253-0fde890c576
-          required: true
-      responses:
-        '200':
-          description: WebAuthn credentials list result
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      credentials:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            webauthnCredentialId:
-                              type: string
-                              example: ea7a0931-b533-4478-9253-0fde890ca23
-                            recipeUserId:
-                              type: string
-                              example: fa7a0841-b533-4478-9253-0fde890c576
-                            relyingPartyId:
-                              type: string
-                              example: example.com
-                            createdAt:
-                              type: number
-                              example: 1741793746
-                            updatedAt:
-                              type: number
-                              example: 1741793746
-
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-
-
-  /appid-<appId>/<tenantId>/recipe/webauthn/options:
-    get:
-      tags:
-        - WebAuthn Recipe
-      description:
-        Get the WebAuthn options.
-      operationId: getWebAuthNOptions
-      parameters:
-        - $ref: '#/components/parameters/webauthnRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-        - in: query
-          name: webauthnGeneratedOptionsId
-          schema:
-            type: string
-            example: fa7a0841-b533-4478-9253-0fde890c576
-          required: true
-      responses:
-        '200':
-          description: WebAuthn options result
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      webauthnGeneratedOptionsId:
-                        type: string
-                        example: fa7a0841-b533-4478-9253-0fde890c576
-                      relyingPartyId:
-                        type: string
-                        example: example.com
-                      relyingPartyName:
-                        type: string
-                        example: Example
-                      challenge:
-                        type: string
-                        example: TQvEVDV8B64w_2zIifzKaPzBPfthqpx2uJkq_2PIB0k
-                      timeout:
-                        type: number
-                        example: 10000
-                      origin:
-                        type: string
-                        example: http://example.com
-                      email:
-                        type: string
-                        example: email@example.com
-                      userVerification:
-                        type: string
-                        example: required
-                      userPresence:
-                        type: boolean
-                        example: true
-                      createdAt:
-                        type: number
-                        example: 1741793746
-                      expiresAt:
-                        type: number
-                        example: 1741793746
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-
-  /appid-<appId>/<tenantId>/recipe/webauthn/user/recover:
-    get:
-      tags:
-        - WebAuthn Recipe
-      description:
-        Recover the user using the WebAuthn credential.
-      operationId: recoverWebAuthNUser
-      parameters:
-        - $ref: '#/components/parameters/webauthnRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-        - in: query
-          name: token
-          schema:
-            type: string
-            example: ZmE3YTA4NDEtYjUzMy00NDc4LTkyNTMtMGZkZTg5MGM1NzY
-          required: true
-      responses:
-        '200':
-          description: AuthRecipeUser for the token
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      recipeUserId:
-                        type: string
-                        example: fa7a0841-b533-4478-9253-0fde890c576
-                      user:
-                        $ref: '#/components/schemas/authRecipeUser'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: [ 'RECOVER_ACCOUNT_TOKEN_INVALID_ERROR' ]
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-
-
-  /appid-<appId>/<tenantId>/recipe/webauthn/options/register:
-    post:
-      tags:
-        - WebAuthn Recipe
-      description:
-        Generate the webauthn options for registration.
-      operationId: generateRegistrationOptions
-      parameters:
-        - $ref: '#/components/parameters/webauthnRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - email
-                - relyingPartyId
-                - relyingPartyName
-                - origin
-              properties:
-                email:
-                  $ref: '#/components/schemas/email'
-                displayName:
-                  type: string
-                  example: John Doe
-                relyingPartyId:
-                  type: string
-                  example: example.com
-                relyingPartyName:
-                  type: string
-                  example: Example
-                origin:
-                  type: string
-                  example: http://example.com
-                timeout:
-                  type: number
-                  example: 10000
-                userVerification:
-                  type: string
-                  example: preferred
-                userPresence:
-                  type: boolean
-                  example: false
-                attestation:
-                  type: string
-                  example: none
-                residentKey:
-                  type: string
-                  example: required
-                supportedAlgorithmIDs:
-                  type: array
-                  items:
-                    type: number
-                    example: -7
-      responses:
-        '200':
-          description: The generated register options response
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      webauthnGeneratedOptionsId:
-                        type: string
-                        example: fa7a0841-b533-4478-9253-0fde890c576
-                      rp:
-                        type: object
-                        properties:
-                            id:
-                              type: string
-                              example: example.com
-                            name:
-                              type: string
-                              example: Example
-                      user:
-                        type: object
-                        properties:
-                            id:
-                              type: string
-                              example: fa7a0841-b533-4478-9253-0fde890c576
-                            name:
-                              type: string
-                              example: John Doe
-                            displayName:
-                              type: string
-                              example: John Doe
-                      email:
-                        $ref: '#/components/schemas/email'
-                      challenge:
-                        type: string
-                        example: TQvEVDV8B64w_2zIifzKaPzBPfthqpx2uJkq_2PIB0k
-                      timeout:
-                        type: number
-                        example: 10000
-                      attestation:
-                        type: string
-                        example: none
-                      createdAt:
-                        type: number
-                        example: 1741793746
-                      expiresAt:
-                        type: number
-                        example: 1741793746
-                      pubKeyCredParams:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            type:
-                              type: string
-                              example: public-key
-                            alg:
-                              type: number
-                              example: -7
-                      excludeCredentials:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            id:
-                              type: string
-                              example: fa7a0841-b533-4478-9253-0fde890c576
-                            transport:
-                              type: array
-                              items:
-                                type: string
-                                example: internal
-                      authenticatorSelection:
-                        type: object
-                        properties:
-                          userVerification:
-                            type: string
-                            example: preferred
-                          requireResidentKey:
-                            type: boolean
-                            example: true
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: [ 'INVALID_OPTIONS_ERROR' ]
-                      reason:
-                        type: string
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-
-  /appid-<appId>/<tenantId>/recipe/webauthn/options/signin:
-    post:
-      tags:
-        - WebAuthn Recipe
-      description:
-        Generate the webauthn options for signin.
-      operationId: generateSigninOptions
-      parameters:
-        - $ref: '#/components/parameters/webauthnRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - relyingPartyId
-                - relyingPartyName
-                - origin
-                - timeout
-                - userVerification
-                - userPresence
-              properties:
-                relyingPartyId:
-                  type: string
-                  example: example.com
-                relyingPartyName:
-                  type: string
-                  example: Example
-                origin:
-                  type: string
-                  example: http://example.com
-                timeout:
-                  type: number
-                  example: 10000
-                userVerification:
-                  type: string
-                  example: preferred
-                userPresence:
-                  type: boolean
-                  example: false
-      responses:
-        '200':
-          description: AuthRecipeUser for the token
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      webauthnGeneratedOptionsId:
-                        type: string
-                        example: fa7a0841-b533-4478-9253-0fde890c576
-                      relyingPartyId:
-                        type: string
-                        example: example.com
-                      challenge:
-                        type: string
-                        example: TQvEVDV8B64w_2zIifzKaPzBPfthqpx2uJkq_2PIB0k
-                      timeout:
-                        type: number
-                        example: 10000
-                      userVerification:
-                        type: string
-                        example: required
-                      userPresence:
-                        type: boolean
-                        example: true
-                      createdAt:
-                        type: number
-                        example: 1741793746
-                      expiresAt:
-                        type: number
-                        example: 1741793746
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: [ 'INVALID_OPTIONS_ERROR' ]
-                      reason:
-                        type: string
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-
-  /appid-<appId>/<tenantId>/recipe/webauthn/user/credential/register:
-    post:
-      tags:
-        - WebAuthn Recipe
-      description:
-        Register a new credential for the user
-      operationId: registerWebAuthNCredential
-      parameters:
-        - $ref: '#/components/parameters/webauthnRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - email
-              properties:
-                recipeUserId:
-                  $ref: '#/components/schemas/userId'
-                webauthnGeneratedOptionsId:
-                  type: string
-                  example: fa7a0841-b533-4478-9253-0fde890c576
-                credential:
-                  type: object
-                  description: Credential returned by the browser
-      responses:
-        '200':
-          description: The stored credential
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      webauthnCredentialId:
-                        type: string
-                        example: fa7a0841-b533-4478-9253-0fde890c576
-                      relyingPartyId:
-                        type: string
-                        example: example.com
-                      relyingPartyName:
-                        type: string
-                        example: Example
-                      recipeUserId:
-                        type: string
-                        example: fa7a0841-b533-4478-9253-0fde890c576
-                      email:
-                        $ref: '#/components/schemas/email'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: [ 'INVALID_OPTIONS_ERROR', 'INVALID_AUTHENTICATOR_ERROR', 'INVALID_CREDENTIALS_ERROR' ]
-                      reason:
-                        type: string
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: [ 'OPTIONS_NOT_FOUND_ERROR', 'CREDENTIAL_ALREADY_EXISTS_ERROR', 'UNKNOWN_USER_ID_ERROR' ]
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-
-  /appid-<appId>/<tenantId>/recipe/webauthn/signup:
-    post:
-      tags:
-        - WebAuthn Recipe
-      description:
-        Sign up the user using the WebAuthn credential.
-      operationId: signUpWebAuthNUser
-      parameters:
-        - $ref: '#/components/parameters/webauthnRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - email
-              properties:
-                webauthnGeneratedOptionsId:
-                  type: string
-                  example: fa7a0841-b533-4478-9253-0fde890c576
-                credential:
-                  type: object
-                  description: Credential returned by the browser
-      responses:
-        '200':
-          description: The signup result
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      webauthnCredentialId:
-                        type: string
-                        example: fa7a0841-b533-4478-9253-0fde890c576
-                      relyingPartyId:
-                        type: string
-                        example: example.com
-                      relyingPartyName:
-                        type: string
-                        example: Example
-                      recipeUserId:
-                        type: string
-                        example: fa7a0841-b533-4478-9253-0fde890c576
-                      user:
-                        $ref: '#/components/schemas/authRecipeUser'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: [ 'INVALID_OPTIONS_ERROR', 'INVALID_AUTHENTICATOR_ERROR', 'INVALID_CREDENTIALS_ERROR' ]
-                      reason:
-                        type: string
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: [ 'OPTIONS_NOT_FOUND_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR' ]
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-
-  /appid-<appId>/<tenantId>/recipe/webauthn/signin:
-    post:
-      tags:
-        - WebAuthn Recipe
-      description:
-        Sign in the user using the WebAuthn credential.
-      operationId: signInWebAuthNUser
-      parameters:
-        - $ref: '#/components/parameters/webauthnRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - email
-              properties:
-                webauthnGeneratedOptionsId:
-                  type: string
-                  example: fa7a0841-b533-4478-9253-0fde890c576
-                credential:
-                  type: object
-                  description: Credential returned by the browser
-      responses:
-        '200':
-          description: The stored credential
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      recipeUserId:
-                        type: string
-                        example: fa7a0841-b533-4478-9253-0fde890c576
-                      user:
-                        $ref: '#/components/schemas/authRecipeUser'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: [ 'INVALID_OPTIONS_ERROR', 'INVALID_AUTHENTICATOR_ERROR', 'INVALID_CREDENTIALS_ERROR' ]
-                      reason:
-                        type: string
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: [ 'OPTIONS_NOT_FOUND_ERROR', 'CREDENTIAL_NOT_FOUND_ERROR', 'UNKNOWN_USER_ID_ERROR' ]
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-
-  /appid-<appId>/<tenantId>/recipe/webauthn/user/recover/token:
-    post:
-      tags:
-        - WebAuthn Recipe
-      description:
-        Generate a token to recover the user.
-      operationId: generateTokenForRecovery
-      parameters:
-        - $ref: '#/components/parameters/webauthnRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - userId
-                - email
-              properties:
-                userId:
-                  $ref: '#/components/schemas/userId'
-                email:
-                  $ref: '#/components/schemas/email'
-      responses:
-        '200':
-          description: WebAuthn options result
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      token:
-                        type: string
-                        example: ZmE3YTA4NDEtYjUzMy00NDc4LTkyNTMtMGZkZTg5MGM1NzY
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: [ 'UNKNOWN_USER_ID_ERROR' ]
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-
-  /appid-<appId>/<tenantId>/recipe/webauthn/user/recover/token/consume:
-    post:
-      tags:
-        - WebAuthn Recipe
-      description:
-        Consume the token to recover the user.
-      operationId: consumeWebAuthNToken
-      parameters:
-        - $ref: '#/components/parameters/webauthnRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - token
-              properties:
-                token:
-                  type: string
-                  example: ZmE3YTA4NDEtYjUzMy00NDc4LTkyNTMtMGZkZTg5MGM1NzY
-      responses:
-        '200':
-          description: Consume token result
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                      userId:
-                        $ref: '#/components/schemas/userId'
-                      email:
-                        $ref: '#/components/schemas/email'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: [ 'RECOVER_ACCOUNT_TOKEN_INVALID_ERROR' ]
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-
-  /appid-<appId>/<tenantId>/recipe/webauthn/user/email:
-    put:
-      tags:
-        - WebAuthn Recipe
-      description:
-        Update the email of the user.
-      operationId: updateEmail
-      parameters:
-        - $ref: '#/components/parameters/webauthnRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - recipeUserId
-                - email
-              properties:
-                recipeUserId:
-                  $ref: '#/components/schemas/userId'
-                email:
-                  $ref: '#/components/schemas/email'
-      responses:
-        '200':
-          description: Update email result
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: [ 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR', 'USER_WITH_EMAIL_ALREADY_EXISTS_ERROR' ]
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-
-  /appid-<appId>/<tenantId>/recipe/webauthn/user/credential/remove:
-    delete:
-      tags:
-        - WebAuthn Recipe
-      description:
-        Remove the WebAuthn credential for the user.
-      operationId: removeWebAuthNCredential
-      parameters:
-        - $ref: '#/components/parameters/webauthnRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-        - in: query
-          name: recipeUserId
-          schema:
-            type: string
-            example: fa7a0841-b533-4478-9253-0fde890c576
-          required: true
-        - in: query
-          name: webauthnCredentialId
-          schema:
-            type: string
-            example: fa7a0841-b533-4478-9253-0fde890c576
-          required: true
-      responses:
-        '200':
-          description: Delete credential result
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: [ 'CREDENTIAL_NOT_FOUND_ERROR' ]
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-
-  /appid-<appId>/<tenantId>/recipe/webauthn/options/remove:
-    delete:
-      tags:
-        - WebAuthn Recipe
-      description:
-        Remove the WebAuthn options.
-      operationId: removeWebAuthNOptions
-      parameters:
-        - $ref: '#/components/parameters/webauthnRid'
-        - $ref: '#/components/parameters/api-key'
-        - $ref: '#/components/parameters/cdi-version'
-        - in: query
-          name: webauthnGeneratedOptionsId
-          schema:
-            type: string
-            example: fa7a0841-b533-4478-9253-0fde890c576
-          required: true
-      responses:
-        '200':
-          description: Delete options result
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    properties:
-                      status:
-                        $ref: '#/components/schemas/statusOK'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: [ 'OPTIONS_NOT_FOUND_ERROR' ]
-        '400':
-          $ref: '#/components/responses/400'
-        '401':
-          $ref: '#/components/responses/401'
-        '404':
-          $ref: '#/components/responses/404'
-        '500':
-          $ref: '#/components/responses/500'
-
   /appid-<appId>/recipe/oauth/clients:
     get:
       tags:
@@ -8981,6 +8035,951 @@ paths:
         '404':
           $ref: '#/components/responses/404'
 
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/user/credential:
+    get:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Get the WebAuthn credential for the user.
+
+      operationId: getWebAuthNCredential
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: recipeUserId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+        - in: query
+          name: webauthnCredentialId
+          schema:
+            type: string
+            example: ea7a0931-b533-4478-9253-0fde890ca23
+          required: true
+      responses:
+        '200':
+          description: WebAuthn credential result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      credential:
+                        type: object
+                        properties:
+                          webauthnCredentialId:
+                            type: string
+                            example: ea7a0931-b533-4478-9253-0fde890ca23
+                          recipeUserId:
+                            type: string
+                            example: fa7a0841-b533-4478-9253-0fde890c576
+                          relyingPartyId:
+                            type: string
+                            example: example.com
+                          createdAt:
+                            type: number
+                            example: 1741793746
+                          updatedAt:
+                            type: number
+                            example: 1741793746
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          [
+                            'CREDENTIAL_NOT_FOUND_ERROR',
+                          ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/user/credential/list:
+    get:
+      tags:
+        - WebAuthn Recipe
+      description:
+        List credentials that were created by the user.
+      operationId: listWebAuthNCredentials
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: recipeUserId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+      responses:
+        '200':
+          description: WebAuthn credentials list result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      credentials:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            webauthnCredentialId:
+                              type: string
+                              example: ea7a0931-b533-4478-9253-0fde890ca23
+                            recipeUserId:
+                              type: string
+                              example: fa7a0841-b533-4478-9253-0fde890c576
+                            relyingPartyId:
+                              type: string
+                              example: example.com
+                            createdAt:
+                              type: number
+                              example: 1741793746
+                            updatedAt:
+                              type: number
+                              example: 1741793746
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/options:
+    get:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Get the WebAuthn options.
+      operationId: getWebAuthNOptions
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: webauthnGeneratedOptionsId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+      responses:
+        '200':
+          description: WebAuthn options result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      webauthnGeneratedOptionsId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      relyingPartyId:
+                        type: string
+                        example: example.com
+                      relyingPartyName:
+                        type: string
+                        example: Example
+                      challenge:
+                        type: string
+                        example: TQvEVDV8B64w_2zIifzKaPzBPfthqpx2uJkq_2PIB0k
+                      timeout:
+                        type: number
+                        example: 10000
+                      origin:
+                        type: string
+                        example: http://example.com
+                      email:
+                        type: string
+                        example: email@example.com
+                      userVerification:
+                        type: string
+                        example: required
+                      userPresence:
+                        type: boolean
+                        example: true
+                      createdAt:
+                        type: number
+                        example: 1741793746
+                      expiresAt:
+                        type: number
+                        example: 1741793746
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/user/recover:
+    get:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Recover the user using the WebAuthn credential.
+      operationId: recoverWebAuthNUser
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: token
+          schema:
+            type: string
+            example: ZmE3YTA4NDEtYjUzMy00NDc4LTkyNTMtMGZkZTg5MGM1NzY
+          required: true
+      responses:
+        '200':
+          description: AuthRecipeUser for the token
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      recipeUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'RECOVER_ACCOUNT_TOKEN_INVALID_ERROR' ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/options/register:
+    post:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Generate the webauthn options for registration.
+      operationId: generateRegistrationOptions
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - relyingPartyId
+                - relyingPartyName
+                - origin
+              properties:
+                email:
+                  $ref: '#/components/schemas/email'
+                displayName:
+                  type: string
+                  example: John Doe
+                relyingPartyId:
+                  type: string
+                  example: example.com
+                relyingPartyName:
+                  type: string
+                  example: Example
+                origin:
+                  type: string
+                  example: http://example.com
+                timeout:
+                  type: number
+                  example: 10000
+                userVerification:
+                  type: string
+                  example: preferred
+                userPresence:
+                  type: boolean
+                  example: false
+                attestation:
+                  type: string
+                  example: none
+                residentKey:
+                  type: string
+                  example: required
+                supportedAlgorithmIDs:
+                  type: array
+                  items:
+                    type: number
+                    example: -7
+      responses:
+        '200':
+          description: The generated register options response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      webauthnGeneratedOptionsId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      rp:
+                        type: object
+                        properties:
+                            id:
+                              type: string
+                              example: example.com
+                            name:
+                              type: string
+                              example: Example
+                      user:
+                        type: object
+                        properties:
+                            id:
+                              type: string
+                              example: fa7a0841-b533-4478-9253-0fde890c576
+                            name:
+                              type: string
+                              example: John Doe
+                            displayName:
+                              type: string
+                              example: John Doe
+                      email:
+                        $ref: '#/components/schemas/email'
+                      challenge:
+                        type: string
+                        example: TQvEVDV8B64w_2zIifzKaPzBPfthqpx2uJkq_2PIB0k
+                      timeout:
+                        type: number
+                        example: 10000
+                      attestation:
+                        type: string
+                        example: none
+                      createdAt:
+                        type: number
+                        example: 1741793746
+                      expiresAt:
+                        type: number
+                        example: 1741793746
+                      pubKeyCredParams:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              example: public-key
+                            alg:
+                              type: number
+                              example: -7
+                      excludeCredentials:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: fa7a0841-b533-4478-9253-0fde890c576
+                            transport:
+                              type: array
+                              items:
+                                type: string
+                                example: internal
+                      authenticatorSelection:
+                        type: object
+                        properties:
+                          userVerification:
+                            type: string
+                            example: preferred
+                          requireResidentKey:
+                            type: boolean
+                            example: true
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'INVALID_OPTIONS_ERROR' ]
+                      reason:
+                        type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/options/signin:
+    post:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Generate the webauthn options for signin.
+      operationId: generateSigninOptions
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - relyingPartyId
+                - relyingPartyName
+                - origin
+                - timeout
+                - userVerification
+                - userPresence
+              properties:
+                relyingPartyId:
+                  type: string
+                  example: example.com
+                relyingPartyName:
+                  type: string
+                  example: Example
+                origin:
+                  type: string
+                  example: http://example.com
+                timeout:
+                  type: number
+                  example: 10000
+                userVerification:
+                  type: string
+                  example: preferred
+                userPresence:
+                  type: boolean
+                  example: false
+      responses:
+        '200':
+          description: AuthRecipeUser for the token
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      webauthnGeneratedOptionsId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      relyingPartyId:
+                        type: string
+                        example: example.com
+                      challenge:
+                        type: string
+                        example: TQvEVDV8B64w_2zIifzKaPzBPfthqpx2uJkq_2PIB0k
+                      timeout:
+                        type: number
+                        example: 10000
+                      userVerification:
+                        type: string
+                        example: required
+                      userPresence:
+                        type: boolean
+                        example: true
+                      createdAt:
+                        type: number
+                        example: 1741793746
+                      expiresAt:
+                        type: number
+                        example: 1741793746
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'INVALID_OPTIONS_ERROR' ]
+                      reason:
+                        type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/user/credential/register:
+    post:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Register a new credential for the user
+      operationId: registerWebAuthNCredential
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                recipeUserId:
+                  $ref: '#/components/schemas/userId'
+                webauthnGeneratedOptionsId:
+                  type: string
+                  example: fa7a0841-b533-4478-9253-0fde890c576
+                credential:
+                  type: object
+                  description: Credential returned by the browser
+      responses:
+        '200':
+          description: The stored credential
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      webauthnCredentialId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      relyingPartyId:
+                        type: string
+                        example: example.com
+                      relyingPartyName:
+                        type: string
+                        example: Example
+                      recipeUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      email:
+                        $ref: '#/components/schemas/email'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'INVALID_OPTIONS_ERROR', 'INVALID_AUTHENTICATOR_ERROR', 'INVALID_CREDENTIALS_ERROR' ]
+                      reason:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'OPTIONS_NOT_FOUND_ERROR', 'CREDENTIAL_ALREADY_EXISTS_ERROR', 'UNKNOWN_USER_ID_ERROR' ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/signup:
+    post:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Sign up the user using the WebAuthn credential.
+      operationId: signUpWebAuthNUser
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                webauthnGeneratedOptionsId:
+                  type: string
+                  example: fa7a0841-b533-4478-9253-0fde890c576
+                credential:
+                  type: object
+                  description: Credential returned by the browser
+      responses:
+        '200':
+          description: The signup result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      webauthnCredentialId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      relyingPartyId:
+                        type: string
+                        example: example.com
+                      relyingPartyName:
+                        type: string
+                        example: Example
+                      recipeUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'INVALID_OPTIONS_ERROR', 'INVALID_AUTHENTICATOR_ERROR', 'INVALID_CREDENTIALS_ERROR' ]
+                      reason:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'OPTIONS_NOT_FOUND_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR' ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/signin:
+    post:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Sign in the user using the WebAuthn credential.
+      operationId: signInWebAuthNUser
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                webauthnGeneratedOptionsId:
+                  type: string
+                  example: fa7a0841-b533-4478-9253-0fde890c576
+                credential:
+                  type: object
+                  description: Credential returned by the browser
+      responses:
+        '200':
+          description: The stored credential
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      recipeUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'INVALID_OPTIONS_ERROR', 'INVALID_AUTHENTICATOR_ERROR', 'INVALID_CREDENTIALS_ERROR' ]
+                      reason:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'OPTIONS_NOT_FOUND_ERROR', 'CREDENTIAL_NOT_FOUND_ERROR', 'UNKNOWN_USER_ID_ERROR' ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/user/recover/token:
+    post:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Generate a token to recover the user.
+      operationId: generateTokenForRecovery
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - email
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+                email:
+                  $ref: '#/components/schemas/email'
+      responses:
+        '200':
+          description: WebAuthn options result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      token:
+                        type: string
+                        example: ZmE3YTA4NDEtYjUzMy00NDc4LTkyNTMtMGZkZTg5MGM1NzY
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'UNKNOWN_USER_ID_ERROR' ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/user/recover/token/consume:
+    post:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Consume the token to recover the user.
+      operationId: consumeWebAuthNToken
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+              properties:
+                token:
+                  type: string
+                  example: ZmE3YTA4NDEtYjUzMy00NDc4LTkyNTMtMGZkZTg5MGM1NzY
+      responses:
+        '200':
+          description: Consume token result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      userId:
+                        $ref: '#/components/schemas/userId'
+                      email:
+                        $ref: '#/components/schemas/email'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'RECOVER_ACCOUNT_TOKEN_INVALID_ERROR' ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/user/email:
+    put:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Update the email of the user.
+      operationId: updateEmail
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - recipeUserId
+                - email
+              properties:
+                recipeUserId:
+                  $ref: '#/components/schemas/userId'
+                email:
+                  $ref: '#/components/schemas/email'
+      responses:
+        '200':
+          description: Update email result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR', 'USER_WITH_EMAIL_ALREADY_EXISTS_ERROR' ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/user/credential/remove:
+    delete:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Remove the WebAuthn credential for the user.
+      operationId: removeWebAuthNCredential
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: recipeUserId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+        - in: query
+          name: webauthnCredentialId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+      responses:
+        '200':
+          description: Delete credential result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'CREDENTIAL_NOT_FOUND_ERROR' ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/options/remove:
+    delete:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Remove the WebAuthn options.
+      operationId: removeWebAuthNOptions
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: webauthnGeneratedOptionsId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+      responses:
+        '200':
+          description: Delete options result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'OPTIONS_NOT_FOUND_ERROR' ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
 
