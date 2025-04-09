@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [5.3.0]
+
+- Adds APIs to bulk import users
+  - GET `/bulk-import/users`
+  - POST `/bulk-import/users`
+  - GET `/bulk-import/users/count`
+  - POST `/bulk-import/users/remove`
+  - POST `/bulk-import/users/import`
+
 ## [5.2.0]
 
 - Adds APIs related to OAuth2 Provider

@@ -7,7 +7,7 @@ info:
 
     Those that do not have `<tenantId>` in the path will enforce that the API is called from `public` tenant only.
 
-  version: 5.2.0
+  version: 5.3.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -25,6 +25,8 @@ tags:
   - name: Dashboard Recipe
   - name: Totp Recipe
   - name: Account Linking Recipe
+  - name: JWT Recipe
+  - name: Bulk Import
 
 paths:
   /appid-<appId>/recipe/accountlinking/user/primary/check:
@@ -2062,12 +2064,9 @@ paths:
                 email:
                   $ref: '#/components/schemas/email'
                 passwordHash:
-                  type: string
-                  example: "passwordHash"
+                  $ref: '#/components/schemas/passwordHash'
                 hashingAlgorithm:
-                  type: string
-                  enum: ["argon2", "bcrypt", "firebase_scrypt"]
-
+                  $ref: '#/components/schemas/hashingAlgorithm'
 
       responses:
         '200':
@@ -7872,6 +7871,170 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
+  /appid-<appId>/bulk-import/users:
+    get:
+      tags: 
+        - Bulk Import
+      operationId: getBulkImportUsers
+      description: |
+        Paginated API to get bulk import users
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/paginationToken'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/bulkImportUserStatus'
+
+      responses:
+        '200':
+          description: Paginated Bulk Import Users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/bulkImportUserResponse'
+                  nextPaginationToken: 
+                    $ref: '#/components/schemas/paginationToken'
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+    post:
+      tags:
+        - Bulk Import
+      operationId: addBulkImportUsers
+      description: |
+        Add users for bulk import. Maximum 10000 users can be added in one request.
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                users:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/bulkImportUser'
+              required:
+                - users
+      responses:
+        '200':
+          description: Bulk Import Users added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  users:
+                    $ref: '#/components/schemas/addBulkImportUserResponse'
+        '400':
+          description: One or more users have invalid schema
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Data has missing or invalid fields. Please check the users field for more details."
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: number
+                          example: 0
+                          description: "Index of the user in the users array that has invalid schema"
+                        errors:
+                          type: array
+                          items:
+                            type: string
+                            description: "List of errors for the user"
+                            example: "Invalid recipeId for loginMethod. Pass one of emailpassword, thirdparty or, passwordless!"
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/bulk-import/users/remove:
+    post:
+      tags:
+        - Bulk Import
+      operationId: deleteBulkImportUsers
+      description: |
+        Delete bulk import users by id. Multiple ids can be passed in the request body.
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  description: List of bulk import user ids to be deleted
+                  items:
+                    $ref: '#/components/schemas/bulkImportUserId'
+              required:
+                - ids
+      responses:
+        '200':
+          description: Bulk Import Users deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deletedIds:
+                    type: array
+                    description: List of ids that were successfully deleted
+                    items:
+                      $ref: '#/components/schemas/bulkImportUserId'
+                  invalidIds:
+                    type: array
+                    description: List of ids that were invalid
+                    items:
+                      $ref: '#/components/schemas/bulkImportUserId'
+                    example: []
+
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
 
 components:
   parameters:
@@ -8071,7 +8234,12 @@ components:
       schema:
         type: string
         example: val1,val2,val3..
-
+     
+    bulkImportUserStatus:
+      name: status
+      in: query
+      schema:
+        $ref: '#/components/schemas/bulkImportUserStatus'
 
   responses:
     500:
@@ -8753,6 +8921,196 @@ components:
         coreConfig:
           type: object
 
+    passwordHash:
+        type: string
+        example: "$argon2d$v=19$m=12,t=3,p=1$aGI4enNvMmd0Zm0wMDAwMA$r6p7qbr6HD+8CD7sBi4HVw"
+    hashingAlgorithm:
+        type: string
+        enum: ["argon2", "bcrypt", "firebase_scrypt"]
+
+    bulkImportUserId:
+      type: string
+      example: "fa7a0841-b533-4478-9253-0fde890c576"
+
+    bulkImportUserStatus:
+      type: string
+      enum: ["NEW", "PROCESSING", "FAILED"]
+
+    bulkImportUserRole:
+      type: object
+      properties:
+        role:
+          $ref: '#/components/schemas/role'
+        tenantIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/tenantId'
+      required:
+        - role
+        - tenantIds
+
+    bulkImportTotpDevice:
+      type: object
+      properties:
+        secretKey:
+          type: string
+          example: "2PRXZWZAYYDAWCD"
+        skew:
+          type: number
+          example: 0
+        period:
+          type: number
+          example: 30
+        deviceName:
+          type: string
+          example: "My Authy App"
+      required:
+        - secretKey
+
+    bulkImportUserLoginMethodFields:
+      type: object
+      properties:
+        tenantIds:
+          type: array
+          description: List of tenant IDs this login method is associated with
+          items:
+            $ref: '#/components/schemas/tenantId'
+        isVerified:
+          type: boolean
+          description: Indicates whether the email is verified
+        isPrimary:
+          type: boolean
+          description: Indicates whether the login method is the primary login method
+        timeJoinedInMSSinceEpoch:
+          type: integer
+          description: Time joined in milliseconds since the epoch
+
+    bulkImportUserEmailPasswordLoginMethod:
+      allOf:
+      - $ref: '#/components/schemas/bulkImportUserLoginMethodFields'
+      - type: object
+        properties:
+          recipeId:
+            type: string
+            example: "emailpassword"
+          email:
+            $ref: '#/components/schemas/email'
+          passwordHash:
+            $ref: '#/components/schemas/passwordHash'
+          plainTextPassword:
+            type: string
+            example: passwordExample
+          hashingAlgorithm:
+            $ref: '#/components/schemas/hashingAlgorithm'
+        required:
+          - email
+          - passwordHash
+          - hashingAlgorithm
+
+    addBulkImportUserLoginMethodResponse:
+        type: object
+        properties:
+          recipeId:
+            type: string
+            example: "emailpassword"
+          userId:
+            $ref: '#/components/schemas/userId'
+          tenants:
+              type: array
+              items:
+                  $ref: '#/components/schemas/tenantId'
+          email:
+            $ref: '#/components/schemas/email'
+          thirdpartyId:
+            $ref: '#/components/schemas/thirdPartyId'
+          thirdpartyUserId:
+            $ref: '#/components/schemas/thirdPartyUserId'
+          phoneNumber:
+            $ref: '#/components/schemas/phoneNumber'
+        required:
+          - recipeId
+          - userId
+          - tenants
+          - email
+
+
+    bulkImportUserThirdPartyLoginMethod:
+      allOf:
+      - $ref: '#/components/schemas/bulkImportUserLoginMethodFields'
+      - type: object
+        properties:
+          recipeId:
+            type: string
+            example: "thirdparty"
+          thirdPartyId:
+            $ref: '#/components/schemas/thirdPartyId'
+          thirdPartyUserId:
+            $ref: '#/components/schemas/thirdPartyUserId'
+        required:
+          - thirdPartyId
+          - thirdPartyUserId
+
+    bulkImportUserPasswordlessLoginMethod:
+      allOf:
+      - $ref: '#/components/schemas/bulkImportUserLoginMethodFields'
+      - type: object
+        properties:
+          recipeId:
+            type: string
+            example: "passwordless"
+      oneOf:
+        - $ref: '#/components/schemas/email'
+        - $ref: '#/components/schemas/phoneNumber'
+
+    bulkImportUser:
+      type: object
+      properties:
+        externalUserId:
+          $ref: '#/components/schemas/userId'
+        userMetadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/userMetadata'
+        userRoles:
+          type: array
+          items:
+            $ref: '#/components/schemas/bulkImportUserRole'
+        totpDevices:
+          type: array
+          items:
+            $ref: '#/components/schemas/bulkImportTotpDevice'
+        loginMethods:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/bulkImportUserEmailPasswordLoginMethod'
+              - $ref: '#/components/schemas/bulkImportUserThirdPartyLoginMethod'
+              - $ref: '#/components/schemas/bulkImportUserPasswordlessLoginMethod'
+
+    addBulkImportUserResponse:
+      type: object
+      properties:
+        userId:
+          $ref: '#/components/schemas/userId'
+        loginMethods:
+          type: array
+          items:
+            $ref: '#/components/schemas/addBulkImportUserLoginMethodResponse'
+
+    bulkImportUserResponse:
+      properties:
+        id:
+          $ref: '#/components/schemas/bulkImportUserId'
+        status:
+          $ref: '#/components/schemas/bulkImportUserStatus'
+        createdAt:
+          $ref: '#/components/schemas/timeJoined'
+        updatedAt:
+          $ref: '#/components/schemas/timeJoined'
+      allOf:
+      - $ref: '#/components/schemas/bulkImportUser'
+      - type: object
+  
     tenantConfigV2:
       type: object
       required:
@@ -8793,3 +9151,4 @@ components:
           type: string
         statusCode:
           type: integer
+
