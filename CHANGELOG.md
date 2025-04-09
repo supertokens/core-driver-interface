@@ -17,6 +17,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - POST `/bulk-import/users/remove`
   - POST `/bulk-import/users/import`
 
+## [5.2.0]
+
+- Adds APIs related to OAuth2 Provider
+
+## [5.1.1]
+
+- Fixes response schema of thirdparty signInUp POST
+
+## [5.1.0]
+
+- Adds `/appid-<appid>/<tenantid>/recipe/dashboard/tenant/core-config` GET API.
+- Adds optional `websiteDomain` and `apiDomain` query param to GET `/appid-<appId>/apiversion` API.
+- Deprecates the recipe enabled booleans for ConnectionURIDomains, Apps and Tenants and now the `firstFactors` and `requiredSecondaryFactors` are used to control the login methods.
+  - Deprecated APIs:
+    - PUT `/recipe/multitenancy/connectionuridomain`
+    - GET `/recipe/multitenancy/connectionuridomain/list`
+    - PUT `/recipe/multitenancy/app`
+    - GET `/recipe/multitenancy/app/list`
+    - PUT `/appid-<appid>/recipe/multitenancy/tenant`
+    - GET `/appid-<appid>/<tenantid>/recipe/multitenancy/tenant`
+    - GET `/appid-<appid>/<tenantid>/recipe/multitenancy/tenant/list`
+  - New v2 APIs replacing the deprecated APIs:
+    - PUT `/recipe/multitenancy/connectionuridomain/v2`
+    - GET `/recipe/multitenancy/connectionuridomain/list/v2`
+    - PUT `/recipe/multitenancy/app/v2`
+    - GET `/recipe/multitenancy/app/list/v2`
+    - PUT `/appid-<appid>/recipe/multitenancy/tenant/v2`
+    - GET `/appid-<appid>/<tenantid>/recipe/multitenancy/tenant/v2`
+    - GET `/appid-<appid>/<tenantid>/recipe/multitenancy/tenant/list/v2`
+
+
 ## [5.0.0] - 2024-03-19
 
 - `TOTP_NOT_ENABLED_ERROR` status is removed from the totp related APIs.
