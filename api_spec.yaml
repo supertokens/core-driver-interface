@@ -7,7 +7,7 @@ info:
 
     Those that do not have `<tenantId>` in the path will enforce that the API is called from `public` tenant only.
 
-  version: 5.1.1
+  version: 5.2.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -4064,7 +4064,6 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-
   /appid-<appId>/recipe/dashboard/users:
     get:
       tags:
@@ -4769,7 +4768,6 @@ paths:
 
         '500':
           $ref: '#/components/responses/500'
-
 
   /appid-<appId>/ee/featureflag:
     get:
@@ -6610,6 +6608,1270 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
+  /appid-<appId>/recipe/oauth/clients:
+    get:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Get OAuth2 Client
+      operationId: getOAuth2Client
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - name: clientId
+          in: query
+          required: true
+          schema:
+            type: string
+          example: abcd
+      responses:
+        '200':
+          description: OAuth2 Client Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - allOf:
+                      - type: object
+                        properties:
+                          status:
+                            $ref: '#/components/schemas/statusOK'
+                      - $ref: '#/components/schemas/oauthClient'
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Create OAuth2 Client
+      operationId: createOAuth2Client
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/oauthClient'
+      responses:
+        '200':
+          description: OAuth2 Client Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - allOf:
+                      - type: object
+                        properties:
+                          status:
+                            $ref: '#/components/schemas/statusOK'
+                      - $ref: '#/components/schemas/oauthClient'
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Update OAuth2 Client
+      operationId: updateOAuth2Client
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/oauthClient'
+      responses:
+        '200':
+          description: OAuth2 Client Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - allOf:
+                      - type: object
+                        properties:
+                          status:
+                            $ref: '#/components/schemas/statusOK'
+                      - $ref: '#/components/schemas/oauthClient'
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/oauth/clients/list:
+    get:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        List OAuth2 Clients
+      operationId: listOAuth2Clients
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: integer
+            example: 250
+        - name: pageToken
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "1234567890"
+        - name: clientName
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "My App"
+      responses:
+        '200':
+          description: OAuth2 Client Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      clients:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/oauthClient'
+                      nextPaginationToken:
+                        type: string
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/oauth/clients/remove:
+    post:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Remove OAuth2 Client
+      operationId: removeOAuth2Client
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                clientId:
+                  type: string
+                  example: "stcl_c6dd9189-33b8-4ec0-8aea-a0ffdaf75fcb"
+      responses:
+        '200':
+          description: OAuth2 Client Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      didExist:
+                        type: boolean
+                        example: true
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/oauth/auth/requests/consent:
+    get:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Get OAuth2 Consent Request
+      operationId: getOAuth2ConsentRequest
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - name: consentChallenge
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "1234567890"
+      responses:
+        '200':
+          description: OAuth2 Consent Request Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      client:
+                        $ref: '#/components/schemas/oauthClient'
+                      requestedScope:
+                        type: array
+                        items:
+                          type: string
+                      requestedAudience:
+                        type: array
+                        items:
+                          type: string
+                      requestedClaims:
+                        type: object
+                        properties:
+                          idToken:
+                            type: object
+                            properties:
+                              property1:
+                                type: string
+                              property2:
+                                type: string
+                      loginHint:
+                        type: string
+                      uiLocales:
+                        type: array
+                        items:
+                          type: string
+                      acrValues:
+                        type: array
+                        items:
+                          type: string
+                      subject:
+                        type: string
+                      requestUrl:
+                        type: string
+                      skip:
+                        type: boolean
+                      clientId:
+                        type: string
+                      redirectUri:
+                        type: string
+                      forceSubjectIdentifier:
+                        type: string
+                      requestedAccessTokenAudience:
+                        type: array
+                        items:
+                          type: string
+                      context:
+                        type: object
+                      sessionId:
+                        type: string
+                      loginSessionId:
+                        type: string
+                      loginChallenge:
+                        type: string
+                      loginRequestedAt:
+                        type: string
+                      consentRequestedAt:
+                        type: string
+                      consentChallenge:
+                        type: string
+                      consentSkip:
+                        type: boolean
+                      consentRemember:
+                        type: boolean
+                      consentRememberFor:
+                        type: integer
+                      consentError:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          description:
+                            type: string
+                      consentErrorDebug:
+                        type: string
+                      consentErrorDescription:
+                        type: string
+                      consentErrorHint:
+                        type: string
+                      consentErrorCode:
+                        type: string
+                      consentStatusCode:
+                        type: integer
+                      sessionIdToken:
+                        type: object
+                        properties:
+                          property1:
+                            type: string
+                          property2:
+                            type: string
+                      sessionAccessToken:
+                        type: object
+                        properties:
+                          property1:
+                            type: string
+                          property2:
+                            type: string
+                      sessionToken:
+                        type: object
+                        properties:
+                          property1:
+                            type: string
+                          property2:
+                            type: string
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/oauth/auth/requests/consent/accept:
+    put:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Accept OAuth2 Consent Request
+      operationId: acceptOAuth2ConsentRequest
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - name: consentChallenge
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "1234567890"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                context:
+                  type: object
+                grantAccessTokenAudience:
+                  type: array
+                  items:
+                    type: string
+                grantScope:
+                  type: array
+                  items:
+                    type: string
+                handledAt:
+                  type: string
+                  format: date-time
+                  example: "2019-08-24T14:15:22Z"
+                remember:
+                  type: boolean
+                rememberFor:
+                  type: integer
+                session:
+                  type: object
+                  properties:
+                    accessToken:
+                      type: object
+                      additionalProperties: true
+                    idToken:
+                      type: object
+                      additionalProperties: true
+      responses:
+        '200':
+          description: OAuth2 Consent Request Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      redirectTo:
+                        type: string
+                        example: "{apiDomain}/oauth/consent?..."
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/oauth/auth/requests/consent/reject:
+    put:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Reject OAuth2 Consent Request
+      operationId: rejectOAuth2ConsentRequest
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - name: consentChallenge
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "1234567890"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+                errorDebug:
+                  type: string
+                errorDescription:
+                  type: string
+                errorHint:
+                  type: string
+                statusCode:
+                  type: integer
+                  example: 400
+
+      responses:
+        '200':
+          description: OAuth2 Consent Request Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      redirectTo:
+                        type: string
+                        example: "{apiDomain}/oauth/consent?..."
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/oauth/auth/requests/login:
+    get:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Get OAuth2 Login Request
+      operationId: getOAuth2LoginRequest
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - name: loginChallenge
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "1234567890"
+      responses:
+        '200':
+          description: OAuth2 Login Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      challenge:
+                        type: string
+                      client:
+                        $ref: '#/components/schemas/oauthClient'
+                      oidcContext:
+                        type: object
+                        properties:
+                          acrValues:
+                            type: array
+                            items:
+                              type: string
+                          display:
+                            type: string
+                          idTokenHintClaims:
+                            type: object
+                          loginHint:
+                            type: string
+                          uiLocales:
+                            type: array
+                            items:
+                              type: string
+                          requestUrl:
+                            type: string
+                          requestedAccessTokenAudience:
+                            type: array
+                            items:
+                              type: string
+                          requestedScope:
+                            type: array
+                            items:
+                              type: string
+                          sessionId:
+                            type: string
+                          skip:
+                            type: boolean
+                          subject:
+                            type: string
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/oauth/auth/requests/login/accept:
+    put:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Accept OAuth2 Login Request
+      operationId: acceptOAuth2LoginRequest
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - name: loginChallenge
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "1234567890"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - subject
+              properties:
+                acr:
+                  type: string
+                amr:
+                  type: array
+                  items:
+                    type: string
+                context:
+                  type: string
+                  nullable: true
+                extendSessionLifespan:
+                  type: boolean
+                  example: true
+                forceSubjectIdentifier:
+                  type: string
+                identityProviderSessionId:
+                  type: string
+                remember:
+                  type: boolean
+                  example: true
+                rememberFor:
+                  type: integer
+                  example: 0
+                subject:
+                  type: string
+
+      responses:
+        '200':
+          description: OAuth2 Login Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      redirectTo:
+                        type: string
+                        example: "{apiDomain}/oauth/login?..."
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/oauth/auth/requests/login/reject:
+    put:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Reject OAuth2 Login Request
+      operationId: rejectOAuth2LoginRequest
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - name: loginChallenge
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "1234567890"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+                errorDebug:
+                  type: string
+                errorDescription:
+                  type: string
+                errorHint:
+                  type: string
+                statusCode:
+                  type: integer
+                  example: 0
+      responses:
+        '200':
+          description: OAuth2 Login Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      redirectTo:
+                        type: string
+                        example: "{apiDomain}/oauth/login?..."
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/oauth/auth/requests/logout/accept:
+    put:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Accept OAuth2 Logout Request
+      operationId: acceptOAuth2LogoutRequest
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                challenge:
+                  type: string
+      responses:
+        '200':
+          description: OAuth2 Logout Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      redirectTo:
+                        type: string
+                        example: "{apiDomain}/oauth/logout?..."
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/oauth/auth/requests/logout/reject:
+    put:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Reject OAuth2 Logout Request
+      operationId: rejectOAuth2LogoutRequest
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                challenge:
+                  type: string
+      responses:
+        '200':
+          description: OAuth2 Logout Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/oauth/session/revoke:
+    post:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Revoke OAuth2 Session
+      operationId: revokeOAuth2Session
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sessionHandle:
+                  type: string
+      responses:
+        '200':
+          description: OAuth2 Session Revocation Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      didExist:
+                        type: boolean
+                        example: true
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/oauth/token/revoke:
+    post:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Revoke OAuth2 Token
+      operationId: revokeOAuth2Token
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+      responses:
+        '200':
+          description: OAuth2 Token Revocation Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      didExist:
+                        type: boolean
+                        example: true
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/oauth/tokens/revoke:
+    post:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Revoke OAuth2 Token
+      operationId: revokeOAuth2Tokens
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                client_id:
+                  type: string
+                  example: "stcl_fed7cff0-cc6e-406e-b7a6-766148675a4a"
+      responses:
+        '200':
+          description: OAuth2 Token Revocation Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      didExist:
+                        type: boolean
+                        example: true
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/oauth/auth:
+    get:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Get OAuth2 Auth
+      operationId: getOAuth2Auth
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        '200':
+          description: OAuth2 Auth Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - allOf:
+                      - type: object
+                        properties:
+                          status:
+                            $ref: '#/components/schemas/statusOK'
+                      - $ref: '#/components/schemas/oauthClient'
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/oauth/token:
+    post:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Get OAuth2 Token
+      operationId: getOAuth2Token
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                iss:
+                  type: string
+                  example: "https://api.auth.com"
+                inputBody:
+                  type: object
+                  example: {}
+                useStaticSigningKey:
+                  type: boolean
+                  example: false
+                authorizationHeader:
+                  type: string
+                  example: "Bearer 1234567890"
+      responses:
+        '200':
+          description: OAuth2 Token Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    required:
+                      - status
+                      - access_token
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      access_token:
+                        type: string
+                        example: "eyJraWQiOiJzLTBjZmVmMDdkLWQ2NDktNGIwOC04MTVjLWJkYjZlYTczNWQyZCIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2In0.eyJpYXQiOjE3NDAzODU5MzcsImV4cCI6MTc0MDM4OTUzOCwiY2xpZW50X2lkIjoic3RjbF82NWUwODc1Mi0yYzU5LTQ5NjQtOTM0Yy02OTIwZDJmMDZlNjIiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDEvYXV0aCIsImp0aSI6Ijc1NTc2MmFmLTUwYTUtNDc1ZS04YWRkLTg3MDA1ZmU3YWJlNiIsIm5iZiI6MTc0MDM4NTkzNywic2NwIjpbIm9wZW5pZCIsIm9mZmxpbmVfYWNjZXNzIl0sInN1YiI6InNvbWV1c2VyaWQiLCJzdHQiOjEsImdpZCI6ImRjOGQ0OGUzLTcwOTgtNDhhNi1hYjU0LTgxMWMyODQ4N2I4MiIsInRJZCI6InB1YmxpYyIsInJzdWIiOiJzb21ldXNlcmlkIiwic2Vzc2lvbkhhbmRsZSI6InNlc3Npb24taGFuZGxlIn0.DgVgtD2gXgzHrDsC2lIUBa-wsYm8KO4Pg8L1Ov3aSBVgjwtjiCO40ldjBZ9qKdQBq5Qqk0ElAZNj6Bzc40ESfQumLH3_N2XtOj568s71JPuEOIg5hs9XAdK4vYfXMhVQRWn9iPUKHKrpRVf73IIH0mpkN8i6_MhcDoMMOuG5XPlXajG9VOyoY_5saHA61-uTafZLdAgKqnmYGvS8KmNEcEbBWLGwFB4QQKiDAUvatIi5n3juFBUxyt9t6DrqT1D04shesRppa0XhCZbCFBv1dixSrprdtqKhlPOrMgvOGNZ3cBLbYBOG9zoJRD5YlVMGw-j_pE7IbvpDWKL7tTJS1Q"
+                      expires_in:
+                        type: integer
+                        example: 3599
+                      id_token:
+                        type: string
+                        example: "eyJraWQiOiJzLTBjZmVmMDdkLWQ2NDktNGIwOC04MTVjLWJkYjZlYTczNWQyZCIsInR5cCI6IkpXVCIsImFsZyI6IlJTMjU2In0.eyJpYXQiOjE3NDAzODU5MzgsImV4cCI6MTc0MDM4OTUzOCwiYXRfaGFzaCI6IkNxOGNCSk01Nm5FcG9aaWREcnZvLVEiLCJhdWQiOiJzdGNsXzY1ZTA4NzUyLTJjNTktNDk2NC05MzRjLTY5MjBkMmYwNmU2MiIsImF1dGhfdGltZSI6MTc0MDM4NTkzNywiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDozMDAxL2F1dGgiLCJqdGkiOiIxZDA5OGUxZi04ZGIxLTQyNzUtYmMzYS0zYTA4NjdjOWE2NTAiLCJyYXQiOjE3NDAzODU3MzEsInNpZCI6InNlc3Npb24taGFuZGxlIiwic3ViIjoic29tZXVzZXJpZCIsInN0dCI6MiwiZ2lkIjoiYzk1OTVjYjItMWFjOS00MDI0LWFjNjMtNDJlZDEyODliY2RmIn0.PGsemf1qpLF-cE_616NHvKsRmanFiyba0yqF2j5fy87AWD5McI405A4eqi-wAlKsDxC-MPpuW8bx-08YUhs3x6ku4aFaDyA-M-Xhc65fJJ4SCPVaUL7qlUwl7wJwNs2rMRW3Ayyj4MDSlW5uqm39_K_bBqod2Qj1yqck-N0g78qh86uEcyX6Al3d5KSln1B21nwDsEgegk3xzE8lFMCQUTpZEYb5-1v2D0Bu_PblBfOCjA6mBtT1IIQkmSE27FvkTUS1H50EUyhFP4JH30kP3bUnQ9pOqGMTe405N2ruKtPyWsXHLPlQ4hcJCLO5GT5ZgtUjfz6Y3mCM9l69uDYDHg"
+                      refresh_token:
+                        type: string
+                        example: "st_rt_d7LI9mGYHF2TAaVEFJi7fqOWo8ZQ8zEGpuxhHQs0R18.UZ0nbTuuYuDD8G54PCD8AKHdsh9cezu8BTxVlTy7pYw"
+                      scope:
+                        type: string
+                        example: "openid offline_access"
+                      token_type:
+                        type: string
+                        example: "bearer"
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+          
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/oauth/sessions/logout:
+    get:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Get OAuth2 Sessions Logout
+      operationId: getOAuth2SessionsLogout
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - name: clientId
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "stcl_fed7cff0-cc6e-406e-b7a6-766148675a4a"
+        - name: idTokenHint
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: postLogoutRedirectUri
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OAuth2 Sessions Logout Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      redirectTo:
+                        type: string
+                        example: "{apiDomain}/oauth/logout?..."
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'      
+  /appid-<appId>/recipe/oauth/introspect:
+    post:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Introspect OAuth2 Token
+      operationId: introspectOAuth2Token
+      parameters:
+        - $ref: '#/components/parameters/oauthRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+              properties:
+                token:
+                  type: string
+      responses:
+        '200':
+          description: OAuth2 Token Introspection Result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      active:
+                        type: boolean
+                      iat:
+                        type: integer
+                        example: 1740992368
+                      exp:
+                        type: integer
+                        example: 1740995969
+                      client_id:
+                        type: string
+                        example: "stcl_fed7cff0-cc6e-406e-b7a6-766148675a4a"
+                      iss:
+                        type: string
+                        example: "http://localhost:3001/auth"
+                      jti:
+                        type: string
+                        example: "1c229efe-c55b-44c1-98cf-9fa3a366502e"
+                      nbf:
+                        type: integer
+                        example: 1740992368
+                      scp:
+                        type: array
+                        items:
+                          type: string
+                        example: ["openid", "offline_access"]
+                      sub:
+                        type: string
+                        example: "137d053d-0d69-4dea-8a19-06ddbdfa4f96"
+                      stt:
+                        type: integer
+                        example: 1
+                      sessionHandle:
+                        type: string
+                        example: "87bcc2d8-f159-4e10-a097-0898179a2d7d"
+                      rsub:
+                        type: string
+                        example: "137d053d-0d69-4dea-8a19-06ddbdfa4f96"
+                      tId:
+                        type: string
+                        example: "public"
+                      gid:
+                        type: string
+                        example: "575b7130-d982-4945-be49-3ecde2a49eaa"
+                      token_type:
+                        type: string
+                        example: "Bearer"
+                      token_use:
+                        type: string
+                        example: "access_token"
+                  - $ref: '#/components/schemas/oauthError'
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+          
+        '402':
+          $ref: '#/components/responses/402'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
 
 components:
   parameters:
@@ -6659,7 +7921,13 @@ components:
       required: false
       schema:
         type: string
-
+    oauthRid:
+      name: rid
+      in: header
+      example: oauth
+      required: false
+      schema:
+        type: string
     userMetadataRid:
       name: rid
       in: header
@@ -6728,7 +7996,7 @@ components:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version.
-      example: '5.1'
+      example: '5.2'
       schema:
         type: string
 
@@ -7017,6 +8285,118 @@ components:
       type: string
       enum:
         - OK
+
+    oauthClient:
+      type: object
+      properties:
+        clientId:
+          type: string
+          example: "stcl_c6dd9189-33b8-4ec0-8aea-a0ffdaf75fcb"
+        clientName:
+          type: string
+          example: "Hello"
+        clientSecret:
+          type: string
+          example: "T98n1YIMWqr4wOM.~bV4HOPFmO"
+        redirectUris:
+          type: array
+          items:
+            type: string
+          example: ["http://localhost:3000/auth/callback/ory"]
+        grantTypes:
+          type: array
+          items:
+            type: string
+          example: ["authorization_code", "refresh_token"]
+        responseTypes:
+          type: array
+          items:
+            type: string
+          example: ["code", "id_token"]
+        scope:
+          type: string
+          example: "offline_access openid email"
+        audience:
+          type: array
+          items:
+            type: string
+          example: []
+        policyUri:
+          type: string
+          example: ""
+        allowedCorsOrigins:
+          type: array
+          items:
+            type: string
+          example: []
+        tosUri:
+          type: string
+          example: ""
+        clientUri:
+          type: string
+          example: ""
+        logoUri:
+          type: string
+          example: ""
+        tokenEndpointAuthMethod:
+          type: string
+          example: "client_secret_post"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-02-24T08:14:40Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2025-02-24T08:14:40.362463Z"
+        postLogoutRedirectUris:
+          type: array
+          items:
+            type: string
+          example: ["http://localhost:3000"]
+        metadata:
+          type: object
+          additionalProperties: true
+          example: {}
+        authorizationCodeGrantAccessTokenLifespan:
+          type: string
+          nullable: true
+          example: 1h0m0s
+        authorizationCodeGrantIdTokenLifespan:
+          type: string
+          nullable: true
+          example: 1h0m0s
+        authorizationCodeGrantRefreshTokenLifespan:
+          type: string
+          nullable: true
+          example: 1h0m0s
+        clientCredentialsGrantAccessTokenLifespan:
+          type: string
+          nullable: true
+          example: 1h0m0s
+        implicitGrantAccessTokenLifespan:
+          type: string
+          nullable: true
+          example: 1h0m0s
+        implicitGrantIdTokenLifespan:
+          type: string
+          nullable: true
+          example: 1h0m0s
+        refreshTokenGrantIdTokenLifespan:
+          type: string
+          nullable: true
+          example: 1h0m0s
+        refreshTokenGrantAccessTokenLifespan:
+          type: string
+          nullable: true
+          example: 1h0m0s
+        refreshTokenGrantRefreshTokenLifespan:
+          type: string
+          nullable: true
+          example: 1h0m0s
+        enableRefreshTokenRotation:
+          type: boolean
+          example: false
 
     userMetadata:
       type: object
@@ -7395,3 +8775,21 @@ components:
           $ref: '#/components/schemas/requiredSecondaryFactors'
         coreConfig:
           type: object
+
+    oauthError:
+      type: object
+      required:
+        - status
+        - error
+        - errorDescription
+        - statusCode
+      properties:
+        status:
+          type: string
+          enum: [OAUTH_ERROR]
+        error:
+          type: string
+        errorDescription:
+          type: string
+        statusCode:
+          type: integer
