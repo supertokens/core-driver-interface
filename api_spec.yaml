@@ -7182,11 +7182,6 @@ paths:
                             type: string
                           idTokenHintClaims:
                             type: object
-                            properties:
-                              property1:
-                                type: null
-                              property2:
-                                type: null
                           loginHint:
                             type: string
                           uiLocales:
