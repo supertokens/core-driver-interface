@@ -8038,6 +8038,107 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
+  /appid-<appId>/bulk-import/users/count:
+    get:
+      tags:
+        - Bulk Import
+      operationId: countBulkImportUsers
+      description: |
+        Count users in the bulk import processing queue, by status or all of them (by passing `null` status).
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/bulkImportUserStatus'
+      responses:
+
+        '200':
+          description: The number of users in the bulk import processing queue by status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  count:
+                    type: number
+                    description: The number of users in the bulk import processing queue by status
+                    example: 10
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/bulk-import/import:
+    post:
+      tags:
+        - Bulk Import
+      operationId: importOneUserWithBulkImport
+      description: |
+        Import one user immediately with the Bulk Import functionality.
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/bulkImportUser'
+      responses:
+        '200':
+          description: User added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  user:
+                    $ref: '#/components/schemas/authRecipeUser'
+        '400':
+          description: User has invalid schema
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Data has missing or invalid fields. Please check the users field for more details."
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: number
+                          example: 0
+                          description: "Index of the user in the users array that has invalid schema"
+                        errors:
+                          type: array
+                          items:
+                            type: string
+                            description: "List of errors for the user"
+                            example: "Invalid recipeId for loginMethod. Pass one of emailpassword, thirdparty or, passwordless!"
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
   /appid-<appId>/<tenantId>/recipe/webauthn/user/credential:
     get:
       tags:
@@ -9101,7 +9202,7 @@ components:
       required: false
       schema:
         type: string
-        
+
     webauthnRid:
       name: rid
       in: header
@@ -9138,7 +9239,7 @@ components:
       in: query
       schema:
         type: string
-        enum: ["ASC", "DESC"]
+        enum: [ "ASC", "DESC" ]
 
 
     email:
@@ -9146,32 +9247,32 @@ components:
       in: query
       required: false
       schema:
-         type: string
-         example: johndoe@gmail.com
+        type: string
+        example: johndoe@gmail.com
 
     userId:
       name: userId
       in: query
       required: false
       schema:
-         type: string
-         example: fa7a0841-b533-4478-9253-0fde890c576
+        type: string
+        example: fa7a0841-b533-4478-9253-0fde890c576
 
     userIdRequired:
       name: userId
       in: query
       required: true
       schema:
-         type: string
-         example: fa7a0841-b533-4478-9253-0fde890c576
+        type: string
+        example: fa7a0841-b533-4478-9253-0fde890c576
 
     roleRequired:
       name: role
       in: query
       required: true
       schema:
-         type: string
-         example: admin
+        type: string
+        example: admin
 
     permissionRequired:
       name: permission
@@ -9189,7 +9290,7 @@ components:
       schema:
         type: string
         example: val1,val2,val3..
-     
+
     bulkImportUserStatus:
       name: status
       in: query
@@ -9360,8 +9461,8 @@ components:
           $ref: '#/components/schemas/isVerified'
 
     isVerified:
-          type: boolean
-          example: true
+      type: boolean
+      example: true
 
     email:
       type: string
@@ -9442,17 +9543,17 @@ components:
           type: array
           items:
             type: string
-          example: ["http://localhost:3000/auth/callback/ory"]
+          example: [ "http://localhost:3000/auth/callback/ory" ]
         grantTypes:
           type: array
           items:
             type: string
-          example: ["authorization_code", "refresh_token"]
+          example: [ "authorization_code", "refresh_token" ]
         responseTypes:
           type: array
           items:
             type: string
-          example: ["code", "id_token"]
+          example: [ "code", "id_token" ]
         scope:
           type: string
           example: "offline_access openid email"
@@ -9460,7 +9561,7 @@ components:
           type: array
           items:
             type: string
-          example: []
+          example: [ ]
         policyUri:
           type: string
           example: ""
@@ -9468,7 +9569,7 @@ components:
           type: array
           items:
             type: string
-          example: []
+          example: [ ]
         tosUri:
           type: string
           example: ""
@@ -9493,11 +9594,11 @@ components:
           type: array
           items:
             type: string
-          example: ["http://localhost:3000"]
+          example: [ "http://localhost:3000" ]
         metadata:
           type: object
           additionalProperties: true
-          example: {}
+          example: { }
         authorizationCodeGrantAccessTokenLifespan:
           type: string
           nullable: true
@@ -9545,7 +9646,7 @@ components:
         {
           'preferences': { 'theme': 'dark' },
           'notifications': { 'email': true },
-          'todos': ['example'],
+          'todos': [ 'example' ],
         }
 
     userMetadataUpdate:
@@ -9616,12 +9717,12 @@ components:
     createJWTPayload:
       type: object
       description: The payload of the JWT, should be a JSON object.
-      example: {"custom-claim": ""}
+      example: { "custom-claim": "" }
 
     createJWTAlgorithm:
       type: string
       description: The algorithm to use when creating the JWT.
-      enum: ["RS256"]
+      enum: [ "RS256" ]
 
     jwksDomain:
       type: string
@@ -9662,7 +9763,7 @@ components:
 
     helloResponse:
       type: string
-      enum: ['Hello']
+      enum: [ 'Hello' ]
 
 
     statusOKResponse:
@@ -9670,7 +9771,7 @@ components:
       properties:
         status:
           type: string
-          enum: ['OK']
+          enum: [ 'OK' ]
 
 
     wrongCredentialsResponse:
@@ -9678,35 +9779,35 @@ components:
       properties:
         status:
           type: string
-          enum: ['WRONG_CREDENTIALS_ERROR']
+          enum: [ 'WRONG_CREDENTIALS_ERROR' ]
 
     unknownUserIdResponse:
       type: object
       properties:
         status:
           type: string
-          enum: ['UNKNOWN_USER_ID_ERROR']
+          enum: [ 'UNKNOWN_USER_ID_ERROR' ]
 
     unknownRoleResponse:
       type: object
       properties:
         status:
           type: string
-          enum: ['UNKNOWN_ROLE_ERROR']
+          enum: [ 'UNKNOWN_ROLE_ERROR' ]
 
 
 
     tokenTheftResponse:
-        type: string
-        enum: ['TOKEN_THEFT_DETECTED']
+      type: string
+      enum: [ 'TOKEN_THEFT_DETECTED' ]
 
     unauthorisedResponse:
-        type: string
-        enum: ['UNAUTHORISED']
+      type: string
+      enum: [ 'UNAUTHORISED' ]
 
     tryRefreshTokenResponse:
-        type: string
-        enum: ['TRY_REFRESH_TOKEN']
+      type: string
+      enum: [ 'TRY_REFRESH_TOKEN' ]
 
 
 
@@ -9894,11 +9995,11 @@ components:
           type: object
 
     passwordHash:
-        type: string
-        example: "$argon2d$v=19$m=12,t=3,p=1$aGI4enNvMmd0Zm0wMDAwMA$r6p7qbr6HD+8CD7sBi4HVw"
+      type: string
+      example: "$argon2d$v=19$m=12,t=3,p=1$aGI4enNvMmd0Zm0wMDAwMA$r6p7qbr6HD+8CD7sBi4HVw"
     hashingAlgorithm:
-        type: string
-        enum: ["argon2", "bcrypt", "firebase_scrypt"]
+      type: string
+      enum: [ "argon2", "bcrypt", "firebase_scrypt" ]
 
     bulkImportUserId:
       type: string
@@ -9906,7 +10007,7 @@ components:
 
     bulkImportUserStatus:
       type: string
-      enum: ["NEW", "PROCESSING", "FAILED"]
+      enum: [ "NEW", "PROCESSING", "FAILED" ]
 
     bulkImportUserRole:
       type: object
@@ -9959,80 +10060,81 @@ components:
 
     bulkImportUserEmailPasswordLoginMethod:
       allOf:
-      - $ref: '#/components/schemas/bulkImportUserLoginMethodFields'
-      - type: object
-        properties:
-          recipeId:
-            type: string
-            example: "emailpassword"
-          email:
-            $ref: '#/components/schemas/email'
-          passwordHash:
-            $ref: '#/components/schemas/passwordHash'
-          plainTextPassword:
-            type: string
-            example: passwordExample
-          hashingAlgorithm:
-            $ref: '#/components/schemas/hashingAlgorithm'
-        required:
-          - email
-          - passwordHash
-          - hashingAlgorithm
+        - $ref: '#/components/schemas/bulkImportUserLoginMethodFields'
+        - type: object
+          properties:
+            recipeId:
+              type: string
+              example: "emailpassword"
+            email:
+              $ref: '#/components/schemas/email'
+            passwordHash:
+              $ref: '#/components/schemas/passwordHash'
+            plainTextPassword:
+              type: string
+              example: passwordExample
+            hashingAlgorithm:
+              $ref: '#/components/schemas/hashingAlgorithm'
+          required:
+            - email
+            - passwordHash
+            - hashingAlgorithm
 
     addBulkImportUserLoginMethodResponse:
-        type: object
-        properties:
-          recipeId:
-            type: string
-            example: "emailpassword"
-          userId:
-            $ref: '#/components/schemas/userId'
-          tenants:
-              type: array
-              items:
-                  $ref: '#/components/schemas/tenantId'
-          email:
-            $ref: '#/components/schemas/email'
-          thirdpartyId:
-            $ref: '#/components/schemas/thirdPartyId'
-          thirdpartyUserId:
-            $ref: '#/components/schemas/thirdPartyUserId'
-          phoneNumber:
-            $ref: '#/components/schemas/phoneNumber'
-        required:
-          - recipeId
-          - userId
-          - tenants
-          - email
+      type: object
+      properties:
+        recipeId:
+          type: string
+          example: "emailpassword"
+        userId:
+          $ref: '#/components/schemas/userId'
+        tenants:
+          type: array
+          items:
+            $ref: '#/components/schemas/tenantId'
+        email:
+          $ref: '#/components/schemas/email'
+        thirdpartyId:
+          $ref: '#/components/schemas/thirdPartyId'
+        thirdpartyUserId:
+          $ref: '#/components/schemas/thirdPartyUserId'
+        phoneNumber:
+          $ref: '#/components/schemas/phoneNumber'
+      required:
+        - recipeId
+        - userId
+        - tenants
+        - email
 
 
     bulkImportUserThirdPartyLoginMethod:
       allOf:
-      - $ref: '#/components/schemas/bulkImportUserLoginMethodFields'
-      - type: object
-        properties:
-          recipeId:
-            type: string
-            example: "thirdparty"
-          thirdPartyId:
-            $ref: '#/components/schemas/thirdPartyId'
-          thirdPartyUserId:
-            $ref: '#/components/schemas/thirdPartyUserId'
-        required:
-          - thirdPartyId
-          - thirdPartyUserId
+        - $ref: '#/components/schemas/bulkImportUserLoginMethodFields'
+        - type: object
+          properties:
+            recipeId:
+              type: string
+              example: "thirdparty"
+            thirdPartyId:
+              $ref: '#/components/schemas/thirdPartyId'
+            thirdPartyUserId:
+              $ref: '#/components/schemas/thirdPartyUserId'
+          required:
+            - thirdPartyId
+            - thirdPartyUserId
 
     bulkImportUserPasswordlessLoginMethod:
       allOf:
-      - $ref: '#/components/schemas/bulkImportUserLoginMethodFields'
-      - type: object
-        properties:
-          recipeId:
-            type: string
-            example: "passwordless"
-      oneOf:
-        - $ref: '#/components/schemas/email'
-        - $ref: '#/components/schemas/phoneNumber'
+        - $ref: '#/components/schemas/bulkImportUserLoginMethodFields'
+        - type: object
+          properties:
+            recipeId:
+              type: string
+              example: "passwordless"
+            email:
+              $ref: '#/components/schemas/email'
+            phoneNumber:
+              $ref: '#/components/schemas/phoneNumber'
 
     bulkImportUser:
       type: object
@@ -10080,9 +10182,9 @@ components:
         updatedAt:
           $ref: '#/components/schemas/timeJoined'
       allOf:
-      - $ref: '#/components/schemas/bulkImportUser'
-      - type: object
-  
+        - $ref: '#/components/schemas/bulkImportUser'
+        - type: object
+
     tenantConfigV2:
       type: object
       required:
@@ -10116,7 +10218,7 @@ components:
       properties:
         status:
           type: string
-          enum: [OAUTH_ERROR]
+          enum: [ OAUTH_ERROR ]
         error:
           type: string
         errorDescription:
