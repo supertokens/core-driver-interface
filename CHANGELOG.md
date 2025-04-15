@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - POST `/bulk-import/users`
   - GET `/bulk-import/users/count`
   - POST `/bulk-import/users/remove`
-  - POST `/bulk-import/users/import`
+  - POST `/bulk-import/import`
 
 ## [5.2.0]
 
