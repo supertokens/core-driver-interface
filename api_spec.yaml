@@ -8038,7 +8038,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/webauthn/user/credential:
+  /appid-<appId>/recipe/webauthn/user/credential:
     get:
       tags:
         - WebAuthn Recipe
@@ -8073,24 +8073,18 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      credential:
-                        type: object
-                        properties:
-                          webauthnCredentialId:
-                            type: string
-                            example: ea7a0931-b533-4478-9253-0fde890ca23
-                          recipeUserId:
-                            type: string
-                            example: fa7a0841-b533-4478-9253-0fde890c576
-                          relyingPartyId:
-                            type: string
-                            example: example.com
-                          createdAt:
-                            type: number
-                            example: 1741793746
-                          updatedAt:
-                            type: number
-                            example: 1741793746
+                      webauthnCredentialId:
+                        type: string
+                        example: ea7a0931-b533-4478-9253-0fde890ca23
+                      recipeUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      relyingPartyId:
+                        type: string
+                        example: example.com
+                      createdAt:
+                        type: number
+                        example: 1741793746
                   - type: object
                     properties:
                       status:
@@ -8108,7 +8102,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/webauthn/user/credential/list:
+  /appid-<appId>/recipe/webauthn/user/credential/list:
     get:
       tags:
         - WebAuthn Recipe
@@ -8139,6 +8133,11 @@ paths:
                       credentials:
                         type: array
                         items:
+                          required:
+                            - webauthnCredentialId
+                            - recipeUserId
+                            - relyingPartyId
+                            - createdAt
                           type: object
                           properties:
                             webauthnCredentialId:
@@ -8208,7 +8207,7 @@ paths:
                         type: string
                         example: TQvEVDV8B64w_2zIifzKaPzBPfthqpx2uJkq_2PIB0k
                       timeout:
-                        type: number
+                        type: string
                         example: 10000
                       origin:
                         type: string
@@ -8217,8 +8216,7 @@ paths:
                         type: string
                         example: email@example.com
                       userVerification:
-                        type: string
-                        example: required
+                        $ref: '#/components/schemas/userVerification'
                       userPresence:
                         type: boolean
                         example: true
@@ -8325,8 +8323,7 @@ paths:
                   type: number
                   example: 10000
                 userVerification:
-                  type: string
-                  example: preferred
+                  $ref: '#/components/schemas/userVerification'
                 userPresence:
                   type: boolean
                   example: false
@@ -8336,7 +8333,7 @@ paths:
                 residentKey:
                   type: string
                   example: required
-                supportedAlgorithmIDs:
+                supportedAlgorithmIds:
                   type: array
                   items:
                     type: number
@@ -8421,8 +8418,7 @@ paths:
                         type: object
                         properties:
                           userVerification:
-                            type: string
-                            example: preferred
+                            $ref: '#/components/schemas/userVerification'
                           requireResidentKey:
                             type: boolean
                             example: true
@@ -8462,9 +8458,6 @@ paths:
                 - relyingPartyId
                 - relyingPartyName
                 - origin
-                - timeout
-                - userVerification
-                - userPresence
               properties:
                 relyingPartyId:
                   type: string
@@ -8479,8 +8472,7 @@ paths:
                   type: number
                   example: 10000
                 userVerification:
-                  type: string
-                  example: preferred
+                  $ref: '#/components/schemas/userVerification'
                 userPresence:
                   type: boolean
                   example: false
@@ -8508,16 +8500,15 @@ paths:
                         type: number
                         example: 10000
                       userVerification:
-                        type: string
-                        example: required
+                        $ref: '#/components/schemas/userVerification'
                       userPresence:
                         type: boolean
                         example: true
                       createdAt:
-                        type: number
+                        type: string
                         example: 1741793746
                       expiresAt:
-                        type: number
+                        type: string
                         example: 1741793746
                   - type: object
                     properties:
@@ -8535,7 +8526,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/webauthn/user/credential/register:
+  /appid-<appId>/recipe/webauthn/user/credential/register:
     post:
       tags:
         - WebAuthn Recipe
@@ -8591,14 +8582,14 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: [ 'INVALID_OPTIONS_ERROR', 'INVALID_AUTHENTICATOR_ERROR', 'INVALID_CREDENTIALS_ERROR' ]
+                        enum: [ 'INVALID_AUTHENTICATOR_ERROR' ]
                       reason:
                         type: string
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: [ 'OPTIONS_NOT_FOUND_ERROR', 'CREDENTIAL_ALREADY_EXISTS_ERROR', 'UNKNOWN_USER_ID_ERROR' ]
+                        enum: [ 'OPTIONS_NOT_FOUND_ERROR', 'INVALID_CREDENTIALS_ERROR', 'INVALID_OPTIONS_ERROR', ]
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -8883,7 +8874,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: [ 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR', 'USER_WITH_EMAIL_ALREADY_EXISTS_ERROR' ]
+                        enum: [ 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR' ]
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -8893,7 +8884,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/webauthn/user/credential/remove:
+  /appid-<appId>/recipe/webauthn/user/credential/remove:
     delete:
       tags:
         - WebAuthn Recipe
@@ -9425,6 +9416,13 @@ components:
       type: string
       enum:
         - OK
+    
+    userVerification:
+      type: string
+      enum:
+        - preferred
+        - required
+        - discouraged
 
     oauthClient:
       type: object
