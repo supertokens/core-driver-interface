@@ -3735,6 +3735,8 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - keys
                 properties:
                   keys:
                     type: array
@@ -9667,6 +9669,13 @@ components:
     jwk:
       type: object
       description: A JWK that can be used to verify a JWT
+      required:
+        - alg
+        - kty
+        - use
+        - kid
+        - n
+        - e
       properties:
         alg:
           $ref: '#/components/schemas/createJWTAlgorithm'
@@ -9679,6 +9688,12 @@ components:
         kid:
           type: string
           description: Unique identifier for the JWK
+        n:
+          type: string
+          description: Modulus
+        e:
+          type: string
+          description: Exponent
         x5c:
           type: array
           description: X.509 Certificate Chain
@@ -9788,6 +9803,8 @@ components:
           type: array
           items:
             type: object
+            required:
+              - clientId
             properties:
               clientType:
                 type: string
@@ -9807,23 +9824,33 @@ components:
           type: string
         authorizationEndpointQueryParams:
           type: object
+          additionalProperties:
+            type: string
+            nullable: true
         tokenEndpoint:
           type: string
         tokenEndpointBodyParams:
           type: object
+          additionalProperties:
+            type: string
         userInfoEndpoint:
           type: string
         userInfoEndpointQueryParams:
           type: object
+          additionalProperties:
+            type: string
+            nullable: true
         userInfoEndpointHeaders:
           type: object
+          additionalProperties:
+            type: string
+            nullable: true
         jwksURI:
           type: string
         oidcDiscoveryEndpoint:
           type: string
         requireEmail:
           type: boolean
-          default: true
         userInfoMap:
           type: object
           properties:
@@ -10127,6 +10154,8 @@ components:
           $ref: '#/components/schemas/tenantId'
         thirdParty:
           type: object
+          required:
+            - providers
           properties:
             providers:
               type: array
