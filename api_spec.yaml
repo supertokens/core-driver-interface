@@ -573,6 +573,11 @@ paths:
                         type: array
                         items:
                           type: object
+                          required:
+                            - name
+                            - period
+                            - skew
+                            - verified
                           properties:
                             name:
                               type: string
@@ -747,7 +752,6 @@ paths:
               required:
                 - userId
                 - totp
-                - allowUnverifiedDevices
 
       responses:
         '200':
@@ -9612,6 +9616,11 @@ components:
 
     session:
       type: object
+      required:
+        - handle
+        - userId
+        - tenantId
+        - recipeUserId
       properties:
         handle:
           $ref: '#/components/schemas/handle'
@@ -9626,6 +9635,10 @@ components:
 
     cookieInfo:
       type: object
+      required:
+        - token
+        - expiry
+        - createdTime
       properties:
         token:
           $ref: '#/components/schemas/token'
