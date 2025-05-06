@@ -210,6 +210,10 @@ paths:
               schema:
                 oneOf:
                   - type: object
+                    required:
+                      - status
+                      - user
+                      - wasAlreadyAPrimaryUser
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
@@ -219,6 +223,10 @@ paths:
                       user:
                         $ref: '#/components/schemas/authRecipeUser'
                   - type: object
+                    required:
+                      - status
+                      - primaryUserId
+                      - description
                     properties:
                       status:
                         type: string
@@ -232,6 +240,9 @@ paths:
                       description:
                         type: string
                   - type: object
+                    required:
+                      - status
+                      - primaryUserId
                     properties:
                       status:
                         type: string
@@ -242,8 +253,6 @@ paths:
                       primaryUserId:
                         type: string
                         example: fa7a0841-b533-4478-9253-0fde890c576
-                      description:
-                        type: string
         '400':
           $ref: '#/components/responses/400'
 
