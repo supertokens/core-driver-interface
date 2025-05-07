@@ -1415,11 +1415,6 @@ paths:
 
                       codeLifetime:
                         $ref: '#/components/schemas/codeLifetime'
-                  - type: object
-                    properties:
-                      status:
-                        type: string
-                        enum: [ "RESTART_FLOW_ERROR", "USER_INPUT_CODE_ALREADY_USED_ERROR" ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -1529,6 +1524,10 @@ paths:
                     type: array
                     items:
                       type: object
+                      required:
+                        - preAuthSessionId
+                        - failedCodeInputAttemptCount
+                        - codes
                       properties:
                         preAuthSessionId:
                           $ref: '#/components/schemas/preAuthSessionId'
@@ -1543,11 +1542,15 @@ paths:
                           type: array
                           items:
                             type: object
+                            required:
+                              - codeId
+                              - timeCreated
+                              - codeLifetime
                             properties:
                               codeId:
                                 $ref: '#/components/schemas/codeId'
                               timeCreated:
-                                $ref: '#/components/schemas/timeCreated'
+                                type: string
                               codeLifetime:
                                 $ref: '#/components/schemas/codeLifetime'
 
