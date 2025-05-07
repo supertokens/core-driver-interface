@@ -6419,16 +6419,7 @@ paths:
                         $ref: '#/components/schemas/statusOK'
                       createdNew:
                         type: boolean
-                  - type: object
-                    required:
-                      - status
-                      - reason
-                    properties:
-                      status:
-                        type: string
-                        enum: [ "CONFIG_VALIDATION_ERROR" ]
-                      reason:
-                        type: string
+
         '400':
           $ref: '#/components/responses/400'
 
