@@ -3243,6 +3243,8 @@ paths:
                         $ref: '#/components/schemas/handle'
                       tenantId:
                         $ref: '#/components/schemas/tenantId'
+                      recipeUserId:
+                        $ref: '#/components/schemas/userId'
                   - $ref: '#/components/schemas/unauthorisedMessageResponse'
 
         '400':
@@ -3315,6 +3317,65 @@ paths:
 
         '500':
           $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/session/remove:
+    post:
+      tags:
+        - Session Recipe
+      operationId: deleteSession
+      description: |
+        Delete a sesion
+
+        If revoking session by `userId`, the sessions are cleared across all tenants by default.
+
+        Note: If `revokeAcrossAllTenants` is set to `true`, this API can only be called from `public` tenant.
+
+      parameters:
+        - $ref: '#/components/parameters/sessionRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    sessionHandles:
+                      $ref: '#/components/schemas/sessionHandles'
+                - type: object
+                  required:
+                    - userId
+                  properties:
+                    userId:
+                      $ref: '#/components/schemas/userId'
+                    revokeAcrossAllTenants:
+                      type: boolean
+
+      responses:
+        '200':
+          description: Delete a session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  sessionHandlesRevoked:
+                    $ref: '#/components/schemas/sessionHandles'
+
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
 
   /appid-<appId>/recipe/session/verify:
     post:
@@ -3432,10 +3493,16 @@ paths:
                         $ref: '#/components/schemas/tokenTheftResponse'
                       session:
                         type: object
+                        required:
+                          - handle
+                          - userId
+                          - recipeUserId
                         properties:
                           handle:
                             $ref: '#/components/schemas/handle'
                           userId:
+                            $ref: '#/components/schemas/userId'
+                          recipeUserId:
                             $ref: '#/components/schemas/userId'
                   - $ref: '#/components/schemas/unauthorisedMessageResponse'
 
@@ -3497,6 +3564,54 @@ paths:
 
         '500':
           $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/session/user:
+    get:
+      tags:
+        - Session Recipe
+      operationId: getUserSessionHandles
+      description: |
+        Get session handles for a user
+
+        By default, the session handles are fetched across all tenants. Set `fetchAcrossAllTenants` to `false` to get sessionHandles for the user for a particular tenant.
+
+        Note: If `fetchAcrossAllTenants` is set to `true`, this API can only be called from `public` tenant.
+      parameters:
+        - $ref: '#/components/parameters/sessionRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/userId'
+        - name: fetchAcrossAllTenants
+          schema:
+            type: string
+            enum: [ "true", "false" ]
+          required: false
+          in: query
+      responses:
+        '200':
+          description: Get user Session Handles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  sessionHandles:
+                    $ref: '#/components/schemas/sessionHandles'
+
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
 
   /appid-<appId>/recipe/session/regenerate:
     post:
@@ -3760,7 +3875,7 @@ paths:
           $ref: '#/components/responses/500'
 
 
-  /appid-<appId>/<tenantId>/recipe/jwt/data:
+  /appid-<appId>/recipe/jwt/data:
     get:
       deprecated: true
       tags:
@@ -4524,6 +4639,9 @@ paths:
               schema:
                 oneOf:
                   - type: object
+                    required:
+                      - exists
+                      - telemetryId
                     properties:
                       exists:
                         type: boolean
@@ -4532,10 +4650,12 @@ paths:
                         type: string
                         example: 99c87c72-1807-22d-9b39-7a88f95re56c
                   - type: object
+                    required:
+                      - exists
                     properties:
                       exists:
                         type: boolean
-                        example: [ false ]
+                        enum: [ false ]
 
         '400':
           $ref: '#/components/responses/400'
