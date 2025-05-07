@@ -6769,6 +6769,11 @@ paths:
                             $ref: '#/components/schemas/statusOK'
                       - $ref: '#/components/schemas/oauthClient'
                   - $ref: '#/components/schemas/oauthError'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ "CLIENT_NOT_FOUND_ERROR" ]
         '400':
           $ref: '#/components/responses/400'
 
