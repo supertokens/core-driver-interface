@@ -6881,6 +6881,8 @@ paths:
               schema:
                 oneOf:
                   - type: object
+                    required:
+                      - challenge
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
@@ -6988,7 +6990,17 @@ paths:
                             type: string
                           property2:
                             type: string
-                  - $ref: '#/components/schemas/oauthError'
+                      acr:
+                        type: string
+                      amr:
+                        type: array
+                        items:
+                          type: string
+                      challenge:
+                        type: string
+                      oidcContext:
+                        type: object
+                    
         '400':
           $ref: '#/components/responses/400'
 
@@ -7053,6 +7065,19 @@ paths:
                     idToken:
                       type: object
                       additionalProperties: true
+                iss:
+                  type: string
+                tId:
+                  type: string
+                rsub:
+                  type: string
+                sessionHandle:
+                  type: string
+                initialAccessTokenPayload:
+                  type: object
+                initialIdTokenPayload:
+                  type: object
+                  
       responses:
         '200':
           description: OAuth2 Consent Request Result
@@ -7067,7 +7092,6 @@ paths:
                       redirectTo:
                         type: string
                         example: "{apiDomain}/oauth/consent?..."
-                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7131,7 +7155,6 @@ paths:
                       redirectTo:
                         type: string
                         example: "{apiDomain}/oauth/consent?..."
-                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7171,6 +7194,8 @@ paths:
               schema:
                 oneOf:
                   - type: object
+                    required:
+                      - requestUrl
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
@@ -7178,6 +7203,22 @@ paths:
                         type: string
                       client:
                         $ref: '#/components/schemas/oauthClient'
+                      requestUrl:
+                        type: string
+                      requestedAccessTokenAudience:
+                        type: array
+                        items:
+                          type: string
+                      requestedScope:
+                        type: array
+                        items:
+                          type: string
+                      sessionId:
+                        type: string
+                      skip:
+                        type: boolean
+                      subject:
+                        type: string
                       oidcContext:
                         type: object
                         properties:
@@ -7290,7 +7331,6 @@ paths:
                       redirectTo:
                         type: string
                         example: "{apiDomain}/oauth/login?..."
-                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7353,7 +7393,6 @@ paths:
                       redirectTo:
                         type: string
                         example: "{apiDomain}/oauth/login?..."
-                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7574,7 +7613,7 @@ paths:
             schema:
               type: object
               properties:
-                client_id:
+                clientId:
                   type: string
                   example: "stcl_fed7cff0-cc6e-406e-b7a6-766148675a4a"
       responses:
@@ -7707,6 +7746,11 @@ paths:
                         type: string
                         example: "bearer"
                   - $ref: '#/components/schemas/oauthError'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ "CLIENT_NOT_FOUND_ERROR" ]
         '400':
           $ref: '#/components/responses/400'
 
@@ -7803,6 +7847,8 @@ paths:
               properties:
                 token:
                   type: string
+                scope:
+                  type: string
       responses:
         '200':
           description: OAuth2 Token Introspection Result
@@ -7863,7 +7909,6 @@ paths:
                       token_use:
                         type: string
                         example: "access_token"
-                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
