@@ -7800,18 +7800,84 @@ paths:
                   - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
-
         '401':
           $ref: '#/components/responses/401'
-
         '402':
           $ref: '#/components/responses/402'
-
         '404':
           $ref: '#/components/responses/404'
-
         '500':
           $ref: '#/components/responses/500'
+
+    post:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Exchange OAuth2 Auth request for redirect or error.
+      operationId: postOAuth2Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - params
+                - iss
+              properties:
+                params:
+                  type: object
+                iss:
+                  type: string
+                cookies:
+                  type: string
+                session:
+                  type: object
+                  properties:
+                    idToken:
+                      type: object
+                    accessToken:
+                      type: object
+      responses:
+        '200':
+          description: OAuth2 auth result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    required:
+                      - status
+                      - redirectTo
+                      - cookies
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      redirectTo:
+                        type: string
+                      cookies:
+                        type: array
+                        items:
+                          type: string
+                  - $ref: '#/components/schemas/oauthError'
+                  - type: object
+                    required:
+                      - status
+                    properties:
+                      status:
+                        type: string
+                        enum: [CLIENT_NOT_FOUND_ERROR]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '402':
+          $ref: '#/components/responses/402'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
   /appid-<appId>/recipe/oauth/token:
     post:
       tags:
