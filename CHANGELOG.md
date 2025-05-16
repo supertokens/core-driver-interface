@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [5.3.1]
+
+- Fixes various type and path errors in the spec
+
 ## [5.3.0]
 
 - Adds new APIs for webauthn (passkeys):
