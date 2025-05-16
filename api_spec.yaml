@@ -10147,9 +10147,13 @@ components:
       type: object
       properties:
         firstFactors:
-          $ref: '#/components/schemas/firstFactors'
+          oneOf:
+            - $ref: '#/components/schemas/firstFactors'
+            - type: "null"
         requiredSecondaryFactors:
-          $ref: '#/components/schemas/requiredSecondaryFactors'
+          oneOf:
+            - $ref: '#/components/schemas/requiredSecondaryFactors'
+            - type: "null"
         coreConfig:
           type: object
 
