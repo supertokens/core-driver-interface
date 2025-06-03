@@ -7459,6 +7459,7 @@ paths:
                       redirectTo:
                         type: string
                         example: "{apiDomain}/oauth/login?..."
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7521,6 +7522,7 @@ paths:
                       redirectTo:
                         type: string
                         example: "{apiDomain}/oauth/login?..."
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
