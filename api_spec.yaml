@@ -7128,7 +7128,8 @@ paths:
                         type: string
                       oidcContext:
                         type: object
-                    
+                  - $ref: '#/components/schemas/oauthError'
+
         '400':
           $ref: '#/components/responses/400'
 
@@ -7220,6 +7221,7 @@ paths:
                       redirectTo:
                         type: string
                         example: "{apiDomain}/oauth/consent?..."
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -7283,6 +7285,7 @@ paths:
                       redirectTo:
                         type: string
                         example: "{apiDomain}/oauth/consent?..."
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
@@ -8105,6 +8108,7 @@ paths:
                       token_use:
                         type: string
                         example: "access_token"
+                  - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
 
