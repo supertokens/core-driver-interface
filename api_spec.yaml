@@ -8458,7 +8458,7 @@ paths:
                         type: string
                         example: TQvEVDV8B64w_2zIifzKaPzBPfthqpx2uJkq_2PIB0k
                       timeout:
-                        type: string
+                        type: number
                         example: 10000
                       origin:
                         type: string
@@ -8756,10 +8756,10 @@ paths:
                         type: boolean
                         example: true
                       createdAt:
-                        type: string
+                        type: number
                         example: 1741793746
                       expiresAt:
-                        type: string
+                        type: number
                         example: 1741793746
                   - type: object
                     properties:
