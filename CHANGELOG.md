@@ -8,9 +8,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [5.3.1]
+
+- Fixes various type and path errors in the spec
+
+## [5.3.0]
+
+- Adds new APIs for webauthn (passkeys):
+  - GET `/recipe/webauthn/user/credential/`
+  - GET `/recipe/webauthn/user/credential/list`
+  - GET `/recipe/webauthn/options`
+  - GET `/recipe/webauthn/user/recover`
+  - POST `/recipe/webauthn/options/register`
+  - POST `/recipe/webauthn/options/signin`
+  - POST `/recipe/webauthn/user/credential/register`
+  - POST `/recipe/webauthn/signup`
+  - POST `/recipe/webauthn/signin`
+  - POST `/recipe/webauthn/user/recover/token`
+  - POST `/recipe/webauthn/user/recover/token/consume`
+  - PUT `/recipe/webauthn/user/email`
+  - DELETE `/recipe/webauthn/user/credential/remove`
+  - DELETE `/recipe/webauthn/options/remove`
+
+- Adds APIs to bulk import users
+  - GET `/bulk-import/users`
+  - POST `/bulk-import/users`
+  - GET `/bulk-import/users/count`
+  - POST `/bulk-import/users/remove`
+  - POST `/bulk-import/users/import`
+
 ## [5.2.0]
 
 - Adds APIs related to OAuth2 Provider
+
 
 ## [5.1.1]
 

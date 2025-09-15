@@ -25,6 +25,10 @@ tags:
   - name: Dashboard Recipe
   - name: Totp Recipe
   - name: Account Linking Recipe
+  - name: WebAuthn Recipe
+  - name: JWT Recipe
+  - name: Bulk Import
+
 
 paths:
   /appid-<appId>/recipe/accountlinking/user/primary/check:
@@ -163,7 +167,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['INPUT_USER_IS_NOT_A_PRIMARY_USER']
+                        enum: [ 'INPUT_USER_IS_NOT_A_PRIMARY_USER' ]
         '400':
           $ref: '#/components/responses/400'
 
@@ -206,6 +210,10 @@ paths:
               schema:
                 oneOf:
                   - type: object
+                    required:
+                      - status
+                      - user
+                      - wasAlreadyAPrimaryUser
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
@@ -215,6 +223,10 @@ paths:
                       user:
                         $ref: '#/components/schemas/authRecipeUser'
                   - type: object
+                    required:
+                      - status
+                      - primaryUserId
+                      - description
                     properties:
                       status:
                         type: string
@@ -228,6 +240,9 @@ paths:
                       description:
                         type: string
                   - type: object
+                    required:
+                      - status
+                      - primaryUserId
                     properties:
                       status:
                         type: string
@@ -238,8 +253,6 @@ paths:
                       primaryUserId:
                         type: string
                         example: fa7a0841-b533-4478-9253-0fde890c576
-                      description:
-                        type: string
         '400':
           $ref: '#/components/responses/400'
 
@@ -329,7 +342,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['INPUT_USER_IS_NOT_A_PRIMARY_USER']
+                        enum: [ 'INPUT_USER_IS_NOT_A_PRIMARY_USER' ]
         '400':
           $ref: '#/components/responses/400'
 
@@ -399,7 +412,7 @@ paths:
   /appid-<appId>/recipe/totp/device:
     post:
       tags:
-         - Totp Recipe
+        - Totp Recipe
       operationId: createTotpDevice
       description: |
         Add a TOTP device for a user and enable TOTP if not already enabled.
@@ -451,7 +464,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['DEVICE_ALREADY_EXISTS_ERROR']
+                        enum: [ 'DEVICE_ALREADY_EXISTS_ERROR' ]
 
 
         '400':
@@ -467,7 +480,7 @@ paths:
           $ref: '#/components/responses/500'
     put:
       tags:
-         - Totp Recipe
+        - Totp Recipe
       operationId: updateTotpDeviceName
       description: |
         Update the name of a TOTP device for a user.
@@ -509,12 +522,12 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["UNKNOWN_DEVICE_ERROR"]
+                        enum: [ "UNKNOWN_DEVICE_ERROR" ]
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ["DEVICE_ALREADY_EXISTS_ERROR"]
+                        enum: [ "DEVICE_ALREADY_EXISTS_ERROR" ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -531,7 +544,7 @@ paths:
   /appid-<appId>/recipe/totp/device/list:
     get:
       tags:
-          - Totp Recipe
+        - Totp Recipe
       operationId: getTotpDevices
       description: |
         Retrieve a list of TOTP devices for a user.
@@ -550,8 +563,8 @@ paths:
           description: Retrives all TOTP devices
           content:
             application/json:
-                schema:
-                  oneOf:
+              schema:
+                oneOf:
                   - type: object
                     properties:
                       status:
@@ -560,6 +573,11 @@ paths:
                         type: array
                         items:
                           type: object
+                          required:
+                            - name
+                            - period
+                            - skew
+                            - verified
                           properties:
                             name:
                               type: string
@@ -586,7 +604,7 @@ paths:
   /recipe/totp/device/import:
     post:
       tags:
-         - Totp Recipe
+        - Totp Recipe
       operationId: importTotpDevice
       description: |
         Add a TOTP device for a user and enable TOTP if not already enabled.
@@ -638,7 +656,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['DEVICE_ALREADY_EXISTS_ERROR']
+                        enum: [ 'DEVICE_ALREADY_EXISTS_ERROR' ]
 
 
         '400':
@@ -656,7 +674,7 @@ paths:
   /appid-<appId>/recipe/totp/device/remove:
     post:
       tags:
-         - Totp Recipe
+        - Totp Recipe
       operationId: removeTotpDevice
       description: |
         Remove a TOTP device for a user. If all devices are removed, TOTP is disabled for the user.
@@ -709,7 +727,7 @@ paths:
   /appid-<appId>/<tenantId>/recipe/totp/verify:
     post:
       tags:
-         - Totp Recipe
+        - Totp Recipe
       operationId: verifyTotpCode
       description: |
         Check if a TOTP code is valid against any of the TOTP devices for a user.
@@ -734,7 +752,6 @@ paths:
               required:
                 - userId
                 - totp
-                - allowUnverifiedDevices
 
       responses:
         '200':
@@ -752,7 +769,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['INVALID_TOTP_ERROR']
+                        enum: [ 'INVALID_TOTP_ERROR' ]
                       currentNumberOfFailedAttempts:
                         type: number
                         example: 2
@@ -764,13 +781,13 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['UNKNOWN_USER_ID_ERROR']
+                        enum: [ 'UNKNOWN_USER_ID_ERROR' ]
 
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ['LIMIT_REACHED_ERROR']
+                        enum: [ 'LIMIT_REACHED_ERROR' ]
                       retryAfterMs:
                         type: number
                         example: 90000
@@ -797,7 +814,7 @@ paths:
   /appid-<appId>/<tenantId>/recipe/totp/device/verify:
     post:
       tags:
-         - Totp Recipe
+        - Totp Recipe
       operationId: verifyTotpDevice
       description: |
         Mark a TOTP device as verified if the given TOTP code is valid for that device.
@@ -843,13 +860,13 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['UNKNOWN_DEVICE_ERROR']
+                        enum: [ 'UNKNOWN_DEVICE_ERROR' ]
 
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ['INVALID_TOTP_ERROR']
+                        enum: [ 'INVALID_TOTP_ERROR' ]
                       currentNumberOfFailedAttempts:
                         type: number
                         example: 2
@@ -861,7 +878,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['LIMIT_REACHED_ERROR']
+                        enum: [ 'LIMIT_REACHED_ERROR' ]
                       retryAfterMs:
                         type: number
                         example: 90000
@@ -888,7 +905,7 @@ paths:
   /appid-<appId>/recipe/userid/map:
     post:
       tags:
-         - UserIdMapping Recipe
+        - UserIdMapping Recipe
       operationId: userIdMappingCreateMapping
       description: |
         Create a mapping between a SuperTokens userId and an external userId.
@@ -932,13 +949,13 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['UNKNOWN_SUPERTOKENS_USER_ID_ERROR']
+                        enum: [ 'UNKNOWN_SUPERTOKENS_USER_ID_ERROR' ]
 
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ['USER_ID_MAPPING_ALREADY_EXISTS_ERROR']
+                        enum: [ 'USER_ID_MAPPING_ALREADY_EXISTS_ERROR' ]
                       doesSuperTokensUserIdExist:
                         type: boolean
                       doesExternalUserIdExist:
@@ -958,7 +975,7 @@ paths:
           $ref: '#/components/responses/500'
     get:
       tags:
-          - UserIdMapping Recipe
+        - UserIdMapping Recipe
       operationId: userIdMappingGetMapping
       description: |
         Retrieve a UserIdMapping
@@ -975,15 +992,15 @@ paths:
           name: userIdType
           schema:
             type: string
-            enum: ["SUPERTOKENS", "EXTERNAL", "ANY"]
+            enum: [ "SUPERTOKENS", "EXTERNAL", "ANY" ]
 
       responses:
         '200':
           description: Retrives a userId mapping
           content:
             application/json:
-                schema:
-                  oneOf:
+              schema:
+                oneOf:
                   - type: object
                     properties:
                       status:
@@ -1004,7 +1021,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["UNKNOWN_MAPPING_ERROR"]
+                        enum: [ "UNKNOWN_MAPPING_ERROR" ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -1021,7 +1038,7 @@ paths:
   /appid-<appId>/recipe/userid/map/remove:
     post:
       tags:
-         - UserIdMapping Recipe
+        - UserIdMapping Recipe
       operationId: userIdMappingRemoveMapping
       description: |
         Delete a mapping between a SuperTokens userId and an external userId.
@@ -1039,7 +1056,7 @@ paths:
                   $ref: '#/components/schemas/userId'
                 userIdType:
                   type: string
-                  enum: ["SUPERTOKENS", "EXTERNAL", "ANY"]
+                  enum: [ "SUPERTOKENS", "EXTERNAL", "ANY" ]
                 force:
                   type: boolean
 
@@ -1074,7 +1091,7 @@ paths:
   /appid-<appId>/recipe/userid/external-user-id-info:
     put:
       tags:
-         - UserIdMapping Recipe
+        - UserIdMapping Recipe
       operationId: userIdMappingUpateExternalUserIdInfo
       description: |
         Update or delete externalUserIdInfo
@@ -1092,7 +1109,7 @@ paths:
                   $ref: '#/components/schemas/userId'
                 userIdType:
                   type: string
-                  enum: ["SUPERTOKENS", "EXTERNAL", "ANY"]
+                  enum: [ "SUPERTOKENS", "EXTERNAL", "ANY" ]
                 externalUserIdInfo:
                   type: string
                   example: "new external userId info"
@@ -1116,7 +1133,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["UNKNOWN_MAPPING_ERROR"]
+                        enum: [ "UNKNOWN_MAPPING_ERROR" ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -1197,7 +1214,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['INCORRECT_USER_INPUT_CODE_ERROR', 'EXPIRED_USER_INPUT_CODE_ERROR']
+                        enum: [ 'INCORRECT_USER_INPUT_CODE_ERROR', 'EXPIRED_USER_INPUT_CODE_ERROR' ]
                       failedCodeInputAttemptCount:
                         type: number
                         example: 2
@@ -1209,7 +1226,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['RESTART_FLOW_ERROR']
+                        enum: [ 'RESTART_FLOW_ERROR' ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -1297,7 +1314,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['INCORRECT_USER_INPUT_CODE_ERROR', 'EXPIRED_USER_INPUT_CODE_ERROR']
+                        enum: [ 'INCORRECT_USER_INPUT_CODE_ERROR', 'EXPIRED_USER_INPUT_CODE_ERROR' ]
                       failedCodeInputAttemptCount:
                         type: number
                         example: 2
@@ -1309,7 +1326,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['RESTART_FLOW_ERROR']
+                        enum: [ 'RESTART_FLOW_ERROR' ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -1371,38 +1388,33 @@ paths:
           description: Starts the passwordless login process
           content:
             application/json:
-                schema:
-                  oneOf:
-                    - type: object
-                      properties:
-                        status:
-                          $ref: '#/components/schemas/statusOK'
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
 
-                        preAuthSessionId:
-                          $ref: '#/components/schemas/preAuthSessionId'
+                      preAuthSessionId:
+                        $ref: '#/components/schemas/preAuthSessionId'
 
-                        codeId:
-                          $ref: '#/components/schemas/codeId'
+                      codeId:
+                        $ref: '#/components/schemas/codeId'
 
-                        deviceId:
-                          $ref: '#/components/schemas/deviceId'
+                      deviceId:
+                        $ref: '#/components/schemas/deviceId'
 
-                        userInputCode:
-                          $ref: '#/components/schemas/userInputCode'
+                      userInputCode:
+                        $ref: '#/components/schemas/userInputCode'
 
-                        linkCode:
-                          $ref: '#/components/schemas/linkCode'
+                      linkCode:
+                        $ref: '#/components/schemas/linkCode'
 
-                        timeCreated:
-                          $ref: '#/components/schemas/timeCreated'
+                      timeCreated:
+                        $ref: '#/components/schemas/timeCreated'
 
-                        codeLifetime:
-                          $ref: '#/components/schemas/codeLifetime'
-                    - type: object
-                      properties:
-                        status:
-                          type: string
-                          enum: ["RESTART_FLOW_ERROR", "USER_INPUT_CODE_ALREADY_USED_ERROR"]
+                      codeLifetime:
+                        $ref: '#/components/schemas/codeLifetime'
 
         '400':
           $ref: '#/components/responses/400'
@@ -1419,7 +1431,7 @@ paths:
   /appid-<appId>/<tenantId>/recipe/signinup/code/remove:
     post:
       tags:
-          - Passwordless Recipe
+        - Passwordless Recipe
       operationId: passwordlessRevokeCode
       description: |
         Revokes a code by id
@@ -1449,11 +1461,11 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-                schema:
-                  type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
 
         '400':
           $ref: '#/components/responses/400'
@@ -1470,7 +1482,7 @@ paths:
   /appid-<appId>/<tenantId>/recipe/signinup/codes:
     get:
       tags:
-          - Passwordless Recipe
+        - Passwordless Recipe
       operationId: passwordlessListCodes
       description: |
         Lists all active passwordless codes of the user
@@ -1495,7 +1507,7 @@ paths:
             $ref: '#/components/schemas/deviceId'
         - in: query
           name: preAuthSessionId
-          description:  Use this parameter to get information about a single device (without the other query params)
+          description: Use this parameter to get information about a single device (without the other query params)
           schema:
             $ref: '#/components/schemas/preAuthSessionId'
       responses:
@@ -1503,36 +1515,44 @@ paths:
           description: List of all active passwordless codes of the user
           content:
             application/json:
-                schema:
-                  type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    devices:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          preAuthSessionId:
-                            $ref: '#/components/schemas/preAuthSessionId'
-                          failedCodeInputAttemptCount:
-                            type: number
-                            example: 2
-                          email:
-                            $ref: '#/components/schemas/email'
-                          phoneNumber:
-                            $ref: '#/components/schemas/phoneNumber'
-                          codes:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                codeId:
-                                  $ref: '#/components/schemas/codeId'
-                                timeCreated:
-                                  $ref: '#/components/schemas/timeCreated'
-                                codeLifetime:
-                                  $ref: '#/components/schemas/codeLifetime'
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  devices:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - preAuthSessionId
+                        - failedCodeInputAttemptCount
+                        - codes
+                      properties:
+                        preAuthSessionId:
+                          $ref: '#/components/schemas/preAuthSessionId'
+                        failedCodeInputAttemptCount:
+                          type: number
+                          example: 2
+                        email:
+                          $ref: '#/components/schemas/email'
+                        phoneNumber:
+                          $ref: '#/components/schemas/phoneNumber'
+                        codes:
+                          type: array
+                          items:
+                            type: object
+                            required:
+                              - codeId
+                              - timeCreated
+                              - codeLifetime
+                            properties:
+                              codeId:
+                                $ref: '#/components/schemas/codeId'
+                              timeCreated:
+                                type: string
+                              codeLifetime:
+                                $ref: '#/components/schemas/codeLifetime'
 
         '400':
           $ref: '#/components/responses/400'
@@ -1549,7 +1569,7 @@ paths:
   /appid-<appId>/<tenantId>/recipe/signinup/codes/remove:
     post:
       tags:
-          - Passwordless Recipe
+        - Passwordless Recipe
       operationId: passwordlessRevokeAllCodesOfUser
       description: |
         Revokes all codes issued for the user
@@ -1579,11 +1599,11 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-                schema:
-                  type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
 
         '400':
           $ref: '#/components/responses/400'
@@ -1631,19 +1651,19 @@ paths:
           description: Get a user's information.
           content:
             application/json:
-                schema:
-                  oneOf:
-                    - type: object
-                      properties:
-                        status:
-                          $ref: '#/components/schemas/statusOK'
-                        user:
-                          $ref: '#/components/schemas/authRecipeUser'
-                    - type: object
-                      properties:
-                        status:
-                          type: string
-                          enum: ["UNKNOWN_USER_ID_ERROR", "UNKNOWN_EMAIL_ERROR", "UNKNOWN_PHONE_NUMBER_ERROR"]
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ "UNKNOWN_USER_ID_ERROR", "UNKNOWN_EMAIL_ERROR", "UNKNOWN_PHONE_NUMBER_ERROR" ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -1692,18 +1712,18 @@ paths:
             application/json:
               schema:
                 oneOf:
-                - type: object
-                  properties:
-                    status:
-                      type: string
-                      enum: ['OK', 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR', 'PHONE_NUMBER_ALREADY_EXISTS_ERROR']
-                - type: object
-                  properties:
-                    status:
-                      type: string
-                      enum: [ 'EMAIL_CHANGE_NOT_ALLOWED_ERROR', 'PHONE_NUMBER_CHANGE_NOT_ALLOWED_ERROR' ]
-                    reason:
-                      type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'OK', 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR', 'PHONE_NUMBER_ALREADY_EXISTS_ERROR' ]
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'EMAIL_CHANGE_NOT_ALLOWED_ERROR', 'PHONE_NUMBER_CHANGE_NOT_ALLOWED_ERROR' ]
+                      reason:
+                        type: string
 
         '400':
           $ref: '#/components/responses/400'
@@ -1745,16 +1765,16 @@ paths:
             application/json:
               schema:
                 oneOf:
-                - type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    user:
-                      $ref: '#/components/schemas/authRecipeUser'
-                    recipeUserId:
-                      $ref: '#/components/schemas/userId'
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
+                      recipeUserId:
+                        $ref: '#/components/schemas/userId'
 
-                - $ref: '#/components/schemas/wrongCredentialsResponse'
+                  - $ref: '#/components/schemas/wrongCredentialsResponse'
 
         '400':
           $ref: '#/components/responses/400'
@@ -1796,19 +1816,19 @@ paths:
             application/json:
               schema:
                 oneOf:
-                - type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    user:
-                      $ref: '#/components/schemas/authRecipeUser'
-                    recipeUserId:
-                      $ref: '#/components/schemas/userId'
-                - type: object
-                  properties:
-                    status:
-                      type: string
-                      enum: ['EMAIL_ALREADY_EXISTS_ERROR']
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
+                      recipeUserId:
+                        $ref: '#/components/schemas/userId'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'EMAIL_ALREADY_EXISTS_ERROR' ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -1822,7 +1842,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/user:
+  /appid-<appId>/recipe/user:
     get:
       tags:
         - EmailPassword Recipe
@@ -1854,8 +1874,8 @@ paths:
           description: get user's information
           content:
             application/json:
-                schema:
-                  oneOf:
+              schema:
+                oneOf:
                   - type: object
                     properties:
                       status:
@@ -1866,7 +1886,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['UNKNOWN_USER_ID_ERROR', 'UNKNOWN_EMAIL_ERROR']
+                        enum: [ 'UNKNOWN_USER_ID_ERROR', 'UNKNOWN_EMAIL_ERROR' ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -1908,18 +1928,18 @@ paths:
             application/json:
               schema:
                 oneOf:
-                - type: object
-                  properties:
-                    status:
-                      type: string
-                      enum: ['OK', 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR']
-                - type: object
-                  properties:
-                    status:
-                      type: string
-                      enum: ['EMAIL_CHANGE_NOT_ALLOWED_ERROR']
-                    reason:
-                      type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'OK', 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR' ]
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'EMAIL_CHANGE_NOT_ALLOWED_ERROR' ]
+                      reason:
+                        type: string
 
         '400':
           $ref: '#/components/responses/400'
@@ -1962,8 +1982,8 @@ paths:
           description: Generate a new reset password token for this user
           content:
             application/json:
-                schema:
-                  oneOf:
+              schema:
+                oneOf:
                   - type: object
                     properties:
                       status:
@@ -2016,8 +2036,8 @@ paths:
           description: Reset a password using password reset token
           content:
             application/json:
-                schema:
-                  oneOf:
+              schema:
+                oneOf:
                   - type: object
                     properties:
                       status:
@@ -2028,7 +2048,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['RESET_PASSWORD_INVALID_TOKEN_ERROR']
+                        enum: [ 'RESET_PASSWORD_INVALID_TOKEN_ERROR' ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -2062,12 +2082,9 @@ paths:
                 email:
                   $ref: '#/components/schemas/email'
                 passwordHash:
-                  type: string
-                  example: "passwordHash"
+                  $ref: '#/components/schemas/passwordHash'
                 hashingAlgorithm:
-                  type: string
-                  enum: ["argon2", "bcrypt", "firebase_scrypt"]
-
+                  $ref: '#/components/schemas/hashingAlgorithm'
 
       responses:
         '200':
@@ -2134,7 +2151,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['RESET_PASSWORD_INVALID_TOKEN_ERROR']
+                        enum: [ 'RESET_PASSWORD_INVALID_TOKEN_ERROR' ]
         '400':
           $ref: '#/components/responses/400'
 
@@ -2177,24 +2194,24 @@ paths:
             application/json:
               schema:
                 oneOf:
-                - type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    createdNewUser:
-                      type: boolean
-                      example: true
-                    user:
-                      $ref: '#/components/schemas/authRecipeUser'
-                    recipeUserId:
-                      $ref: '#/components/schemas/userId'
-                - type: object
-                  properties:
-                    status:
-                      type: string
-                      enum: ['EMAIL_CHANGE_NOT_ALLOWED_ERROR']
-                    reason:
-                      type: string
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      createdNewUser:
+                        type: boolean
+                        example: true
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
+                      recipeUserId:
+                        $ref: '#/components/schemas/userId'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'EMAIL_CHANGE_NOT_ALLOWED_ERROR' ]
+                      reason:
+                        type: string
 
         '400':
           $ref: '#/components/responses/400'
@@ -2242,19 +2259,19 @@ paths:
           description: Get a user's information.
           content:
             application/json:
-                schema:
-                  oneOf:
-                    - type: object
-                      properties:
-                        status:
-                          $ref: '#/components/schemas/statusOK'
-                        user:
-                          $ref: '#/components/schemas/authRecipeUser'
-                    - type: object
-                      properties:
-                        status:
-                          type: string
-                          enum: ["UNKNOWN_USER_ID_ERROR", "UNKNOWN_THIRD_PARTY_USER_ERROR"]
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ "UNKNOWN_USER_ID_ERROR", "UNKNOWN_THIRD_PARTY_USER_ERROR" ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -2295,15 +2312,15 @@ paths:
           description: Get all users associated with given email
           content:
             application/json:
-                schema:
-                  type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    users:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/authRecipeUser'
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/authRecipeUser'
 
         '400':
           $ref: '#/components/responses/400'
@@ -2335,8 +2352,8 @@ paths:
           description: Generate a new email verification token for this user
           content:
             application/json:
-                schema:
-                  oneOf:
+              schema:
+                oneOf:
                   - type: object
                     properties:
                       status:
@@ -2347,7 +2364,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['EMAIL_ALREADY_VERIFIED_ERROR']
+                        enum: [ 'EMAIL_ALREADY_VERIFIED_ERROR' ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -2382,11 +2399,11 @@ paths:
           description: OK response
           content:
             application/json:
-                schema:
-                  properties:
-                    status:
-                      type: string
-                      enum: ['OK']
+              schema:
+                properties:
+                  status:
+                    type: string
+                    enum: [ 'OK' ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -2429,8 +2446,8 @@ paths:
           description: Verify an email
           content:
             application/json:
-                schema:
-                  oneOf:
+              schema:
+                oneOf:
                   - type: object
                     properties:
                       status:
@@ -2443,7 +2460,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['EMAIL_VERIFICATION_INVALID_TOKEN_ERROR']
+                        enum: [ 'EMAIL_VERIFICATION_INVALID_TOKEN_ERROR' ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -2475,13 +2492,13 @@ paths:
           description: Verify an email
           content:
             application/json:
-                schema:
-                  type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    isVerified:
-                      $ref: '#/components/schemas/isVerified'
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  isVerified:
+                    $ref: '#/components/schemas/isVerified'
 
         '400':
           $ref: '#/components/responses/400'
@@ -2517,11 +2534,11 @@ paths:
           description: OK response
           content:
             application/json:
-                schema:
-                  properties:
-                    status:
-                      type: string
-                      enum: ['OK']
+              schema:
+                properties:
+                  status:
+                    type: string
+                    enum: [ 'OK' ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -2552,13 +2569,13 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-                schema:
-                  type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    metadata:
-                      $ref: '#/components/schemas/userMetadata'
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  metadata:
+                    $ref: '#/components/schemas/userMetadata'
         '400':
           $ref: '#/components/responses/400'
 
@@ -2604,13 +2621,13 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-                schema:
-                  type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    metadata:
-                      $ref: '#/components/schemas/userMetadata'
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  metadata:
+                    $ref: '#/components/schemas/userMetadata'
 
         '400':
           $ref: '#/components/responses/400'
@@ -2650,11 +2667,11 @@ paths:
           description: 'The operation was successful'
           content:
             application/json:
-                schema:
-                  type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
 
         '400':
           $ref: '#/components/responses/400'
@@ -2690,15 +2707,15 @@ paths:
                   $ref: '#/components/schemas/userId'
                 role:
                   $ref: '#/components/schemas/role'
-              required: [userId, role]
+              required: [ userId, role ]
 
       responses:
         '200':
           description: 'The operation was successful'
           content:
             application/json:
-                schema:
-                  oneOf:
+              schema:
+                oneOf:
                   - type: object
                     properties:
                       status:
@@ -2742,15 +2759,15 @@ paths:
                   $ref: '#/components/schemas/userId'
                 role:
                   $ref: '#/components/schemas/role'
-              required: [userId, role]
+              required: [ userId, role ]
 
       responses:
         '200':
           description: 'The operation was successful'
           content:
             application/json:
-                schema:
-                  oneOf:
+              schema:
+                oneOf:
                   - type: object
                     properties:
                       status:
@@ -2828,7 +2845,7 @@ paths:
           content:
             application/json:
               schema:
-                  oneOf:
+                oneOf:
                   - type: object
                     properties:
                       status:
@@ -2876,21 +2893,21 @@ paths:
                   items:
                     type: string
                     example: permission
-              required: [role]
+              required: [ role ]
 
       responses:
         '200':
           description: 'The operation was successful'
           content:
             application/json:
-                schema:
-                  type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    createdNewRole:
-                      type: boolean
-                      example: true
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  createdNewRole:
+                    type: boolean
+                    example: true
 
 
         '400':
@@ -2923,7 +2940,7 @@ paths:
           content:
             application/json:
               schema:
-                  oneOf:
+                oneOf:
                   - type: object
                     properties:
                       status:
@@ -2972,15 +2989,15 @@ paths:
                   items:
                     type: string
                     example: permission
-              required: [role]
+              required: [ role ]
 
       responses:
         '200':
           description: 'The operation was successful'
           content:
             application/json:
-                schema:
-                  oneOf:
+              schema:
+                oneOf:
                   - type: object
                     properties:
                       status:
@@ -3059,21 +3076,21 @@ paths:
               properties:
                 role:
                   $ref: '#/components/schemas/role'
-              required: [role]
+              required: [ role ]
 
       responses:
         '200':
           description: 'The operation was successful'
           content:
             application/json:
-                schema:
-                  type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    didRoleExist:
-                      type: boolean
-                      example: true
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  didRoleExist:
+                    type: boolean
+                    example: true
 
         '400':
           $ref: '#/components/responses/400'
@@ -3104,15 +3121,15 @@ paths:
           content:
             application/json:
               schema:
-                  type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    roles:
-                      type: array
-                      items:
-                        type: string
-                        example: admin
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  roles:
+                    type: array
+                    items:
+                      type: string
+                      example: admin
 
         '400':
           $ref: '#/components/responses/400'
@@ -3160,19 +3177,19 @@ paths:
           description: Create a new Session
           content:
             application/json:
-                schema:
-                  type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    session:
-                      $ref: '#/components/schemas/session'
-                    accessToken:
-                      $ref: '#/components/schemas/cookieInfo'
-                    refreshToken:
-                      $ref: '#/components/schemas/cookieInfo'
-                    antiCsrfToken:
-                      $ref: '#/components/schemas/token'
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  session:
+                    $ref: '#/components/schemas/session'
+                  accessToken:
+                    $ref: '#/components/schemas/cookieInfo'
+                  refreshToken:
+                    $ref: '#/components/schemas/cookieInfo'
+                  antiCsrfToken:
+                    $ref: '#/components/schemas/token'
 
         '400':
           $ref: '#/components/responses/400'
@@ -3226,6 +3243,8 @@ paths:
                         $ref: '#/components/schemas/handle'
                       tenantId:
                         $ref: '#/components/schemas/tenantId'
+                      recipeUserId:
+                        $ref: '#/components/schemas/userId'
                   - $ref: '#/components/schemas/unauthorisedMessageResponse'
 
         '400':
@@ -3267,7 +3286,7 @@ paths:
                       $ref: '#/components/schemas/sessionHandles'
                 - type: object
                   required:
-                  - userId
+                    - userId
                   properties:
                     userId:
                       $ref: '#/components/schemas/userId'
@@ -3279,13 +3298,13 @@ paths:
           description: Delete a session
           content:
             application/json:
-                schema:
-                  type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    sessionHandlesRevoked:
-                      $ref: '#/components/schemas/sessionHandles'
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  sessionHandlesRevoked:
+                    $ref: '#/components/schemas/sessionHandles'
 
         '400':
           $ref: '#/components/responses/400'
@@ -3298,6 +3317,65 @@ paths:
 
         '500':
           $ref: '#/components/responses/500'
+  /appid-<appId>/recipe/session/remove:
+    post:
+      tags:
+        - Session Recipe
+      operationId: deleteSession
+      description: |
+        Delete a sesion
+
+        If revoking session by `userId`, the sessions are cleared across all tenants by default.
+
+        Note: If `revokeAcrossAllTenants` is set to `true`, this API can only be called from `public` tenant.
+
+      parameters:
+        - $ref: '#/components/parameters/sessionRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    sessionHandles:
+                      $ref: '#/components/schemas/sessionHandles'
+                - type: object
+                  required:
+                    - userId
+                  properties:
+                    userId:
+                      $ref: '#/components/schemas/userId'
+                    revokeAcrossAllTenants:
+                      type: boolean
+
+      responses:
+        '200':
+          description: Delete a session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  sessionHandlesRevoked:
+                    $ref: '#/components/schemas/sessionHandles'
+
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
 
   /appid-<appId>/recipe/session/verify:
     post:
@@ -3334,23 +3412,23 @@ paths:
           description: Verify a session
           content:
             application/json:
-                schema:
-                  oneOf:
-                    - type: object
-                      properties:
-                        status:
-                          $ref: '#/components/schemas/statusOK'
-                        session:
-                          $ref: '#/components/schemas/session'
-                        accessToken:
-                          $ref: '#/components/schemas/cookieInfo'
-                    - $ref: '#/components/schemas/unauthorisedMessageResponse'
-                    - type: object
-                      properties:
-                        status:
-                          $ref: '#/components/schemas/tryRefreshTokenResponse'
-                        message:
-                          $ref: '#/components/schemas/message'
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      session:
+                        $ref: '#/components/schemas/session'
+                      accessToken:
+                        $ref: '#/components/schemas/cookieInfo'
+                  - $ref: '#/components/schemas/unauthorisedMessageResponse'
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/tryRefreshTokenResponse'
+                      message:
+                        $ref: '#/components/schemas/message'
 
         '400':
           $ref: '#/components/responses/400'
@@ -3389,38 +3467,44 @@ paths:
                   $ref: '#/components/schemas/token'
                 useDynamicSigningKey:
                   type: boolean
-              required: [refreshToken, enableAntiCsrf, useDynamicSigningKey]
+              required: [ refreshToken, enableAntiCsrf, useDynamicSigningKey ]
       responses:
         '200':
           description: Refresh a session
           content:
             application/json:
-                schema:
-                  oneOf:
-                    - type: object
-                      properties:
-                        status:
-                          $ref: '#/components/schemas/statusOK'
-                        session:
-                          $ref: '#/components/schemas/session'
-                        accessToken:
-                          $ref: '#/components/schemas/cookieInfo'
-                        refreshToken:
-                          $ref: '#/components/schemas/cookieInfo'
-                        antiCsrfToken:
-                          $ref: '#/components/schemas/token'
-                    - type: object
-                      properties:
-                        status:
-                          $ref: '#/components/schemas/tokenTheftResponse'
-                        session:
-                          type: object
-                          properties:
-                            handle:
-                              $ref: '#/components/schemas/handle'
-                            userId:
-                              $ref: '#/components/schemas/userId'
-                    - $ref: '#/components/schemas/unauthorisedMessageResponse'
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      session:
+                        $ref: '#/components/schemas/session'
+                      accessToken:
+                        $ref: '#/components/schemas/cookieInfo'
+                      refreshToken:
+                        $ref: '#/components/schemas/cookieInfo'
+                      antiCsrfToken:
+                        $ref: '#/components/schemas/token'
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/tokenTheftResponse'
+                      session:
+                        type: object
+                        required:
+                          - handle
+                          - userId
+                          - recipeUserId
+                        properties:
+                          handle:
+                            $ref: '#/components/schemas/handle'
+                          userId:
+                            $ref: '#/components/schemas/userId'
+                          recipeUserId:
+                            $ref: '#/components/schemas/userId'
+                  - $ref: '#/components/schemas/unauthorisedMessageResponse'
 
         '400':
           $ref: '#/components/responses/400'
@@ -3453,7 +3537,7 @@ paths:
         - name: fetchAcrossAllTenants
           schema:
             type: string
-            enum: ["true", "false"]
+            enum: [ "true", "false" ]
           required: false
           in: query
       responses:
@@ -3480,6 +3564,54 @@ paths:
 
         '500':
           $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/session/user:
+    get:
+      tags:
+        - Session Recipe
+      operationId: getUserSessionHandles
+      description: |
+        Get session handles for a user
+
+        By default, the session handles are fetched across all tenants. Set `fetchAcrossAllTenants` to `false` to get sessionHandles for the user for a particular tenant.
+
+        Note: If `fetchAcrossAllTenants` is set to `true`, this API can only be called from `public` tenant.
+      parameters:
+        - $ref: '#/components/parameters/sessionRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/userId'
+        - name: fetchAcrossAllTenants
+          schema:
+            type: string
+            enum: [ "true", "false" ]
+          required: false
+          in: query
+      responses:
+        '200':
+          description: Get user Session Handles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  sessionHandles:
+                    $ref: '#/components/schemas/sessionHandles'
+
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
 
   /appid-<appId>/recipe/session/regenerate:
     post:
@@ -3665,7 +3797,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['UNSUPPORTED_ALGORITHM_ERROR']
+                        enum: [ 'UNSUPPORTED_ALGORITHM_ERROR' ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -3697,7 +3829,7 @@ paths:
                 properties:
                   status:
                     type: string
-                    enum: ["OK"]
+                    enum: [ "OK" ]
                   keys:
                     type: array
                     items:
@@ -3725,6 +3857,8 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - keys
                 properties:
                   keys:
                     type: array
@@ -3741,7 +3875,7 @@ paths:
           $ref: '#/components/responses/500'
 
 
-  /appid-<appId>/<tenantId>/recipe/jwt/data:
+  /appid-<appId>/recipe/jwt/data:
     get:
       deprecated: true
       tags:
@@ -3830,7 +3964,7 @@ paths:
   /appid-<appId>/recipe/dashboard/user:
     post:
       tags:
-         - Dashboard Recipe
+        - Dashboard Recipe
       operationId: createDashboardUser
       description: |
         Create a dashboard user
@@ -3861,7 +3995,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["OK"]
+                        enum: [ "OK" ]
                       user:
                         type: object
                         properties:
@@ -3878,12 +4012,12 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["EMAIL_ALREADY_EXISTS_ERROR"]
+                        enum: [ "EMAIL_ALREADY_EXISTS_ERROR" ]
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ["PASSWORD_WEAK_ERROR"]
+                        enum: [ "PASSWORD_WEAK_ERROR" ]
                       message:
                         type: string
                         example: "Your password must have at least 8 characters"
@@ -3891,7 +4025,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["INVALID_EMAIL_ERROR"]
+                        enum: [ "INVALID_EMAIL_ERROR" ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -3908,7 +4042,7 @@ paths:
                 properties:
                   status:
                     type: string
-                    enum: ["USER_LIMIT_REACHED_ERROR"]
+                    enum: [ "USER_LIMIT_REACHED_ERROR" ]
                   message:
                     type: string
                     example: "You have reached the free limit for creating users, please purchase the dashboard feature to create new users"
@@ -3920,7 +4054,7 @@ paths:
           $ref: '#/components/responses/500'
     put:
       tags:
-         - Dashboard Recipe
+        - Dashboard Recipe
       operationId: updateDashboardUser
       description: |
         Update a user's email or password
@@ -3966,7 +4100,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["OK"]
+                        enum: [ "OK" ]
                       user:
                         type: object
                         properties:
@@ -3983,12 +4117,12 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["EMAIL_ALREADY_EXISTS_ERROR"]
+                        enum: [ "EMAIL_ALREADY_EXISTS_ERROR" ]
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ["PASSWORD_WEAK_ERROR"]
+                        enum: [ "PASSWORD_WEAK_ERROR" ]
                       message:
                         type: string
                         example: "Your password must have at least 8 characters"
@@ -3996,12 +4130,12 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["INVALID_EMAIL_ERROR"]
+                        enum: [ "INVALID_EMAIL_ERROR" ]
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ["UNKNOWN_USER_ERROR"]
+                        enum: [ "UNKNOWN_USER_ERROR" ]
 
 
         '400':
@@ -4017,7 +4151,7 @@ paths:
           $ref: '#/components/responses/500'
     delete:
       tags:
-         - Dashboard Recipe
+        - Dashboard Recipe
       operationId: deleteDashboardUser
       description: |
         Delete a dashboard user with their userId or email
@@ -4085,7 +4219,7 @@ paths:
                 properties:
                   status:
                     type: string
-                    enum: ["OK"]
+                    enum: [ "OK" ]
                   users:
                     type: array
                     items:
@@ -4119,7 +4253,7 @@ paths:
   /appid-<appId>/recipe/dashboard/session/verify:
     post:
       tags:
-         - Dashboard Recipe
+        - Dashboard Recipe
       operationId: verifyDashboardUserSession
       description: |
         Verify a Dashboard user's sessionId
@@ -4147,14 +4281,14 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["OK"]
+                        enum: [ "OK" ]
                       email:
                         type: string
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ["USER_SUSPENDED_ERROR"]
+                        enum: [ "USER_SUSPENDED_ERROR" ]
                       message:
                         type: string
                         example: "You have crossed the free dashboard user limit. Please purchase the dashboard feature or login with a valid user account"
@@ -4162,7 +4296,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["INVAlID_SESSION_ERROR"]
+                        enum: [ "INVAlID_SESSION_ERROR" ]
         '400':
           $ref: '#/components/responses/400'
 
@@ -4178,7 +4312,7 @@ paths:
   /appid-<appId>/recipe/dashboard/session:
     delete:
       tags:
-         - Dashboard Recipe
+        - Dashboard Recipe
       operationId: RevokeDashboardUsersSession
       description: |
         Revoke a Dashboard user's session
@@ -4217,7 +4351,7 @@ paths:
   /appid-<appId>/recipe/dashboard/signin:
     post:
       tags:
-         - Dashboard Recipe
+        - Dashboard Recipe
       operationId: signInDashboardUser
       description: |
         Signin a Dashboard user
@@ -4248,7 +4382,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["OK"]
+                        enum: [ "OK" ]
                       sessionId:
                         type: string
                         example:
@@ -4256,7 +4390,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["USER_SUSPENDED_ERROR"]
+                        enum: [ "USER_SUSPENDED_ERROR" ]
                       message:
                         type: string
                         example: "You have crossed the free dashboard user limit. Please purchase the dashboard feature or login with a valid user account"
@@ -4264,7 +4398,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["INVAlID_CREDENTIALS_ERROR"]
+                        enum: [ "INVAlID_CREDENTIALS_ERROR" ]
         '400':
           $ref: '#/components/responses/400'
 
@@ -4364,7 +4498,7 @@ paths:
                     type: array
                     items:
                       type: string
-                      example: ['2.13']
+                      example: [ '2.13' ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -4412,7 +4546,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['NOT_ALLOWED']
+                        enum: [ 'NOT_ALLOWED' ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -4499,24 +4633,29 @@ paths:
         - $ref: '#/components/parameters/cdi-version'
       responses:
         '200':
-          description:  Returns the telemetryID if it exists
+          description: Returns the telemetryID if it exists
           content:
             application/json:
               schema:
                 oneOf:
                   - type: object
+                    required:
+                      - exists
+                      - telemetryId
                     properties:
                       exists:
                         type: boolean
-                        enum: [true]
+                        enum: [ true ]
                       telemetryId:
                         type: string
                         example: 99c87c72-1807-22d-9b39-7a88f95re56c
                   - type: object
+                    required:
+                      - exists
                     properties:
                       exists:
                         type: boolean
-                        example: [false]
+                        enum: [ false ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -4715,7 +4854,7 @@ paths:
                   example: true
       responses:
         '200':
-          description:  Returns OK if the operation succeeded (even if the user didn't exist before the call)
+          description: Returns OK if the operation succeeded (even if the user didn't exist before the call)
           content:
             application/json:
               schema:
@@ -4755,7 +4894,7 @@ paths:
                     type: array
                     items:
                       type: string
-                      example: ['email', 'phone', 'provider']
+                      example: [ 'email', 'phone', 'provider' ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -4793,7 +4932,7 @@ paths:
                     type: array
                     items:
                       type: string
-                    example: ["feature_1", "feature_2"]
+                    example: [ "feature_1", "feature_2" ]
                   usageStats:
                     type: object
 
@@ -4831,11 +4970,11 @@ paths:
                   example: "eyJhbGciOiJIUzI1NiIsIn..."
       responses:
         '200':
-          description:  The operation was successful
+          description: The operation was successful
           content:
             application/json:
               schema:
-                 oneOf:
+                oneOf:
                   - type: object
                     properties:
                       status:
@@ -4845,13 +4984,13 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['MISSING_EE_FOLDER_ERROR']
+                        enum: [ 'MISSING_EE_FOLDER_ERROR' ]
 
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ['INVALID_LICENSE_KEY_ERROR']
+                        enum: [ 'INVALID_LICENSE_KEY_ERROR' ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -4872,7 +5011,7 @@ paths:
 
       responses:
         '200':
-          description:  The operation was successful
+          description: The operation was successful
           content:
             application/json:
               schema:
@@ -4900,7 +5039,7 @@ paths:
 
       responses:
         '200':
-          description:  The operation was successful
+          description: The operation was successful
           content:
             application/json:
               schema:
@@ -4917,7 +5056,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['NO_LICENSE_KEY_FOUND_ERROR']
+                        enum: [ 'NO_LICENSE_KEY_FOUND_ERROR' ]
 
         '400':
           $ref: '#/components/responses/400'
@@ -4954,7 +5093,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['UNKNOWN_USER_ID_ERROR']
+                        enum: [ 'UNKNOWN_USER_ID_ERROR' ]
         '400':
           $ref: '#/components/responses/400'
 
@@ -5124,14 +5263,14 @@ paths:
           application/json:
             schema:
               allOf:
-              - type: object
-                required:
-                  - connectionUriDomain
-                properties:
-                  connectionUriDomain:
-                    type: string
-                    example: core-1234.supertokens.io:3567
-              - $ref: '#/components/schemas/tenantInput'
+                - type: object
+                  required:
+                    - connectionUriDomain
+                  properties:
+                    connectionUriDomain:
+                      type: string
+                      example: core-1234.supertokens.io:3567
+                - $ref: '#/components/schemas/tenantInput'
       responses:
         200:
           description: Create or Update connection uri domain result
@@ -5226,14 +5365,14 @@ paths:
           application/json:
             schema:
               allOf:
-              - type: object
-                required:
-                  - connectionUriDomain
-                properties:
-                  connectionUriDomain:
-                    type: string
-                    example: core-1234.supertokens.io:3567
-              - $ref: '#/components/schemas/tenantInputV2'
+                - type: object
+                  required:
+                    - connectionUriDomain
+                  properties:
+                    connectionUriDomain:
+                      type: string
+                      example: core-1234.supertokens.io:3567
+                - $ref: '#/components/schemas/tenantInputV2'
       responses:
         200:
           description: Create or Update connection uri domain result
@@ -5495,14 +5634,14 @@ paths:
           application/json:
             schema:
               allOf:
-              - type: object
-                required:
-                  - appId
-                properties:
-                  appId:
-                    type: string
-                    example: app1
-              - $ref: '#/components/schemas/tenantInput'
+                - type: object
+                  required:
+                    - appId
+                  properties:
+                    appId:
+                      type: string
+                      example: app1
+                - $ref: '#/components/schemas/tenantInput'
       responses:
         200:
           description: Create or Update app result
@@ -5595,14 +5734,14 @@ paths:
           application/json:
             schema:
               allOf:
-              - type: object
-                required:
-                  - appId
-                properties:
-                  appId:
-                    type: string
-                    example: app1
-              - $ref: '#/components/schemas/tenantInputV2'
+                - type: object
+                  required:
+                    - appId
+                  properties:
+                    appId:
+                      type: string
+                      example: app1
+                - $ref: '#/components/schemas/tenantInputV2'
       responses:
         200:
           description: Create or Update app result
@@ -5842,13 +5981,13 @@ paths:
           application/json:
             schema:
               allOf:
-              - type: object
-                required:
-                  - tenantId
-                properties:
-                  tenantId:
-                    $ref: '#/components/schemas/tenantId'
-              - $ref: '#/components/schemas/tenantInput'
+                - type: object
+                  required:
+                    - tenantId
+                  properties:
+                    tenantId:
+                      $ref: '#/components/schemas/tenantId'
+                - $ref: '#/components/schemas/tenantInput'
       responses:
         200:
           description: Create or Update tenant result
@@ -5939,13 +6078,13 @@ paths:
           application/json:
             schema:
               allOf:
-              - type: object
-                required:
-                  - tenantId
-                properties:
-                  tenantId:
-                    $ref: '#/components/schemas/tenantId'
-              - $ref: '#/components/schemas/tenantInputV2'
+                - type: object
+                  required:
+                    - tenantId
+                  properties:
+                    tenantId:
+                      $ref: '#/components/schemas/tenantId'
+                - $ref: '#/components/schemas/tenantInputV2'
       responses:
         200:
           description: Create or Update tenant result
@@ -6004,17 +6143,17 @@ paths:
             application/json:
               schema:
                 oneOf:
-                - allOf:
-                    - type: object
-                      properties:
-                        status:
-                          $ref: '#/components/schemas/statusOK'
-                    - $ref: '#/components/schemas/tenantConfig'
-                - type: object
-                  properties:
-                    status:
-                      type: string
-                      enum: [TENANT_NOT_FOUND_ERROR]
+                  - allOf:
+                      - type: object
+                        properties:
+                          status:
+                            $ref: '#/components/schemas/statusOK'
+                      - $ref: '#/components/schemas/tenantConfig'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ TENANT_NOT_FOUND_ERROR ]
         '400':
           $ref: '#/components/responses/400'
 
@@ -6058,17 +6197,17 @@ paths:
             application/json:
               schema:
                 oneOf:
-                - allOf:
-                    - type: object
-                      properties:
-                        status:
-                          $ref: '#/components/schemas/statusOK'
-                    - $ref: '#/components/schemas/tenantConfigV2'
-                - type: object
-                  properties:
-                    status:
-                      type: string
-                      enum: [TENANT_NOT_FOUND_ERROR]
+                  - allOf:
+                      - type: object
+                        properties:
+                          status:
+                            $ref: '#/components/schemas/statusOK'
+                      - $ref: '#/components/schemas/tenantConfigV2'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ TENANT_NOT_FOUND_ERROR ]
         '400':
           $ref: '#/components/responses/400'
 
@@ -6119,7 +6258,7 @@ paths:
                           example: password_reset_token_lifetime
                         valueType:
                           type: string
-                          enum: ["string", "number", "boolean"]
+                          enum: [ "string", "number", "boolean" ]
                           nullable: true
                           example: "number"
                         value:
@@ -6394,25 +6533,16 @@ paths:
             application/json:
               schema:
                 oneOf:
-                - type: object
-                  required:
-                    - status
-                    - createdNew
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    createdNew:
-                      type: boolean
-                - type: object
-                  required:
-                  - status
-                  - reason
-                  properties:
-                    status:
-                      type: string
-                      enum: ["CONFIG_VALIDATION_ERROR"]
-                    reason:
-                      type: string
+                  - type: object
+                    required:
+                      - status
+                      - createdNew
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      createdNew:
+                        type: boolean
+
         '400':
           $ref: '#/components/responses/400'
 
@@ -6458,12 +6588,12 @@ paths:
             application/json:
               schema:
                 oneOf:
-                - type: object
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    didConfigExist:
-                      type: boolean
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      didConfigExist:
+                        type: boolean
         '400':
           $ref: '#/components/responses/400'
 
@@ -6513,29 +6643,29 @@ paths:
             application/json:
               schema:
                 oneOf:
-                - type: object
-                  required:
-                    - status
-                    - wasAlreadyAssociated
-                  properties:
-                    status:
-                      $ref: '#/components/schemas/statusOK'
-                    wasAlreadyAssociated:
-                      type: boolean
-                - type: object
-                  required:
-                  - status
-                  properties:
-                    status:
-                      type: string
-                      enum: ['UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR', 'PHONE_NUMBER_ALREADY_EXISTS_ERROR', 'THIRD_PARTY_USER_ALREADY_EXISTS_ERROR']
-                - type: object
-                  properties:
-                    status:
-                      type: string
-                      enum: ['ASSOCIATION_NOT_ALLOWED_ERROR']
-                    reason:
-                      type: string
+                  - type: object
+                    required:
+                      - status
+                      - wasAlreadyAssociated
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      wasAlreadyAssociated:
+                        type: boolean
+                  - type: object
+                    required:
+                      - status
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR', 'PHONE_NUMBER_ALREADY_EXISTS_ERROR', 'THIRD_PARTY_USER_ALREADY_EXISTS_ERROR' ]
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'ASSOCIATION_NOT_ALLOWED_ERROR' ]
+                      reason:
+                        type: string
 
         '400':
           $ref: '#/components/responses/400'
@@ -6639,6 +6769,11 @@ paths:
                             $ref: '#/components/schemas/statusOK'
                       - $ref: '#/components/schemas/oauthClient'
                   - $ref: '#/components/schemas/oauthError'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ "CLIENT_NOT_FOUND_ERROR" ]
         '400':
           $ref: '#/components/responses/400'
 
@@ -6874,6 +7009,8 @@ paths:
               schema:
                 oneOf:
                   - type: object
+                    required:
+                      - challenge
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
@@ -6981,7 +7118,18 @@ paths:
                             type: string
                           property2:
                             type: string
+                      acr:
+                        type: string
+                      amr:
+                        type: array
+                        items:
+                          type: string
+                      challenge:
+                        type: string
+                      oidcContext:
+                        type: object
                   - $ref: '#/components/schemas/oauthError'
+
         '400':
           $ref: '#/components/responses/400'
 
@@ -7046,6 +7194,19 @@ paths:
                     idToken:
                       type: object
                       additionalProperties: true
+                iss:
+                  type: string
+                tId:
+                  type: string
+                rsub:
+                  type: string
+                sessionHandle:
+                  type: string
+                initialAccessTokenPayload:
+                  type: object
+                initialIdTokenPayload:
+                  type: object
+                  
       responses:
         '200':
           description: OAuth2 Consent Request Result
@@ -7164,6 +7325,8 @@ paths:
               schema:
                 oneOf:
                   - type: object
+                    required:
+                      - requestUrl
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
@@ -7171,6 +7334,22 @@ paths:
                         type: string
                       client:
                         $ref: '#/components/schemas/oauthClient'
+                      requestUrl:
+                        type: string
+                      requestedAccessTokenAudience:
+                        type: array
+                        items:
+                          type: string
+                      requestedScope:
+                        type: array
+                        items:
+                          type: string
+                      sessionId:
+                        type: string
+                      skip:
+                        type: boolean
+                      subject:
+                        type: string
                       oidcContext:
                         type: object
                         properties:
@@ -7626,18 +7805,84 @@ paths:
                   - $ref: '#/components/schemas/oauthError'
         '400':
           $ref: '#/components/responses/400'
-
         '401':
           $ref: '#/components/responses/401'
-
         '402':
           $ref: '#/components/responses/402'
-
         '404':
           $ref: '#/components/responses/404'
-
         '500':
           $ref: '#/components/responses/500'
+
+    post:
+      tags:
+        - OAuth2Provider Recipe
+      description: |
+        Exchange OAuth2 Auth request for redirect or error.
+      operationId: postOAuth2Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - params
+                - iss
+              properties:
+                params:
+                  type: object
+                iss:
+                  type: string
+                cookies:
+                  type: string
+                session:
+                  type: object
+                  properties:
+                    idToken:
+                      type: object
+                    accessToken:
+                      type: object
+      responses:
+        '200':
+          description: OAuth2 auth result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    required:
+                      - status
+                      - redirectTo
+                      - cookies
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      redirectTo:
+                        type: string
+                      cookies:
+                        type: array
+                        items:
+                          type: string
+                  - $ref: '#/components/schemas/oauthError'
+                  - type: object
+                    required:
+                      - status
+                    properties:
+                      status:
+                        type: string
+                        enum: [CLIENT_NOT_FOUND_ERROR]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '402':
+          $ref: '#/components/responses/402'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
   /appid-<appId>/recipe/oauth/token:
     post:
       tags:
@@ -7700,6 +7945,11 @@ paths:
                         type: string
                         example: "bearer"
                   - $ref: '#/components/schemas/oauthError'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ "CLIENT_NOT_FOUND_ERROR" ]
         '400':
           $ref: '#/components/responses/400'
 
@@ -7774,7 +8024,7 @@ paths:
           $ref: '#/components/responses/404'
 
         '500':
-          $ref: '#/components/responses/500'
+          $ref: '#/components/responses/500'      
   /appid-<appId>/recipe/oauth/introspect:
     post:
       tags:
@@ -7795,6 +8045,8 @@ paths:
                 - token
               properties:
                 token:
+                  type: string
+                scope:
                   type: string
       responses:
         '200':
@@ -8184,6 +8436,1107 @@ paths:
           $ref: '#/components/responses/500'
 
 
+  /appid-<appId>/bulk-import/users:
+    get:
+      tags: 
+        - Bulk Import
+      operationId: getBulkImportUsers
+      description: |
+        Paginated API to get bulk import users
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - $ref: '#/components/parameters/paginationToken'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/bulkImportUserStatus'
+
+      responses:
+        '200':
+          description: Paginated Bulk Import Users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/bulkImportUserResponse'
+                  nextPaginationToken: 
+                    $ref: '#/components/schemas/paginationToken'
+        '400':
+          $ref: '#/components/responses/400'
+        
+        '401':
+          $ref: '#/components/responses/401'
+        
+        '404':
+          $ref: '#/components/responses/404'
+        
+        '500':
+          $ref: '#/components/responses/500'
+
+    post:
+      tags:
+        - Bulk Import
+      operationId: addBulkImportUsers
+      description: |
+        Add users for bulk import. Maximum 10000 users can be added in one request.
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                users:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/bulkImportUser'
+              required:
+                - users
+      responses:
+        '200':
+          description: Bulk Import Users added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  users:
+                    $ref: '#/components/schemas/addBulkImportUserResponse'
+        '400':
+          description: One or more users have invalid schema
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Data has missing or invalid fields. Please check the users field for more details."
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: number
+                          example: 0
+                          description: "Index of the user in the users array that has invalid schema"
+                        errors:
+                          type: array
+                          items:
+                            type: string
+                            description: "List of errors for the user"
+                            example: "Invalid recipeId for loginMethod. Pass one of emailpassword, thirdparty or, passwordless!"
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/bulk-import/users/remove:
+    post:
+      tags:
+        - Bulk Import
+      operationId: deleteBulkImportUsers
+      description: |
+        Delete bulk import users by id. Multiple ids can be passed in the request body.
+      parameters:
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  description: List of bulk import user ids to be deleted
+                  items:
+                    $ref: '#/components/schemas/bulkImportUserId'
+              required:
+                - ids
+      responses:
+        '200':
+          description: Bulk Import Users deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deletedIds:
+                    type: array
+                    description: List of ids that were successfully deleted
+                    items:
+                      $ref: '#/components/schemas/bulkImportUserId'
+                  invalidIds:
+                    type: array
+                    description: List of ids that were invalid
+                    items:
+                      $ref: '#/components/schemas/bulkImportUserId'
+                    example: []
+
+        '400':
+          $ref: '#/components/responses/400'
+
+        '401':
+          $ref: '#/components/responses/401'
+
+        '404':
+          $ref: '#/components/responses/404'
+
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/webauthn/user/credential:
+    get:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Get the WebAuthn credential for the user.
+
+      operationId: getWebAuthNCredential
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: recipeUserId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+        - in: query
+          name: webauthnCredentialId
+          schema:
+            type: string
+            example: ea7a0931-b533-4478-9253-0fde890ca23
+          required: true
+      responses:
+        '200':
+          description: WebAuthn credential result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      webauthnCredentialId:
+                        type: string
+                        example: ea7a0931-b533-4478-9253-0fde890ca23
+                      recipeUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      relyingPartyId:
+                        type: string
+                        example: example.com
+                      createdAt:
+                        type: number
+                        example: 1741793746
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          [
+                            'CREDENTIAL_NOT_FOUND_ERROR',
+                          ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/webauthn/user/credential/list:
+    get:
+      tags:
+        - WebAuthn Recipe
+      description:
+        List credentials that were created by the user.
+      operationId: listWebAuthNCredentials
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: recipeUserId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+      responses:
+        '200':
+          description: WebAuthn credentials list result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      credentials:
+                        type: array
+                        items:
+                          required:
+                            - webauthnCredentialId
+                            - recipeUserId
+                            - relyingPartyId
+                            - createdAt
+                          type: object
+                          properties:
+                            webauthnCredentialId:
+                              type: string
+                              example: ea7a0931-b533-4478-9253-0fde890ca23
+                            recipeUserId:
+                              type: string
+                              example: fa7a0841-b533-4478-9253-0fde890c576
+                            relyingPartyId:
+                              type: string
+                              example: example.com
+                            createdAt:
+                              type: number
+                              example: 1741793746
+                            updatedAt:
+                              type: number
+                              example: 1741793746
+
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/options:
+    get:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Get the WebAuthn options.
+      operationId: getWebAuthNOptions
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: webauthnGeneratedOptionsId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+      responses:
+        '200':
+          description: WebAuthn options result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      webauthnGeneratedOptionsId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      relyingPartyId:
+                        type: string
+                        example: example.com
+                      relyingPartyName:
+                        type: string
+                        example: Example
+                      challenge:
+                        type: string
+                        example: TQvEVDV8B64w_2zIifzKaPzBPfthqpx2uJkq_2PIB0k
+                      timeout:
+                        type: number
+                        example: 10000
+                      origin:
+                        type: string
+                        example: http://example.com
+                      email:
+                        type: string
+                        example: email@example.com
+                      userVerification:
+                        $ref: '#/components/schemas/userVerification'
+                      userPresence:
+                        type: boolean
+                        example: true
+                      createdAt:
+                        type: number
+                        example: 1741793746
+                      expiresAt:
+                        type: number
+                        example: 1741793746
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/user/recover:
+    get:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Recover the user using the WebAuthn credential.
+      operationId: recoverWebAuthNUser
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: token
+          schema:
+            type: string
+            example: ZmE3YTA4NDEtYjUzMy00NDc4LTkyNTMtMGZkZTg5MGM1NzY
+          required: true
+      responses:
+        '200':
+          description: AuthRecipeUser for the token
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      recipeUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'RECOVER_ACCOUNT_TOKEN_INVALID_ERROR' ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/options/register:
+    post:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Generate the webauthn options for registration.
+      operationId: generateRegistrationOptions
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - relyingPartyId
+                - relyingPartyName
+                - origin
+              properties:
+                email:
+                  $ref: '#/components/schemas/email'
+                displayName:
+                  type: string
+                  example: John Doe
+                relyingPartyId:
+                  type: string
+                  example: example.com
+                relyingPartyName:
+                  type: string
+                  example: Example
+                origin:
+                  type: string
+                  example: http://example.com
+                timeout:
+                  type: number
+                  example: 10000
+                userVerification:
+                  $ref: '#/components/schemas/userVerification'
+                userPresence:
+                  type: boolean
+                  example: false
+                attestation:
+                  type: string
+                  example: none
+                residentKey:
+                  type: string
+                  example: required
+                supportedAlgorithmIds:
+                  type: array
+                  items:
+                    type: number
+                    example: -7
+      responses:
+        '200':
+          description: The generated register options response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      webauthnGeneratedOptionsId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      rp:
+                        type: object
+                        properties:
+                            id:
+                              type: string
+                              example: example.com
+                            name:
+                              type: string
+                              example: Example
+                      user:
+                        type: object
+                        properties:
+                            id:
+                              type: string
+                              example: fa7a0841-b533-4478-9253-0fde890c576
+                            name:
+                              type: string
+                              example: John Doe
+                            displayName:
+                              type: string
+                              example: John Doe
+                      email:
+                        $ref: '#/components/schemas/email'
+                      challenge:
+                        type: string
+                        example: TQvEVDV8B64w_2zIifzKaPzBPfthqpx2uJkq_2PIB0k
+                      timeout:
+                        type: number
+                        example: 10000
+                      attestation:
+                        type: string
+                        example: none
+                      createdAt:
+                        type: number
+                        example: 1741793746
+                      expiresAt:
+                        type: number
+                        example: 1741793746
+                      pubKeyCredParams:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              example: public-key
+                            alg:
+                              type: number
+                              example: -7
+                      excludeCredentials:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: fa7a0841-b533-4478-9253-0fde890c576
+                            transport:
+                              type: array
+                              items:
+                                type: string
+                                example: internal
+                      authenticatorSelection:
+                        type: object
+                        properties:
+                          userVerification:
+                            $ref: '#/components/schemas/userVerification'
+                          requireResidentKey:
+                            type: boolean
+                            example: true
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'INVALID_OPTIONS_ERROR' ]
+                      reason:
+                        type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/options/signin:
+    post:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Generate the webauthn options for signin.
+      operationId: generateSigninOptions
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - relyingPartyId
+                - relyingPartyName
+                - origin
+              properties:
+                relyingPartyId:
+                  type: string
+                  example: example.com
+                relyingPartyName:
+                  type: string
+                  example: Example
+                origin:
+                  type: string
+                  example: http://example.com
+                timeout:
+                  type: number
+                  example: 10000
+                userVerification:
+                  $ref: '#/components/schemas/userVerification'
+                userPresence:
+                  type: boolean
+                  example: false
+      responses:
+        '200':
+          description: AuthRecipeUser for the token
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      webauthnGeneratedOptionsId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      relyingPartyId:
+                        type: string
+                        example: example.com
+                      challenge:
+                        type: string
+                        example: TQvEVDV8B64w_2zIifzKaPzBPfthqpx2uJkq_2PIB0k
+                      timeout:
+                        type: number
+                        example: 10000
+                      userVerification:
+                        $ref: '#/components/schemas/userVerification'
+                      userPresence:
+                        type: boolean
+                        example: true
+                      createdAt:
+                        type: number
+                        example: 1741793746
+                      expiresAt:
+                        type: number
+                        example: 1741793746
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'INVALID_OPTIONS_ERROR' ]
+                      reason:
+                        type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/webauthn/user/credential/register:
+    post:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Register a new credential for the user
+      operationId: registerWebAuthNCredential
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                recipeUserId:
+                  $ref: '#/components/schemas/userId'
+                webauthnGeneratedOptionsId:
+                  type: string
+                  example: fa7a0841-b533-4478-9253-0fde890c576
+                credential:
+                  type: object
+                  description: Credential returned by the browser
+      responses:
+        '200':
+          description: The stored credential
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      webauthnCredentialId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      relyingPartyId:
+                        type: string
+                        example: example.com
+                      relyingPartyName:
+                        type: string
+                        example: Example
+                      recipeUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      email:
+                        $ref: '#/components/schemas/email'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'INVALID_AUTHENTICATOR_ERROR' ]
+                      reason:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'OPTIONS_NOT_FOUND_ERROR', 'INVALID_CREDENTIALS_ERROR', 'INVALID_OPTIONS_ERROR', ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/signup:
+    post:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Sign up the user using the WebAuthn credential.
+      operationId: signUpWebAuthNUser
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                webauthnGeneratedOptionsId:
+                  type: string
+                  example: fa7a0841-b533-4478-9253-0fde890c576
+                credential:
+                  type: object
+                  description: Credential returned by the browser
+      responses:
+        '200':
+          description: The signup result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      webauthnCredentialId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      relyingPartyId:
+                        type: string
+                        example: example.com
+                      relyingPartyName:
+                        type: string
+                        example: Example
+                      recipeUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'INVALID_OPTIONS_ERROR', 'INVALID_AUTHENTICATOR_ERROR', 'INVALID_CREDENTIALS_ERROR' ]
+                      reason:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'OPTIONS_NOT_FOUND_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR' ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/signin:
+    post:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Sign in the user using the WebAuthn credential.
+      operationId: signInWebAuthNUser
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                webauthnGeneratedOptionsId:
+                  type: string
+                  example: fa7a0841-b533-4478-9253-0fde890c576
+                credential:
+                  type: object
+                  description: Credential returned by the browser
+      responses:
+        '200':
+          description: The stored credential
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      recipeUserId:
+                        type: string
+                        example: fa7a0841-b533-4478-9253-0fde890c576
+                      user:
+                        $ref: '#/components/schemas/authRecipeUser'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'INVALID_OPTIONS_ERROR', 'INVALID_AUTHENTICATOR_ERROR', 'INVALID_CREDENTIALS_ERROR' ]
+                      reason:
+                        type: string
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'OPTIONS_NOT_FOUND_ERROR', 'CREDENTIAL_NOT_FOUND_ERROR', 'UNKNOWN_USER_ID_ERROR' ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/user/recover/token:
+    post:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Generate a token to recover the user.
+      operationId: generateTokenForRecovery
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+                - email
+              properties:
+                userId:
+                  $ref: '#/components/schemas/userId'
+                email:
+                  $ref: '#/components/schemas/email'
+      responses:
+        '200':
+          description: WebAuthn options result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      token:
+                        type: string
+                        example: ZmE3YTA4NDEtYjUzMy00NDc4LTkyNTMtMGZkZTg5MGM1NzY
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'UNKNOWN_USER_ID_ERROR' ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/user/recover/token/consume:
+    post:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Consume the token to recover the user.
+      operationId: consumeWebAuthNToken
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+              properties:
+                token:
+                  type: string
+                  example: ZmE3YTA4NDEtYjUzMy00NDc4LTkyNTMtMGZkZTg5MGM1NzY
+      responses:
+        '200':
+          description: Consume token result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      userId:
+                        $ref: '#/components/schemas/userId'
+                      email:
+                        $ref: '#/components/schemas/email'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'RECOVER_ACCOUNT_TOKEN_INVALID_ERROR' ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/user/email:
+    put:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Update the email of the user.
+      operationId: updateEmail
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - recipeUserId
+                - email
+              properties:
+                recipeUserId:
+                  $ref: '#/components/schemas/userId'
+                email:
+                  $ref: '#/components/schemas/email'
+      responses:
+        '200':
+          description: Update email result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'UNKNOWN_USER_ID_ERROR', 'EMAIL_ALREADY_EXISTS_ERROR' ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/recipe/webauthn/user/credential/remove:
+    delete:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Remove the WebAuthn credential for the user.
+      operationId: removeWebAuthNCredential
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: recipeUserId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+        - in: query
+          name: webauthnCredentialId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+      responses:
+        '200':
+          description: Delete credential result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'CREDENTIAL_NOT_FOUND_ERROR' ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/webauthn/options/remove:
+    delete:
+      tags:
+        - WebAuthn Recipe
+      description:
+        Remove the WebAuthn options.
+      operationId: removeWebAuthNOptions
+      parameters:
+        - $ref: '#/components/parameters/webauthnRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+        - in: query
+          name: webauthnGeneratedOptionsId
+          schema:
+            type: string
+            example: fa7a0841-b533-4478-9253-0fde890c576
+          required: true
+      responses:
+        '200':
+          description: Delete options result
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [ 'OPTIONS_NOT_FOUND_ERROR' ]
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
 components:
   parameters:
     rid:
@@ -8309,6 +9662,14 @@ components:
       required: false
       schema:
         type: string
+        
+    webauthnRid:
+      name: rid
+      in: header
+      example: webauthn
+      required: false
+      schema:
+        type: string
 
     cdi-version:
       name: cdi-version
@@ -8389,7 +9750,12 @@ components:
       schema:
         type: string
         example: val1,val2,val3..
-
+     
+    bulkImportUserStatus:
+      name: status
+      in: query
+      schema:
+        $ref: '#/components/schemas/bulkImportUserStatus'
 
   responses:
     500:
@@ -8440,6 +9806,16 @@ components:
   schemas:
     authRecipeUser:
       type: object
+      required:
+        - id
+        - timeJoined
+        - isPrimaryUser
+        - tenantIds
+        - emails
+        - phoneNumbers
+        - thirdParty
+        - webauthn
+        - loginMethods
       properties:
         id:
           $ref: '#/components/schemas/userId'
@@ -8460,10 +9836,23 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/phoneNumber'
+        webauthn:
+          type: object
+          required:
+            - credentialIds
+          properties:
+            credentialIds:
+              type: array
+              items:
+                type: string
+                example: fa7a0841-b533-4478-9253-0fde890c576
         thirdParty:
           type: array
           items:
             type: object
+            required:
+              - id
+              - userId
             properties:
               id:
                 $ref: '#/components/schemas/thirdPartyId'
@@ -8473,6 +9862,12 @@ components:
           type: array
           items:
             type: object
+            required:
+              - verified
+              - tenantIds
+              - timeJoined
+              - recipeUserId
+              - recipeId
             properties:
               tenantIds:
                 type: array
@@ -8493,11 +9888,24 @@ components:
                 $ref: '#/components/schemas/phoneNumber'
               thirdParty:
                 type: object
+                required:
+                  - id
+                  - userId
                 properties:
                   id:
                     $ref: '#/components/schemas/thirdPartyId'
                   userId:
                     $ref: '#/components/schemas/thirdPartyUserId'
+              webauthn:
+                type: object
+                required:
+                  - credentialIds
+                properties:
+                  credentialIds:
+                    type: array
+                    items:
+                      type: string
+                      example: fa7a0841-b533-4478-9253-0fde890c576
 
     recipeId:
       type: string
@@ -8505,6 +9913,7 @@ components:
         - emailpassword
         - passwordless
         - thirdparty
+        - webauthn
     token:
       type: string
       example: ZTRiOTBjNz...jI5MTZlODkxw
@@ -8603,6 +10012,13 @@ components:
       type: string
       enum:
         - OK
+    
+    userVerification:
+      type: string
+      enum:
+        - preferred
+        - required
+        - discouraged
 
     oauthClient:
       type: object
@@ -8775,6 +10191,11 @@ components:
 
     session:
       type: object
+      required:
+        - handle
+        - userId
+        - tenantId
+        - recipeUserId
       properties:
         handle:
           $ref: '#/components/schemas/handle'
@@ -8789,6 +10210,10 @@ components:
 
     cookieInfo:
       type: object
+      required:
+        - token
+        - expiry
+        - createdTime
       properties:
         token:
           $ref: '#/components/schemas/token'
@@ -8832,6 +10257,13 @@ components:
     jwk:
       type: object
       description: A JWK that can be used to verify a JWT
+      required:
+        - alg
+        - kty
+        - use
+        - kid
+        - n
+        - e
       properties:
         alg:
           $ref: '#/components/schemas/createJWTAlgorithm'
@@ -8844,6 +10276,12 @@ components:
         kid:
           type: string
           description: Unique identifier for the JWK
+        n:
+          type: string
+          description: Modulus
+        e:
+          type: string
+          description: Exponent
         x5c:
           type: array
           description: X.509 Certificate Chain
@@ -8953,6 +10391,8 @@ components:
           type: array
           items:
             type: object
+            required:
+              - clientId
             properties:
               clientType:
                 type: string
@@ -8972,23 +10412,33 @@ components:
           type: string
         authorizationEndpointQueryParams:
           type: object
+          additionalProperties:
+            type: string
+            nullable: true
         tokenEndpoint:
           type: string
         tokenEndpointBodyParams:
           type: object
+          additionalProperties:
+            type: string
         userInfoEndpoint:
           type: string
         userInfoEndpointQueryParams:
           type: object
+          additionalProperties:
+            type: string
+            nullable: true
         userInfoEndpointHeaders:
           type: object
+          additionalProperties:
+            type: string
+            nullable: true
         jwksURI:
           type: string
         oidcDiscoveryEndpoint:
           type: string
         requireEmail:
           type: boolean
-          default: true
         userInfoMap:
           type: object
           properties:
@@ -9042,9 +10492,13 @@ components:
       type: object
       properties:
         firstFactors:
-          $ref: '#/components/schemas/firstFactors'
+          oneOf:
+            - $ref: '#/components/schemas/firstFactors'
+            - type: "null"
         requiredSecondaryFactors:
-          $ref: '#/components/schemas/requiredSecondaryFactors'
+          oneOf:
+            - $ref: '#/components/schemas/requiredSecondaryFactors'
+            - type: "null"
         coreConfig:
           type: object
 
@@ -9091,6 +10545,196 @@ components:
         coreConfig:
           type: object
 
+    passwordHash:
+        type: string
+        example: "$argon2d$v=19$m=12,t=3,p=1$aGI4enNvMmd0Zm0wMDAwMA$r6p7qbr6HD+8CD7sBi4HVw"
+    hashingAlgorithm:
+        type: string
+        enum: ["argon2", "bcrypt", "firebase_scrypt"]
+
+    bulkImportUserId:
+      type: string
+      example: "fa7a0841-b533-4478-9253-0fde890c576"
+
+    bulkImportUserStatus:
+      type: string
+      enum: ["NEW", "PROCESSING", "FAILED"]
+
+    bulkImportUserRole:
+      type: object
+      properties:
+        role:
+          $ref: '#/components/schemas/role'
+        tenantIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/tenantId'
+      required:
+        - role
+        - tenantIds
+
+    bulkImportTotpDevice:
+      type: object
+      properties:
+        secretKey:
+          type: string
+          example: "2PRXZWZAYYDAWCD"
+        skew:
+          type: number
+          example: 0
+        period:
+          type: number
+          example: 30
+        deviceName:
+          type: string
+          example: "My Authy App"
+      required:
+        - secretKey
+
+    bulkImportUserLoginMethodFields:
+      type: object
+      properties:
+        tenantIds:
+          type: array
+          description: List of tenant IDs this login method is associated with
+          items:
+            $ref: '#/components/schemas/tenantId'
+        isVerified:
+          type: boolean
+          description: Indicates whether the email is verified
+        isPrimary:
+          type: boolean
+          description: Indicates whether the login method is the primary login method
+        timeJoinedInMSSinceEpoch:
+          type: integer
+          description: Time joined in milliseconds since the epoch
+
+    bulkImportUserEmailPasswordLoginMethod:
+      allOf:
+      - $ref: '#/components/schemas/bulkImportUserLoginMethodFields'
+      - type: object
+        properties:
+          recipeId:
+            type: string
+            example: "emailpassword"
+          email:
+            $ref: '#/components/schemas/email'
+          passwordHash:
+            $ref: '#/components/schemas/passwordHash'
+          plainTextPassword:
+            type: string
+            example: passwordExample
+          hashingAlgorithm:
+            $ref: '#/components/schemas/hashingAlgorithm'
+        required:
+          - email
+          - passwordHash
+          - hashingAlgorithm
+
+    addBulkImportUserLoginMethodResponse:
+        type: object
+        properties:
+          recipeId:
+            type: string
+            example: "emailpassword"
+          userId:
+            $ref: '#/components/schemas/userId'
+          tenants:
+              type: array
+              items:
+                  $ref: '#/components/schemas/tenantId'
+          email:
+            $ref: '#/components/schemas/email'
+          thirdpartyId:
+            $ref: '#/components/schemas/thirdPartyId'
+          thirdpartyUserId:
+            $ref: '#/components/schemas/thirdPartyUserId'
+          phoneNumber:
+            $ref: '#/components/schemas/phoneNumber'
+        required:
+          - recipeId
+          - userId
+          - tenants
+          - email
+
+
+    bulkImportUserThirdPartyLoginMethod:
+      allOf:
+      - $ref: '#/components/schemas/bulkImportUserLoginMethodFields'
+      - type: object
+        properties:
+          recipeId:
+            type: string
+            example: "thirdparty"
+          thirdPartyId:
+            $ref: '#/components/schemas/thirdPartyId'
+          thirdPartyUserId:
+            $ref: '#/components/schemas/thirdPartyUserId'
+        required:
+          - thirdPartyId
+          - thirdPartyUserId
+
+    bulkImportUserPasswordlessLoginMethod:
+      allOf:
+      - $ref: '#/components/schemas/bulkImportUserLoginMethodFields'
+      - type: object
+        properties:
+          recipeId:
+            type: string
+            example: "passwordless"
+      oneOf:
+        - $ref: '#/components/schemas/email'
+        - $ref: '#/components/schemas/phoneNumber'
+
+    bulkImportUser:
+      type: object
+      properties:
+        externalUserId:
+          $ref: '#/components/schemas/userId'
+        userMetadata:
+          type: array
+          items:
+            $ref: '#/components/schemas/userMetadata'
+        userRoles:
+          type: array
+          items:
+            $ref: '#/components/schemas/bulkImportUserRole'
+        totpDevices:
+          type: array
+          items:
+            $ref: '#/components/schemas/bulkImportTotpDevice'
+        loginMethods:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/bulkImportUserEmailPasswordLoginMethod'
+              - $ref: '#/components/schemas/bulkImportUserThirdPartyLoginMethod'
+              - $ref: '#/components/schemas/bulkImportUserPasswordlessLoginMethod'
+
+    addBulkImportUserResponse:
+      type: object
+      properties:
+        userId:
+          $ref: '#/components/schemas/userId'
+        loginMethods:
+          type: array
+          items:
+            $ref: '#/components/schemas/addBulkImportUserLoginMethodResponse'
+
+    bulkImportUserResponse:
+      properties:
+        id:
+          $ref: '#/components/schemas/bulkImportUserId'
+        status:
+          $ref: '#/components/schemas/bulkImportUserStatus'
+        createdAt:
+          $ref: '#/components/schemas/timeJoined'
+        updatedAt:
+          $ref: '#/components/schemas/timeJoined'
+      allOf:
+      - $ref: '#/components/schemas/bulkImportUser'
+      - type: object
+  
     tenantConfigV2:
       type: object
       required:
@@ -9102,6 +10746,8 @@ components:
           $ref: '#/components/schemas/tenantId'
         thirdParty:
           type: object
+          required:
+            - providers
           properties:
             providers:
               type: array
