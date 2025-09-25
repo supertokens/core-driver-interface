@@ -8024,7 +8024,7 @@ paths:
           $ref: '#/components/responses/404'
 
         '500':
-          $ref: '#/components/responses/500'      
+          $ref: '#/components/responses/500'
   /appid-<appId>/recipe/oauth/introspect:
     post:
       tags:
@@ -8124,7 +8124,7 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/saml/clients/create:
+  /appid-<appId>/<tenantId>/recipe/saml/clients:
     put:
       tags:
         - Saml Recipe
@@ -8153,17 +8153,36 @@ paths:
                   type: string
                 metadataXML:
                   type: string
+                metadataURL:
+                  type: string
               required:
+                - spEntityId
                 - redirectURIs
                 - defaultRedirectURI
-                - metadataXML
       responses:
         '200':
           description: Returns the created or updated SAML client
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/samlClient'
+                oneOf:
+                  - allOf:
+                    - type: object
+                      properties:
+                        status:
+                          $ref: '#/components/schemas/statusOK'
+                      required:
+                        - status
+
+                    - $ref: '#/components/schemas/samlClient'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["INVALID_METADATA_XML_ERROR"]
+                        example: INVALID_METADATA_XML_ERROR
+                    required:
+                      - status
         '400':
           $ref: '#/components/responses/400'
         '401':
@@ -8276,9 +8295,14 @@ paths:
                   type: string
                 redirectURI:
                   type: string
+                acsURL:
+                  type: string
+                state:
+                  type: string
               required:
                 - clientId
                 - redirectURI
+                - acsURL
       responses:
         '200':
           description: Returns the URL to redirect the user to the IdP
@@ -8328,6 +8352,8 @@ paths:
             schema:
               type: object
               properties:
+                clientId:
+                  type: string
                 samlResponse:
                   type: string
                 relayState:
@@ -8345,16 +8371,16 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      code:
+                      redirectURI:
                         type: string
                     required:
                       - status
-                      - code
+                      - redirectURI
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ['INVALID_SAML_RESPONSE_ERROR']
+                        enum: ['INVALID_CLIENT_ERROR', 'INVALID_RESPONSE_ERROR']
                       message:
                         type: string
                     required:
@@ -8404,21 +8430,13 @@ paths:
                       tokens:
                         type: object
                         properties:
-                          accessToken:
-                            type: string
                           idToken:
                             type: string
                         required:
-                          - accessToken
                           - idToken
-                      claims:
-                        type: object
-                        additionalProperties:
-                          type: string
                     required:
                       - status
                       - tokens
-                      - claims
                   - type: object
                     properties:
                       status:
@@ -10135,8 +10153,6 @@ components:
     samlClient:
       type: object
       properties:
-        status:
-          $ref: '#/components/schemas/statusOK'
         clientId:
           type: string
         spEntityId:
@@ -10147,10 +10163,16 @@ components:
             type: string
         defaultRedirectURI:
           type: string
+        idpEntityId:
+          type: string
+        idpSigningCertificate:
+          type: string
       required:
         - clientId
+        - spEntityId
         - redirectURIs
         - defaultRedirectURI
+        - idpEntityId
 
     userMetadata:
       type: object
