@@ -8155,6 +8155,8 @@ paths:
                   type: string
                 metadataURL:
                   type: string
+                allowIDPInitiatedLogin:
+                  type: boolean
               required:
                 - spEntityId
                 - redirectURIs
@@ -10167,12 +10169,15 @@ components:
           type: string
         idpSigningCertificate:
           type: string
+        allowIDPInitiatedLogin:
+          type: boolean
       required:
         - clientId
         - spEntityId
         - redirectURIs
         - defaultRedirectURI
         - idpEntityId
+        - allowIDPInitiatedLogin
 
     userMetadata:
       type: object
