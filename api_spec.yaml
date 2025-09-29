@@ -8354,8 +8354,6 @@ paths:
             schema:
               type: object
               properties:
-                clientId:
-                  type: string
                 samlResponse:
                   type: string
                 relayState:
@@ -8382,7 +8380,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ['INVALID_CLIENT_ERROR', 'INVALID_RESPONSE_ERROR']
+                        enum: ['INVALID_RELAY_STATE_ERROR', 'SAML_RESPONSE_VERIFICATION_FAILED_ERROR']
                       message:
                         type: string
                     required:
