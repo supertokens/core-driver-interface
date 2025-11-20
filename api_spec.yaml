@@ -7,7 +7,7 @@ info:
 
     Those that do not have `<tenantId>` in the path will enforce that the API is called from `public` tenant only.
 
-  version: 5.3.0
+  version: 5.4.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -28,6 +28,7 @@ tags:
   - name: WebAuthn Recipe
   - name: JWT Recipe
   - name: Bulk Import
+  - name: SAML Recipe
 
 
 paths:
@@ -8024,7 +8025,7 @@ paths:
           $ref: '#/components/responses/404'
 
         '500':
-          $ref: '#/components/responses/500'      
+          $ref: '#/components/responses/500'
   /appid-<appId>/recipe/oauth/introspect:
     post:
       tags:
@@ -8123,6 +8124,341 @@ paths:
 
         '500':
           $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/saml/clients:
+    put:
+      tags:
+        - SAML Recipe
+      description: |
+        Create or update a SAML client for the specified tenant.
+      operationId: createOrUpdateSamlClient
+      parameters:
+        - $ref: '#/components/parameters/samlRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                clientId:
+                  type: string
+                clientSecret:
+                  type: string
+                redirectURIs:
+                  type: array
+                  items:
+                    type: string
+                defaultRedirectURI:
+                  type: string
+                metadataXML:
+                  type: string
+                allowIDPInitiatedLogin:
+                  type: boolean
+                enableRequestSigning:
+                  type: boolean
+              required:
+                - redirectURIs
+                - metadataXML
+      responses:
+        '200':
+          description: Returns the created or updated SAML client
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - allOf:
+                    - type: object
+                      properties:
+                        status:
+                          $ref: '#/components/schemas/statusOK'
+                      required:
+                        - status
+
+                    - $ref: '#/components/schemas/samlClient'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ["DUPLICATE_IDP_ENTITY_ERROR"]
+                        example: INVALID_METADATA_XML_ERROR
+                    required:
+                      - status
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/saml/clients/list:
+    get:
+      tags:
+        - SAML Recipe
+      description: |
+        Get the list of all SAML clients configured for the specified tenant.
+      operationId: listSamlClients
+      parameters:
+        - $ref: '#/components/parameters/samlRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      responses:
+        '200':
+          description: Returns all SAML clients
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  clients:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/samlClient'
+                required:
+                  - status
+                  - clients
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/saml/clients/remove:
+    post:
+      tags:
+        - SAML Recipe
+      description: |
+        Delete a SAML client for the specified tenant.
+      operationId: removeSamlClient
+      parameters:
+        - $ref: '#/components/parameters/samlRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                clientId:
+                  type: string
+              required:
+                - clientId
+      responses:
+        '200':
+          description: Indicates whether the client existed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    $ref: '#/components/schemas/statusOK'
+                  didExist:
+                    type: boolean
+                required:
+                  - status
+                  - didExist
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/saml/login:
+    post:
+      tags:
+        - SAML Recipe
+      description: |
+        Create a new login redirect URL for a given SAML client ID.
+      operationId: createSamlLoginRedirect
+      parameters:
+        - $ref: '#/components/parameters/samlRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                clientId:
+                  type: string
+                redirectURI:
+                  type: string
+                acsURL:
+                  type: string
+                state:
+                  type: string
+              required:
+                - clientId
+                - redirectURI
+                - acsURL
+      responses:
+        '200':
+          description: Returns the URL to redirect the user to the IdP
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      ssoRedirectURI:
+                        type: string
+                    required:
+                      - status
+                      - ssoRedirectURI
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['INVALID_CLIENT_ERROR']
+                    required:
+                      - status
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/saml/callback:
+    post:
+      tags:
+        - SAML Recipe
+      description: |
+        Handle the SAML response from the Identity Provider (IdP).
+      operationId: handleSamlCallback
+      parameters:
+        - $ref: '#/components/parameters/samlRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                samlResponse:
+                  type: string
+                relayState:
+                  type: string
+              required:
+                - samlResponse
+      responses:
+        '200':
+          description: Returns an intermediate code on success
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      redirectURI:
+                        type: string
+                    required:
+                      - status
+                      - redirectURI
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['INVALID_RELAY_STATE_ERROR', 'SAML_RESPONSE_VERIFICATION_FAILED_ERROR', 'INVALID_CLIENT_ERROR', 'IDP_LOGIN_DISALLOWED_ERROR']
+                      message:
+                        type: string
+                    required:
+                      - status
+                      - message
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+  /appid-<appId>/<tenantId>/recipe/saml/user:
+    post:
+      tags:
+        - SAML Recipe
+      description: |
+        Get user information using an access token.
+      operationId: getSamlUserInfo
+      parameters:
+        - $ref: '#/components/parameters/samlRid'
+        - $ref: '#/components/parameters/api-key'
+        - $ref: '#/components/parameters/cdi-version'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                clientId:
+                  type: string
+              required:
+                - accessToken
+                - clientId
+      responses:
+        '200':
+          description: Returns user information on success
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        $ref: '#/components/schemas/statusOK'
+                      sub:
+                        type: string
+                      email:
+                        type: string
+                      aud:
+                        type: string
+                      claims:
+                        type: object
+                    required:
+                      - status
+                      - sub
+                      - email
+                      - claims
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: ['INVALID_TOKEN_ERROR']
+                    required:
+                      - status
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
 
   /appid-<appId>/bulk-import/users:
     get:
@@ -9280,6 +9616,13 @@ components:
       required: false
       schema:
         type: string
+    samlRid:
+      name: rid
+      in: header
+      example: saml
+      required: false
+      schema:
+        type: string
     userMetadataRid:
       name: rid
       in: header
@@ -9356,7 +9699,7 @@ components:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version.
-      example: '5.2'
+      example: '5.4'
       schema:
         type: string
 
@@ -9813,6 +10156,35 @@ components:
           type: boolean
           example: false
 
+    samlClient:
+      type: object
+      properties:
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+        defaultRedirectURI:
+          type: string
+        redirectURIs:
+          type: array
+          items:
+            type: string
+        idpEntityId:
+          type: string
+        idpSigningCertificate:
+          type: string
+        allowIDPInitiatedLogin:
+          type: boolean
+        enableRequestSigning:
+          type: boolean
+      required:
+        - clientId
+        - defaultRedirectURI
+        - redirectURIs
+        - idpEntityId
+        - allowIDPInitiatedLogin
+        - enableRequestSigning
+
     userMetadata:
       type: object
       description: should be a JSON object (not a JSON literal nor an array)
@@ -10153,13 +10525,13 @@ components:
       type: object
       properties:
         firstFactors:
+          nullable: true
           oneOf:
             - $ref: '#/components/schemas/firstFactors'
-            - type: "null"
         requiredSecondaryFactors:
+          nullable: true
           oneOf:
             - $ref: '#/components/schemas/requiredSecondaryFactors'
-            - type: "null"
         coreConfig:
           type: object
 
@@ -10438,4 +10810,3 @@ components:
           type: string
         statusCode:
           type: integer
-
