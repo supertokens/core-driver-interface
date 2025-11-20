@@ -28,6 +28,7 @@ tags:
   - name: WebAuthn Recipe
   - name: JWT Recipe
   - name: Bulk Import
+  - name: SAML Recipe
 
 
 paths:
@@ -8127,7 +8128,7 @@ paths:
   /appid-<appId>/<tenantId>/recipe/saml/clients:
     put:
       tags:
-        - Saml Recipe
+        - SAML Recipe
       description: |
         Create or update a SAML client for the specified tenant.
       operationId: createOrUpdateSamlClient
@@ -8143,7 +8144,7 @@ paths:
               properties:
                 clientId:
                   type: string
-                spEntityId:
+                clientSecret:
                   type: string
                 redirectURIs:
                   type: array
@@ -8153,14 +8154,13 @@ paths:
                   type: string
                 metadataXML:
                   type: string
-                metadataURL:
-                  type: string
                 allowIDPInitiatedLogin:
                   type: boolean
+                enableRequestSigning:
+                  type: boolean
               required:
-                - spEntityId
                 - redirectURIs
-                - defaultRedirectURI
+                - metadataXML
       responses:
         '200':
           description: Returns the created or updated SAML client
@@ -8181,7 +8181,7 @@ paths:
                     properties:
                       status:
                         type: string
-                        enum: ["INVALID_METADATA_XML_ERROR"]
+                        enum: ["DUPLICATE_IDP_ENTITY_ERROR"]
                         example: INVALID_METADATA_XML_ERROR
                     required:
                       - status
@@ -8197,7 +8197,7 @@ paths:
   /appid-<appId>/<tenantId>/recipe/saml/clients/list:
     get:
       tags:
-        - Saml Recipe
+        - SAML Recipe
       description: |
         Get the list of all SAML clients configured for the specified tenant.
       operationId: listSamlClients
@@ -8234,7 +8234,7 @@ paths:
   /appid-<appId>/<tenantId>/recipe/saml/clients/remove:
     post:
       tags:
-        - Saml Recipe
+        - SAML Recipe
       description: |
         Delete a SAML client for the specified tenant.
       operationId: removeSamlClient
@@ -8279,7 +8279,7 @@ paths:
   /appid-<appId>/<tenantId>/recipe/saml/login:
     post:
       tags:
-        - Saml Recipe
+        - SAML Recipe
       description: |
         Create a new login redirect URL for a given SAML client ID.
       operationId: createSamlLoginRedirect
@@ -8340,7 +8340,7 @@ paths:
   /appid-<appId>/<tenantId>/recipe/saml/callback:
     post:
       tags:
-        - Saml Recipe
+        - SAML Recipe
       description: |
         Handle the SAML response from the Identity Provider (IdP).
       operationId: handleSamlCallback
@@ -8395,13 +8395,13 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  /appid-<appId>/<tenantId>/recipe/saml/token:
+  /appid-<appId>/<tenantId>/recipe/saml/user:
     post:
       tags:
-        - Saml Recipe
+        - SAML Recipe
       description: |
-        Exchange an intermediate code for tokens and user claims.
-      operationId: exchangeSamlCode
+        Get user information using an access token.
+      operationId: getSamlUserInfo
       parameters:
         - $ref: '#/components/parameters/samlRid'
         - $ref: '#/components/parameters/api-key'
@@ -8412,13 +8412,16 @@ paths:
             schema:
               type: object
               properties:
-                code:
+                accessToken:
+                  type: string
+                clientId:
                   type: string
               required:
-                - code
+                - accessToken
+                - clientId
       responses:
         '200':
-          description: Returns tokens and claims on success
+          description: Returns user information on success
           content:
             application/json:
               schema:
@@ -8427,21 +8430,24 @@ paths:
                     properties:
                       status:
                         $ref: '#/components/schemas/statusOK'
-                      tokens:
+                      sub:
+                        type: string
+                      email:
+                        type: string
+                      aud:
+                        type: string
+                      claims:
                         type: object
-                        properties:
-                          idToken:
-                            type: string
-                        required:
-                          - idToken
                     required:
                       - status
-                      - tokens
+                      - sub
+                      - email
+                      - claims
                   - type: object
                     properties:
                       status:
                         type: string
-                        enum: ['INVALID_CODE_ERROR']
+                        enum: ['INVALID_TOKEN_ERROR']
                     required:
                       - status
         '400':
@@ -10155,27 +10161,29 @@ components:
       properties:
         clientId:
           type: string
-        spEntityId:
+        clientSecret:
+          type: string
+        defaultRedirectURI:
           type: string
         redirectURIs:
           type: array
           items:
             type: string
-        defaultRedirectURI:
-          type: string
         idpEntityId:
           type: string
         idpSigningCertificate:
           type: string
         allowIDPInitiatedLogin:
           type: boolean
+        enableRequestSigning:
+          type: boolean
       required:
         - clientId
-        - spEntityId
-        - redirectURIs
         - defaultRedirectURI
+        - redirectURIs
         - idpEntityId
         - allowIDPInitiatedLogin
+        - enableRequestSigning
 
     userMetadata:
       type: object
@@ -10517,13 +10525,13 @@ components:
       type: object
       properties:
         firstFactors:
+          nullable: true
           oneOf:
             - $ref: '#/components/schemas/firstFactors'
-            - type: "null"
         requiredSecondaryFactors:
+          nullable: true
           oneOf:
             - $ref: '#/components/schemas/requiredSecondaryFactors'
-            - type: "null"
         coreConfig:
           type: object
 
