@@ -8241,9 +8241,9 @@ paths:
                   type: array
                   nullable: true
                   description: |
-                    Optional allow-list of Assertion Consumer Service URLs. When set, the `acsURL` given to `/recipe/saml/login` must be a member, and the `Destination` / `SubjectConfirmationData.Recipient` of an IdP-initiated response must be a member.
+                    Optional allow-list of Assertion Consumer Service URLs. When set, the `acsURL` given to `/recipe/saml/login` must be a member, and the `Destination` / `SubjectConfirmationData.Recipient` of an IdP-initiated response must be a member when present.
                     Required (at least one URL) when `allowIDPInitiatedLogin` is true; IdP-initiated logins for a client without one are refused.
-                    Required once set (see above). `null` and `[]` clear it. Entries must be non-empty strings.
+                    Required once set (see above). `null` and `[]` clear it. Entries must be strings that are not empty or whitespace-only.
                   items:
                     type: string
                   example: ["https://api.example.com/auth/saml/callback"]
@@ -8522,7 +8522,7 @@ paths:
         Exchange the single-use `code` returned by `/recipe/saml/callback` (passed as `accessToken`) for the authenticated user's SAML claims.
         The code is removed on first use; a second call returns `INVALID_TOKEN_ERROR`.
 
-        For a client with an `attributeMapping`, `sub`, `email`, `firstName` and `lastName` are resolved through it at the time of this call (using the client's current mapping, with the default lists for fields it leaves out). A client without a mapping uses the built-in rules described on each field.
+        For a client with an `attributeMapping`, `sub`, `email`, `firstName` and `lastName` are resolved through it at the time of this call (using the client's current mapping, with the default lists for fields it leaves out, skipping blank values). A client without a mapping uses the built-in rules described on each field, which take the first present claim as is.
       operationId: getSamlUserInfo
       parameters:
         - $ref: '#/components/parameters/samlRid'
@@ -8557,15 +8557,17 @@ paths:
                         type: string
                         nullable: true
                         description: |
-                          The user's id at the IdP, resolved through the client's `attributeMapping.userId` (or the default list: the Subject `NameID`,
+                          The user's id at the IdP. For a client with an `attributeMapping`, resolved through `attributeMapping.userId` (default list: the Subject `NameID`,
                           `http://schemas.microsoft.com/identity/claims/objectidentifier`,
-                          `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name`). `null` if none is present.
+                          `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name`), skipping blank values.
+                          For a client without one, the built-in rule: the first of those claims that is present, taken as is (a blank `NameID` gives an empty string). `null` if none is present.
                       email:
                         type: string
                         nullable: true
                         description: |
-                          Resolved through the client's `attributeMapping.email` (or the default list: `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress`,
-                          `mail`, `email`, or the Subject `NameID` when it contains an `@`). `null` if none is present.
+                          For a client with an `attributeMapping`, resolved through `attributeMapping.email` (default list: `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress`,
+                          `mail`, `email`, or the Subject `NameID` when it contains an `@`), skipping blank values.
+                          For a client without one, the built-in rule: the first of those claims that is present, taken as is. `null` if none is present.
                       firstName:
                         type: string
                         description: Only present when the client's `attributeMapping.firstName` is set and one of its claims is found
@@ -10371,15 +10373,15 @@ components:
       type: object
       nullable: true
       description: |
-        Which assertion claims supply the user's id, email, first name and last name, as ordered fallback lists of claim names (attribute `Name`s; `NameID` is the Subject NameID). For each field the first listed claim with a non-blank value wins. For `email`, `NameID` only counts if it contains an `@`.
+        Which assertion claims supply the user's id, email, first name and last name, as ordered fallback lists of claim names (attribute `Name`s; `NameID` is the Subject NameID). For each field the first listed claim whose first value is non-blank wins (only a claim's first value is considered). For `email`, `NameID` only counts if it contains an `@`.
 
         Fields left out use the defaults:
         - `userId`: `NameID`, `http://schemas.microsoft.com/identity/claims/objectidentifier`, `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name`
         - `email`: `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress`, `mail`, `email`, `NameID`
         - `firstName`, `lastName`: none
 
-        Each list has 1 to 10 names; each name is a non-empty string of at most 512 characters with no leading or trailing whitespace (names match claims exactly and case-sensitively). Unknown keys are rejected. Invalid mappings return a 400 naming the key.
-        `null` and `{}` mean "no mapping" (today's built-in rules). Note that changing `userId` on a client that already has users changes those users' ids.
+        Each list has 1 to 10 names; each name is a non-empty string of at most 512 characters (UTF-16 code units) with no leading or trailing whitespace (names match claims exactly and case-sensitively). Unknown keys are rejected. Invalid mappings return a 400 naming the key.
+        `null` and `{}` mean "no mapping": the client keeps the built-in rules, which take the first *present* claim of the same default chains as is - so a blank `NameID` yields an empty `sub` without a mapping, but falls through to the next claim with one. Note that changing `userId` on a client that already has users changes those users' ids.
       properties:
         userId:
           type: array
