@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [5.5.0]
 
-- `/appid-<appId>/<tenantId>/recipe/webauthn/signin` POST: sign in options are now single-use. They are consumed atomically with a successful sign in, so verifying the same assertion again returns `OPTIONS_NOT_FOUND_ERROR`. SDKs must verify each assertion exactly once (requests on CDI <= 5.4 keep the previous behaviour).
+- `/appid-<appId>/<tenantId>/recipe/webauthn/signin` POST: sign in options are now single-use. A successful sign in consumes them, so a later sign in with the same `webauthnGeneratedOptionsId` returns `OPTIONS_NOT_FOUND_ERROR`. SDKs must verify each assertion exactly once. Requests that send a `cdi-version` of 5.4 or lower keep the previous behaviour; requests without the header are treated as the latest CDI version and consume the options too.
 
 ## [5.4.0]
 
