@@ -7,7 +7,7 @@ info:
 
     Those that do not have `<tenantId>` in the path will enforce that the API is called from `public` tenant only.
 
-  version: 5.4.0
+  version: 5.5.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -9329,8 +9329,13 @@ paths:
     post:
       tags:
         - WebAuthn Recipe
-      description:
+      description: |
         Sign in the user using the WebAuthn credential.
+
+        The sign in options (`webauthnGeneratedOptionsId`, created with `/recipe/webauthn/options/signin`) are single-use:
+        they are consumed atomically with a successful verification, so the same assertion cannot be replayed.
+        Verifying the same assertion a second time returns `OPTIONS_NOT_FOUND_ERROR`.
+        Failed attempts do not consume the options; they stay usable until they expire or are removed.
       operationId: signInWebAuthNUser
       parameters:
         - $ref: '#/components/parameters/webauthnRid'
@@ -9342,7 +9347,8 @@ paths:
             schema:
               type: object
               required:
-                - email
+                - webauthnGeneratedOptionsId
+                - credential
               properties:
                 webauthnGeneratedOptionsId:
                   type: string
@@ -9377,6 +9383,10 @@ paths:
                     properties:
                       status:
                         type: string
+                        description: |
+                          - `OPTIONS_NOT_FOUND_ERROR`: unknown or expired options id, or options already consumed by an earlier successful sign in
+                          - `CREDENTIAL_NOT_FOUND_ERROR`: no credential with this id is registered for the options' relying party
+                          - `UNKNOWN_USER_ID_ERROR`: the credential's user no longer exists
                         enum: [ 'OPTIONS_NOT_FOUND_ERROR', 'CREDENTIAL_NOT_FOUND_ERROR', 'UNKNOWN_USER_ID_ERROR' ]
         '400':
           $ref: '#/components/responses/400'
@@ -9767,7 +9777,7 @@ components:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version.
-      example: '5.4'
+      example: '5.5'
       schema:
         type: string
 
