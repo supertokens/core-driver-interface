@@ -8131,6 +8131,9 @@ paths:
         - SAML Recipe
       description: |
         Create or update a SAML client for the specified tenant.
+
+        If `clientId` is omitted, a new client is created with a generated id (`st_saml_<uuid>`). If it matches an existing client, that client is replaced with the given values.
+        Requires the SAML feature to be enabled for the app (402 otherwise).
       operationId: createOrUpdateSamlClient
       parameters:
         - $ref: '#/components/parameters/samlRid'
@@ -8144,22 +8147,35 @@ paths:
               properties:
                 clientId:
                   type: string
+                  description: Omit to create a client with a generated id
+                  example: st_saml_c3e1b9f0-4d4e-4a8c-9b2a-6b1d7f1f1a2b
                 clientSecret:
                   type: string
+                  description: Optional secret, returned as stored in the client object
                 redirectURIs:
                   type: array
+                  description: Allowed `redirectURI` values for `/recipe/saml/login`; must not be empty
                   items:
                     type: string
+                  example: ["https://example.com/auth/callback/saml"]
                 defaultRedirectURI:
                   type: string
+                  description: Used for IdP-initiated logins, where no `redirectURI` was given at login time
+                  example: https://example.com/auth/callback/saml
                 metadataXML:
                   type: string
+                  description: Base64 encoded IdP metadata XML. Rejected with a 400 if it does not decode to valid SAML metadata.
                 allowIDPInitiatedLogin:
                   type: boolean
+                  description: Whether unsolicited (IdP-initiated) SAML responses are accepted on the callback. Defaults to false.
+                  default: false
                 enableRequestSigning:
                   type: boolean
+                  description: Whether AuthnRequests are signed with the core's SP key. Defaults to true.
+                  default: true
               required:
                 - redirectURIs
+                - defaultRedirectURI
                 - metadataXML
       responses:
         '200':
@@ -8182,13 +8198,15 @@ paths:
                       status:
                         type: string
                         enum: ["DUPLICATE_IDP_ENTITY_ERROR"]
-                        example: INVALID_METADATA_XML_ERROR
+                        example: DUPLICATE_IDP_ENTITY_ERROR
                     required:
                       - status
         '400':
           $ref: '#/components/responses/400'
         '401':
           $ref: '#/components/responses/401'
+        '402':
+          $ref: '#/components/responses/402'
         '404':
           $ref: '#/components/responses/404'
         '500':
@@ -8281,7 +8299,10 @@ paths:
       tags:
         - SAML Recipe
       description: |
-        Create a new login redirect URL for a given SAML client ID.
+        Start an SP-initiated login: builds (and, if enabled for the client, signs) a SAML AuthnRequest and returns the IdP SSO URL to redirect the user to.
+        The generated `RelayState` is stored by the core together with `clientId`, `redirectURI`, `state` and `acsURL`, and is required again in `/recipe/saml/callback`.
+
+        `redirectURI` must be one of the client's `redirectURIs`, otherwise `INVALID_CLIENT_ERROR` is returned.
       operationId: createSamlLoginRedirect
       parameters:
         - $ref: '#/components/parameters/samlRid'
@@ -8297,10 +8318,14 @@ paths:
                   type: string
                 redirectURI:
                   type: string
+                  description: Where the user is sent after the callback; must be one of the client's `redirectURIs`
                 acsURL:
                   type: string
+                  description: The Assertion Consumer Service URL the IdP should post the SAML response to (the backend's SAML callback endpoint)
+                  example: https://api.example.com/auth/saml/callback
                 state:
                   type: string
+                  description: Opaque value echoed back as the `state` query param of the `redirectURI` returned by the callback
               required:
                 - clientId
                 - redirectURI
@@ -8318,10 +8343,12 @@ paths:
                         $ref: '#/components/schemas/statusOK'
                       ssoRedirectURI:
                         type: string
+                        description: IdP SSO URL with the `SAMLRequest` and `RelayState` query params
                     required:
                       - status
                       - ssoRedirectURI
                   - type: object
+                    description: Unknown client, or `redirectURI` is not one of the client's `redirectURIs`
                     properties:
                       status:
                         type: string
@@ -8332,6 +8359,8 @@ paths:
           $ref: '#/components/responses/400'
         '401':
           $ref: '#/components/responses/401'
+        '402':
+          $ref: '#/components/responses/402'
         '404':
           $ref: '#/components/responses/404'
         '500':
@@ -8342,7 +8371,13 @@ paths:
       tags:
         - SAML Recipe
       description: |
-        Handle the SAML response from the Identity Provider (IdP).
+        Handle the SAML response posted by the Identity Provider (IdP) to the ACS URL.
+
+        - With a `relayState` (SP-initiated flow) the response is matched to the login started with `/recipe/saml/login`; the RelayState is single-use.
+        - Without a `relayState` (IdP-initiated flow) the client is resolved from the assertion's issuer, and the login is only accepted if the client has `allowIDPInitiatedLogin` set.
+
+        On success the user info is stored under a short-lived, single-use `code`, and the response contains the `redirectURI` to send the user to, with `code` (and `state`, if one was given at login) appended as query parameters.
+        The `code` is then exchanged with `/recipe/saml/user`.
       operationId: handleSamlCallback
       parameters:
         - $ref: '#/components/parameters/samlRid'
@@ -8356,13 +8391,15 @@ paths:
               properties:
                 samlResponse:
                   type: string
+                  description: The base64 encoded `SAMLResponse` form field posted by the IdP
                 relayState:
                   type: string
+                  description: The `RelayState` form field posted by the IdP. Omit for IdP-initiated logins.
               required:
                 - samlResponse
       responses:
         '200':
-          description: Returns an intermediate code on success
+          description: Returns the redirect URI (carrying an intermediate code) on success
           content:
             application/json:
               schema:
@@ -8373,6 +8410,8 @@ paths:
                         $ref: '#/components/schemas/statusOK'
                       redirectURI:
                         type: string
+                        description: The login's `redirectURI` (or the client's `defaultRedirectURI` for IdP-initiated logins) with `code` and optionally `state` query params added
+                        example: https://example.com/auth/callback/saml?code=4e5c0e6b-9a7f-4a7e-8d7a-2d1b6c1a9f10&state=abc
                     required:
                       - status
                       - redirectURI
@@ -8380,16 +8419,20 @@ paths:
                     properties:
                       status:
                         type: string
+                        description: |
+                          - `INVALID_RELAY_STATE_ERROR`: unknown, expired or already used `relayState`
+                          - `SAML_RESPONSE_VERIFICATION_FAILED_ERROR`: signature, issuer, audience, destination/recipient, InResponseTo, validity window or replay check failed
+                          - `INVALID_CLIENT_ERROR`: no client matches the response's issuer
+                          - `IDP_LOGIN_DISALLOWED_ERROR`: IdP-initiated response for a client without `allowIDPInitiatedLogin`
                         enum: ['INVALID_RELAY_STATE_ERROR', 'SAML_RESPONSE_VERIFICATION_FAILED_ERROR', 'INVALID_CLIENT_ERROR', 'IDP_LOGIN_DISALLOWED_ERROR']
-                      message:
-                        type: string
                     required:
                       - status
-                      - message
         '400':
           $ref: '#/components/responses/400'
         '401':
           $ref: '#/components/responses/401'
+        '402':
+          $ref: '#/components/responses/402'
         '404':
           $ref: '#/components/responses/404'
         '500':
@@ -8400,7 +8443,8 @@ paths:
       tags:
         - SAML Recipe
       description: |
-        Get user information using an access token.
+        Exchange the single-use `code` returned by `/recipe/saml/callback` (passed as `accessToken`) for the authenticated user's SAML claims.
+        The code is removed on first use; a second call returns `INVALID_TOKEN_ERROR`.
       operationId: getSamlUserInfo
       parameters:
         - $ref: '#/components/parameters/samlRid'
@@ -8414,11 +8458,12 @@ paths:
               properties:
                 accessToken:
                   type: string
+                  description: The `code` query param the user was redirected with after the callback
                 clientId:
                   type: string
+                  description: If given, must match the client the code was issued for (`INVALID_TOKEN_ERROR` otherwise)
               required:
                 - accessToken
-                - clientId
       responses:
         '200':
           description: Returns user information on success
@@ -8432,21 +8477,42 @@ paths:
                         $ref: '#/components/schemas/statusOK'
                       sub:
                         type: string
+                        nullable: true
+                        description: |
+                          The user's id at the IdP. Taken from the first of: the Subject `NameID`,
+                          `http://schemas.microsoft.com/identity/claims/objectidentifier`,
+                          `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name`. `null` if none is present.
                       email:
                         type: string
+                        nullable: true
+                        description: |
+                          Taken from the first of: `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress`,
+                          `mail`, `email`, or the Subject `NameID` when it contains an `@`. `null` if none is present.
                       aud:
                         type: string
+                        description: The SAML client id the code was issued for
                       claims:
                         type: object
+                        description: All assertion attributes keyed by attribute `Name`, plus `NameID` and `NameIDFormat`. Each value is an array of strings.
+                        additionalProperties:
+                          type: array
+                          items:
+                            type: string
+                        example:
+                          NameID: ["user@example.com"]
+                          NameIDFormat: ["urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"]
+                          http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress: ["user@example.com"]
                     required:
                       - status
                       - sub
                       - email
+                      - aud
                       - claims
                   - type: object
                     properties:
                       status:
                         type: string
+                        description: Unknown, expired or already used code, or the code was issued for another client
                         enum: ['INVALID_TOKEN_ERROR']
                     required:
                       - status
@@ -8454,6 +8520,8 @@ paths:
           $ref: '#/components/responses/400'
         '401':
           $ref: '#/components/responses/401'
+        '402':
+          $ref: '#/components/responses/402'
         '404':
           $ref: '#/components/responses/404'
         '500':
@@ -10161,8 +10229,10 @@ components:
       properties:
         clientId:
           type: string
+          example: st_saml_c3e1b9f0-4d4e-4a8c-9b2a-6b1d7f1f1a2b
         clientSecret:
           type: string
+          description: Only present if one was set
         defaultRedirectURI:
           type: string
         redirectURIs:
@@ -10171,8 +10241,10 @@ components:
             type: string
         idpEntityId:
           type: string
+          description: The IdP's entity id, read from `metadataXML`
         idpSigningCertificate:
           type: string
+          description: Base64 encoded signing certificate read from `metadataXML`, if present
         allowIDPInitiatedLogin:
           type: boolean
         enableRequestSigning:
