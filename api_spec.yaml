@@ -4720,7 +4720,7 @@ paths:
         API is tenant specific if `includeAllTenants` is false.
         Else, `tenantId` is ignored.
 
-        A single-tenant count without `includeRecipeIds` is served from the core's user lifecycle ledger (a periodically anchored snapshot plus the changes since) instead of being recomputed on every request; the response tells whether the value came from a snapshot (`approximate`) and as of when (`asOf`). Counts across all tenants or filtered by recipe are always computed exactly.
+        A single-tenant count without `includeRecipeIds` is served from the core's user lifecycle ledger (a periodically anchored snapshot, normally with the changes since folded in) instead of being recomputed on every request. `asOf` is normally close to the request time but can be older (for example while a snapshot refresh is in progress or after a failed recount); read it to judge how fresh `count` is. Counts across all tenants or filtered by recipe are always computed exactly.
 
       parameters:
         - $ref: '#/components/parameters/api-key'
@@ -4755,11 +4755,11 @@ paths:
                     example: 1000000
                   approximate:
                     type: boolean
-                    description: "`true` if `count` was served from a snapshot (plus the changes since) rather than recomputed. Always `false` for all-tenant or recipe-filtered counts."
+                    description: "`true` for a single-tenant count without `includeRecipeIds` (served from the ledger); `false` for all-tenant or recipe-filtered counts, which are computed exactly."
                     example: false
                   asOf:
                     type: number
-                    description: Time (ms since epoch) the returned count is accurate as of.
+                    description: Time (ms since epoch) the returned count is accurate as of. For exact counts this is the request time; for ledger-served counts it can be older.
                     example: 1760000000000
                 required:
                   - status

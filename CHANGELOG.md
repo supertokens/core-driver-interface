@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [5.7.0]
 
-- `/appid-<appId>/<tenantId>/users/count` GET: a single-tenant count without `includeRecipeIds` is now served from the user lifecycle ledger (anchored snapshot plus the changes since) by default, and the response always carries `approximate` and `asOf`. The `allowApproximate` query param is deprecated and ignored. Counts across all tenants or filtered by recipe are still computed exactly (`approximate: false`).
+- `/appid-<appId>/<tenantId>/users/count` GET: a single-tenant count without `includeRecipeIds` is now served from the user lifecycle ledger (anchored snapshot, normally with the changes since folded in) by default, and the response always carries `approximate` (`true` for ledger-served counts) and `asOf` (which can be older than the request time; for exact counts it is the request time). The `allowApproximate` query param is deprecated and ignored. Counts across all tenants or filtered by recipe are still computed exactly (`approximate: false`).
 
 ## [5.6.0]
 
