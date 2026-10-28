@@ -9333,9 +9333,10 @@ paths:
         Sign in the user using the WebAuthn credential.
 
         The sign in options (`webauthnGeneratedOptionsId`, created with `/recipe/webauthn/options/signin`) are single-use:
-        they are consumed atomically with a successful verification, so the same assertion cannot be replayed.
-        Verifying the same assertion a second time returns `OPTIONS_NOT_FOUND_ERROR`.
+        a successful sign in consumes them, so a later sign in with the same `webauthnGeneratedOptionsId` returns `OPTIONS_NOT_FOUND_ERROR`.
         Failed attempts do not consume the options; they stay usable until they expire or are removed.
+
+        Note that requests without a `cdi-version` header are treated as the core's latest CDI version, so their options are consumed too.
       operationId: signInWebAuthNUser
       parameters:
         - $ref: '#/components/parameters/webauthnRid'
@@ -9376,6 +9377,10 @@ paths:
                     properties:
                       status:
                         type: string
+                        description: |
+                          - `INVALID_OPTIONS_ERROR`: the options have expired (`reason`: "Options expired")
+                          - `INVALID_AUTHENTICATOR_ERROR`: the assertion failed verification (`reason` has the details)
+                          - `INVALID_CREDENTIALS_ERROR`: the `credential` object could not be parsed (`reason` has the details)
                         enum: [ 'INVALID_OPTIONS_ERROR', 'INVALID_AUTHENTICATOR_ERROR', 'INVALID_CREDENTIALS_ERROR' ]
                       reason:
                         type: string
@@ -9384,8 +9389,8 @@ paths:
                       status:
                         type: string
                         description: |
-                          - `OPTIONS_NOT_FOUND_ERROR`: unknown or expired options id, or options already consumed by an earlier successful sign in
-                          - `CREDENTIAL_NOT_FOUND_ERROR`: no credential with this id is registered for the options' relying party
+                          - `OPTIONS_NOT_FOUND_ERROR`: unknown options id, or options already consumed by an earlier successful sign in (expired options are reported as `INVALID_OPTIONS_ERROR` until they are cleaned up)
+                          - `CREDENTIAL_NOT_FOUND_ERROR`: no credential with this id is registered for the options' relying party, or the credential's user is not in this tenant
                           - `UNKNOWN_USER_ID_ERROR`: the credential's user no longer exists
                         enum: [ 'OPTIONS_NOT_FOUND_ERROR', 'CREDENTIAL_NOT_FOUND_ERROR', 'UNKNOWN_USER_ID_ERROR' ]
         '400':
