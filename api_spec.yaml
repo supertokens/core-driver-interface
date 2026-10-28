@@ -7,7 +7,7 @@ info:
 
     Those that do not have `<tenantId>` in the path will enforce that the API is called from `public` tenant only.
 
-  version: 5.6.0
+  version: 5.7.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -4720,6 +4720,8 @@ paths:
         API is tenant specific if `includeAllTenants` is false.
         Else, `tenantId` is ignored.
 
+        A single-tenant count without `includeRecipeIds` is served from the core's user lifecycle ledger (a periodically anchored snapshot plus the changes since) instead of being recomputed on every request; the response tells whether the value came from a snapshot (`approximate`) and as of when (`asOf`). Counts across all tenants or filtered by recipe are always computed exactly.
+
       parameters:
         - $ref: '#/components/parameters/api-key'
         - $ref: '#/components/parameters/cdi-version'
@@ -4732,8 +4734,8 @@ paths:
             default: false
         - name: allowApproximate
           description: |
-            If set to true, the core may serve the tenant's count from a periodically refreshed snapshot plus the changes since (cheap on very large tenants) instead of recomputing it. The response then also carries `approximate` and `asOf`.
-            Only applies to single-tenant counts without `includeRecipeIds`; other shapes are always computed exactly.
+            Deprecated and ignored from CDI 5.7: the ledger-served count described above is the default behaviour.
+          deprecated: true
           in: query
           schema:
             type: boolean
@@ -4753,12 +4755,17 @@ paths:
                     example: 1000000
                   approximate:
                     type: boolean
-                    description: Only present when `allowApproximate` was true. `true` if `count` was served from a snapshot (plus the changes since) rather than recomputed.
+                    description: "`true` if `count` was served from a snapshot (plus the changes since) rather than recomputed. Always `false` for all-tenant or recipe-filtered counts."
                     example: false
                   asOf:
                     type: number
-                    description: Only present when `allowApproximate` was true. Time (ms since epoch) the returned count is accurate as of.
+                    description: Time (ms since epoch) the returned count is accurate as of.
                     example: 1760000000000
+                required:
+                  - status
+                  - count
+                  - approximate
+                  - asOf
 
         '400':
           $ref: '#/components/responses/400'
@@ -9832,7 +9839,7 @@ components:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version.
-      example: '5.6'
+      example: '5.7'
       schema:
         type: string
 
