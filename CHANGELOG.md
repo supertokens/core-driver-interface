@@ -12,16 +12,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Session refresh (`/appid-<appId>/recipe/session/refresh` POST):
   - The refresh token is rotated within the refresh, and the previously active refresh token stays accepted for the configured `refresh_token_rotation_grace_period` after a rotation (a retried or concurrent refresh with it gets its own fresh token pair).
-  - Reuse of a refresh token outside the grace period revokes the session and returns `TOKEN_THEFT_DETECTED`, or `UNAUTHORISED` when the core is configured with `recent_token_reuse_behaviour: UNAUTHORISED`. Both responses carry a new `recentTokenReuseSubtype` (`RECENT_PREV`, `ORPHANED_BRANCH`, `STALE_LINEAGE`).
-  - Adds an optional, shorten-only `accessTokenValidity` (ms) request field for the minted access token; out of range values return 400.
-- Session create (`/appid-<appId>/<tenantId>/recipe/session` POST): adds the same optional, shorten-only `accessTokenValidity` (ms) request field.
+  - Reuse of a refresh token (the previous token after the grace period, a token displaced by a grace-period refresh, or a token from an older generation) revokes the session and returns `TOKEN_THEFT_DETECTED`; for the first two the core can be configured with `recent_token_reuse_behaviour: UNAUTHORISED` to return `UNAUTHORISED` instead. Both responses carry a new `recentTokenReuseSubtype` (`RECENT_PREV`, `ORPHANED_BRANCH`, `STALE_LINEAGE`).
+  - Adds an optional, shorten-only `accessTokenValidity` (integer ms) request field for the minted access token; out of range values return 400. No validity jitter is applied when it is given.
+- Session create (`/appid-<appId>/<tenantId>/recipe/session` POST): adds the same optional, shorten-only `accessTokenValidity` (integer ms) request field.
 - Session verify (`/appid-<appId>/recipe/session/verify` POST) is stateless:
   - It never writes to the database and never returns a replacement `accessToken`; the `accessToken` field is removed from the success response. Payload changes are only picked up on refresh.
-  - With `checkDatabase: true` the response carries a new `payloadUpdateAvailable` boolean, and an access token from a rotated-out refresh token branch returns `UNAUTHORISED` (a refresh recovers the session).
+  - With `checkDatabase: true` the response carries a new `payloadUpdateAvailable` boolean, and an access token that belongs to neither the session's current nor its previous refresh token returns `UNAUTHORISED` (a refresh recovers the session).
   - Can only be called from the `public` tenant (403 otherwise).
-- Access token validity may be shortened by up to the configured `access_token_validity_jitter` fraction on create and refresh; `accessToken.expiry` is authoritative.
-- `/appid-<appId>/<tenantId>/users/count` GET: adds an opt-in `allowApproximate` query param. When set, a single-tenant count without `includeRecipeIds` may be served from a snapshot plus the changes since, and the response carries new `approximate` and `asOf` fields.
-- Adds the `403` response (used when an app specific API is called with a non-public tenant).
+- Unless `accessTokenValidity` is given, access token validity may be shortened by up to the configured `access_token_validity_jitter` fraction on create and refresh; `accessToken.expiry` is authoritative.
+- `/appid-<appId>/<tenantId>/users/count` GET: adds an opt-in `allowApproximate` query param. When set, a single-tenant count without `includeRecipeIds` may be served from a periodically refreshed snapshot (which can lag behind recent changes), and the response carries new `approximate` and `asOf` fields.
+- Adds the `403` response component (text/plain), used here for `/recipe/session/verify` called with a non-public tenant.
 
 ## [5.5.0]
 

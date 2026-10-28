@@ -3152,7 +3152,7 @@ paths:
       description: |
         Create a new Session
 
-        The minted access token's validity may be shortened by up to the configured `access_token_validity_jitter` fraction (default 5%); the actual expiry is in `accessToken.expiry`.
+        When `accessTokenValidity` is not given, the minted access token's validity may be shortened by up to the configured `access_token_validity_jitter` fraction (default 5%); the actual expiry is in `accessToken.expiry`.
       parameters:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
@@ -3176,10 +3176,10 @@ paths:
                   description: Decides if the token should be signed with a dynamic or static key, defaults to true
                   example: false
                 accessTokenValidity:
-                  type: number
+                  type: integer
                   description: |
                     Optional validity (in milliseconds) for the minted access token. Shorten-only: must be greater than 0 and at most the configured `access_token_validity`, otherwise the request fails with a 400.
-                    Defaults to the configured `access_token_validity`.
+                    Defaults to the configured `access_token_validity` (with jitter applied); no jitter is applied when this is given.
                   example: 300000
       responses:
         '200':
@@ -3395,7 +3395,7 @@ paths:
         Verify a Session
 
         Verification is stateless: this API never writes to the database and never returns a replacement access token. Access token payload changes are only picked up on refresh.
-        With `checkDatabase: true` the session row is read to check that the session still exists and that the access token belongs to the current (or previous, within the rotation grace period) refresh token; a token from a rotated-out branch gets `UNAUTHORISED` (refresh to recover). The response then also tells whether the payload stored in the database differs from the one in the token (`payloadUpdateAvailable`).
+        With `checkDatabase: true` the session row is read to check that the session still exists and that the access token belongs to the session's current or previous refresh token; a token from an older, rotated-out refresh token gets `UNAUTHORISED` (refresh to recover). The response then also tells whether the payload stored in the database differs from the one in the token (`payloadUpdateAvailable`).
 
         This API can only be called from the `public` tenant; the tenant is taken from the access token.
       parameters:
@@ -3472,10 +3472,10 @@ paths:
       description: |
         Refresh a Session
 
-        The refresh token is rotated on every successful refresh. The previously active refresh token stays accepted for the configured `refresh_token_rotation_grace_period` (default 30s) after a rotation, so a retried or concurrent refresh with it succeeds and gets its own fresh token pair (the tokens it displaces become invalid).
-        Presenting a refresh token outside the grace period, or one from an older generation, is reuse: the session is revoked and the response is `TOKEN_THEFT_DETECTED` or, for recent reuse when the core is configured with `recent_token_reuse_behaviour: UNAUTHORISED`, `UNAUTHORISED`; both carry `recentTokenReuseSubtype`.
+        The refresh token is rotated on every successful refresh. The previously active refresh token stays accepted for the configured `refresh_token_rotation_grace_period` (default 30s) after a rotation, so a retried or concurrent refresh with it succeeds and gets its own fresh token pair. The pair it displaces is dead: presenting that displaced refresh token is reuse (`ORPHANED_BRANCH`), even inside the grace window - e.g. with two concurrent refreshes of the same token, the losing client's next refresh revokes the session, so SDKs should serialise refreshes per session.
+        Presenting the previous refresh token after the grace period (`RECENT_PREV`), a displaced one (`ORPHANED_BRANCH`) or one from an older generation (`STALE_LINEAGE`) is reuse: the session is revoked and the response is `TOKEN_THEFT_DETECTED`. For `RECENT_PREV` and `ORPHANED_BRANCH` the core can be configured with `recent_token_reuse_behaviour: UNAUTHORISED` to report `UNAUTHORISED` instead; `STALE_LINEAGE` is always `TOKEN_THEFT_DETECTED`. Both responses carry `recentTokenReuseSubtype`.
 
-        The minted access token's validity may be shortened by up to the configured `access_token_validity_jitter` fraction (default 5%); the actual expiry is in `accessToken.expiry`.
+        When `accessTokenValidity` is not given, the minted access token's validity may be shortened by up to the configured `access_token_validity_jitter` fraction (default 5%); the actual expiry is in `accessToken.expiry`.
       parameters:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
@@ -3495,10 +3495,10 @@ paths:
                 useDynamicSigningKey:
                   type: boolean
                 accessTokenValidity:
-                  type: number
+                  type: integer
                   description: |
                     Optional validity (in milliseconds) for the minted access token. Shorten-only: must be greater than 0 and at most the configured `access_token_validity`, otherwise the request fails with a 400.
-                    Defaults to the configured `access_token_validity`.
+                    Defaults to the configured `access_token_validity` (with jitter applied); no jitter is applied when this is given.
                   example: 300000
               required: [ refreshToken, enableAntiCsrf, useDynamicSigningKey ]
       responses:
@@ -4732,7 +4732,7 @@ paths:
             default: false
         - name: allowApproximate
           description: |
-            If set to true, the core may serve the tenant's count from a periodically refreshed snapshot plus the changes since (cheap on very large tenants) instead of recomputing it. The response then also carries `approximate` and `asOf`.
+            If set to true, the core may serve the tenant's count from a periodically refreshed snapshot instead of recomputing it (cheap on very large tenants); the value may then lag behind recent changes. The response then also carries `approximate` and `asOf`.
             Only applies to single-tenant counts without `includeRecipeIds`; other shapes are always computed exactly.
           in: query
           schema:
@@ -4753,11 +4753,11 @@ paths:
                     example: 1000000
                   approximate:
                     type: boolean
-                    description: Only present when `allowApproximate` was true. `true` if `count` was served from a snapshot (plus the changes since) rather than recomputed.
+                    description: Only present when `allowApproximate` was true. `true` if `count` was served from a snapshot rather than recomputed.
                     example: false
                   asOf:
                     type: number
-                    description: Only present when `allowApproximate` was true. Time (ms since epoch) the returned count is accurate as of.
+                    description: Only present when `allowApproximate` was true. Time (ms since epoch) the returned count is accurate as of; for a snapshot-served count this can be older than the request time.
                     example: 1760000000000
 
         '400':
