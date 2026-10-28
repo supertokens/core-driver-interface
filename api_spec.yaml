@@ -7,7 +7,7 @@ info:
 
     Those that do not have `<tenantId>` in the path will enforce that the API is called from `public` tenant only.
 
-  version: 5.5.0
+  version: 5.6.0
   title: Core Driver Interface
   contact:
     email: team@supertokens.io
@@ -3151,6 +3151,8 @@ paths:
       operationId: createNewSession
       description: |
         Create a new Session
+
+        The minted access token's validity may be shortened by up to the configured `access_token_validity_jitter` fraction (default 5%); the actual expiry is in `accessToken.expiry`.
       parameters:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
@@ -3173,6 +3175,12 @@ paths:
                   type: boolean
                   description: Decides if the token should be signed with a dynamic or static key, defaults to true
                   example: false
+                accessTokenValidity:
+                  type: number
+                  description: |
+                    Optional validity (in milliseconds) for the minted access token. Shorten-only: must be greater than 0 and at most the configured `access_token_validity`, otherwise the request fails with a 400.
+                    Defaults to the configured `access_token_validity`.
+                  example: 300000
       responses:
         '200':
           description: Create a new Session
@@ -3385,6 +3393,11 @@ paths:
       operationId: verifySession
       description: |
         Verify a Session
+
+        Verification is stateless: this API never writes to the database and never returns a replacement access token. Access token payload changes are only picked up on refresh.
+        With `checkDatabase: true` the session row is read to check that the session still exists and that the access token belongs to the current (or previous, within the rotation grace period) refresh token; a token from a rotated-out branch gets `UNAUTHORISED` (refresh to recover). The response then also tells whether the payload stored in the database differs from the one in the token (`payloadUpdateAvailable`).
+
+        This API can only be called from the `public` tenant; the tenant is taken from the access token.
       parameters:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
@@ -3404,7 +3417,7 @@ paths:
                   example: false
                 checkDatabase:
                   type: boolean
-                  description: Decides if we always check if the session exists in the DB or just do token validation, defaults to false.
+                  description: Decides if we always check if the session exists in the DB (and its refresh token lineage) or just do token validation, defaults to false.
                   example: false
                 antiCsrfToken:
                   $ref: '#/components/schemas/token'
@@ -3421,8 +3434,13 @@ paths:
                         $ref: '#/components/schemas/statusOK'
                       session:
                         $ref: '#/components/schemas/session'
-                      accessToken:
-                        $ref: '#/components/schemas/cookieInfo'
+                      payloadUpdateAvailable:
+                        type: boolean
+                        description: Only present when `checkDatabase` is true. `true` if the access token payload stored in the database differs from the one in the verified token, i.e. a refresh would yield an updated payload.
+                        example: false
+                    required:
+                      - status
+                      - session
                   - $ref: '#/components/schemas/unauthorisedMessageResponse'
                   - type: object
                     properties:
@@ -3437,6 +3455,9 @@ paths:
         '401':
           $ref: '#/components/responses/401'
 
+        '403':
+          $ref: '#/components/responses/403'
+
         '404':
           $ref: '#/components/responses/404'
 
@@ -3450,6 +3471,11 @@ paths:
       operationId: refreshSession
       description: |
         Refresh a Session
+
+        The refresh token is rotated on every successful refresh. The previously active refresh token stays accepted for the configured `refresh_token_rotation_grace_period` (default 30s) after a rotation, so a retried or concurrent refresh with it succeeds and gets its own fresh token pair (the tokens it displaces become invalid).
+        Presenting a refresh token outside the grace period, or one from an older generation, is reuse: the session is revoked and the response is `TOKEN_THEFT_DETECTED` or, for recent reuse when the core is configured with `recent_token_reuse_behaviour: UNAUTHORISED`, `UNAUTHORISED`; both carry `recentTokenReuseSubtype`.
+
+        The minted access token's validity may be shortened by up to the configured `access_token_validity_jitter` fraction (default 5%); the actual expiry is in `accessToken.expiry`.
       parameters:
         - $ref: '#/components/parameters/sessionRid'
         - $ref: '#/components/parameters/api-key'
@@ -3468,6 +3494,12 @@ paths:
                   $ref: '#/components/schemas/token'
                 useDynamicSigningKey:
                   type: boolean
+                accessTokenValidity:
+                  type: number
+                  description: |
+                    Optional validity (in milliseconds) for the minted access token. Shorten-only: must be greater than 0 and at most the configured `access_token_validity`, otherwise the request fails with a 400.
+                    Defaults to the configured `access_token_validity`.
+                  example: 300000
               required: [ refreshToken, enableAntiCsrf, useDynamicSigningKey ]
       responses:
         '200':
@@ -3505,7 +3537,14 @@ paths:
                             $ref: '#/components/schemas/userId'
                           recipeUserId:
                             $ref: '#/components/schemas/userId'
-                  - $ref: '#/components/schemas/unauthorisedMessageResponse'
+                      recentTokenReuseSubtype:
+                        $ref: '#/components/schemas/refreshTokenReuseSubtype'
+                  - allOf:
+                    - $ref: '#/components/schemas/unauthorisedMessageResponse'
+                    - type: object
+                      properties:
+                        recentTokenReuseSubtype:
+                          $ref: '#/components/schemas/refreshTokenReuseSubtype'
 
         '400':
           $ref: '#/components/responses/400'
@@ -4691,6 +4730,14 @@ paths:
           schema:
             type: boolean
             default: false
+        - name: allowApproximate
+          description: |
+            If set to true, the core may serve the tenant's count from a periodically refreshed snapshot plus the changes since (cheap on very large tenants) instead of recomputing it. The response then also carries `approximate` and `asOf`.
+            Only applies to single-tenant counts without `includeRecipeIds`; other shapes are always computed exactly.
+          in: query
+          schema:
+            type: boolean
+            default: false
       responses:
         '200':
           description: Get number of users
@@ -4704,6 +4751,14 @@ paths:
                   count:
                     type: number
                     example: 1000000
+                  approximate:
+                    type: boolean
+                    description: Only present when `allowApproximate` was true. `true` if `count` was served from a snapshot (plus the changes since) rather than recomputed.
+                    example: false
+                  asOf:
+                    type: number
+                    description: Only present when `allowApproximate` was true. Time (ms since epoch) the returned count is accurate as of.
+                    example: 1760000000000
 
         '400':
           $ref: '#/components/responses/400'
@@ -9777,7 +9832,7 @@ components:
       name: cdi-version
       in: header
       description: X.Y of the X.Y.Z CDI version.
-      example: '5.5'
+      example: '5.6'
       schema:
         type: string
 
@@ -9897,6 +9952,13 @@ components:
         text/plain:
           schema:
             $ref: "#/components/schemas/licenseError"
+
+    403:
+      description: error code 403
+      content:
+        text/plain:
+          schema:
+            $ref: "#/components/schemas/forbiddenError"
 
     hello:
       description: return a simple hello message
@@ -10411,6 +10473,15 @@ components:
         message:
           $ref: '#/components/schemas/message'
 
+    refreshTokenReuseSubtype:
+      type: string
+      description: |
+        Why a presented refresh token was classified as reuse. Only present on reuse detected at refresh:
+        - `RECENT_PREV`: the previous refresh token, presented after the rotation grace period ended
+        - `ORPHANED_BRANCH`: a token displaced by a grace-period re-rotation
+        - `STALE_LINEAGE`: a token from an older generation
+      enum: ['RECENT_PREV', 'ORPHANED_BRANCH', 'STALE_LINEAGE']
+
     helloResponse:
       type: string
       enum: ['Hello']
@@ -10488,6 +10559,10 @@ components:
       type: string
       enum:
         - License Error
+
+    forbiddenError:
+      type: string
+      example: Only public tenantId can call this app specific API
 
     tenantId:
       type: string
