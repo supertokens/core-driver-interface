@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [5.4.0]
+
+- Adds SAML related APIs:
+  - PUT `/appid-<appId>/<tenantId>/recipe/saml/clients`
+  - GET `/appid-<appId>/<tenantId>/recipe/saml/clients/list`
+  - POST `/appid-<appId>/<tenantId>/recipe/saml/clients/remove`
+  - POST `/appid-<appId>/<tenantId>/recipe/saml/login`
+  - POST `/appid-<appId>/<tenantId>/recipe/saml/callback`
+  - POST `/appid-<appId>/<tenantId>/recipe/saml/user`
+
 ## [5.3.1]
 
 - Fixes various type and path errors in the spec
