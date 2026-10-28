@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [5.4.1]
+
+- `/appid-<appId>/<tenantId>/recipe/saml/user` POST: `clientId` is required (it was wrongly marked optional).
+- `/appid-<appId>/<tenantId>/recipe/saml/clients` PUT: documents the optional `acsURLs` allow-list and that `allowIDPInitiatedLogin: true` requires it; the client object (PUT response and `/clients/list`) carries `acsURLs` when set. `/recipe/saml/login` returns `INVALID_CLIENT_ERROR` for an `acsURL` outside the list, and the callback returns `IDP_LOGIN_DISALLOWED_ERROR` for an IdP-initiated login on a client without one.
+- Version notes for cores declaring CDI 5.4 (11.3.0 and later):
+  - `acsURLs`, the single-use RelayState, the `InResponseTo` / `Destination` / `Recipient` / assertion replay checks on the callback, and `INVALID_CLIENT_ERROR` (instead of a 500) for an IdP-initiated response with an unknown issuer exist from the GHSA-3r7x-rhvc-fw28 patched versions: 11.3.8, 11.4.8, 12.0.11, 12.1.2, 12.2.1, 12.3.1. Earlier releases ignore `acsURLs`.
+  - `/recipe/saml/user` claims come from the response's first (audience-validated) assertion from the GHSA-wfg2-vqfg-rqh6 patched versions (same list); earlier releases merged all assertions.
+  - The `mail` / `email` fallbacks for `email` exist from core 12.0.
+  - On 11.3.x / 11.4.x, `/recipe/saml/login` builds a malformed `ssoRedirectURI` when the IdP SSO URL already has a query string (fixed in 12.x).
+- Intentionally not part of the CDI: `GET /.well-known/sp-metadata` and the `/recipe/saml/legacy/{authorize,callback,token,userinfo}` routes. They are browser / Polis-compatibility endpoints served by the core directly, not SDK-facing APIs.
+
 ## [5.4.0]
 
 - Adds SAML related APIs:
