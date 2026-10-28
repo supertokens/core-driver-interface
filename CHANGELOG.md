@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [5.8.0]
+
+- `/appid-<appId>/<tenantId>/recipe/saml/clients` PUT:
+  - Adds an optional `attributeMapping` (`userId`, `email`, `firstName`, `lastName`, each an ordered list of 1-10 assertion claim names; `NameID` is the Subject NameID). Invalid mappings return a 400 naming the key.
+  - `acsURLs` (documented since 5.4.1) can now be cleared with `null`; `[]` also clears it.
+  - Both fields are required once set: an update of a client that has either field must send it (its current value keeps it, `null` / `[]` / `{}` clears it); leaving the key out returns a 400 naming the field. Requests on CDI < 5.8 keep the stored value instead.
+  - The client object (PUT response and `/recipe/saml/clients/list`) includes `acsURLs` and `attributeMapping` when set.
+- `/appid-<appId>/<tenantId>/recipe/saml/user` POST: for clients with an `attributeMapping`, `sub` and `email` are resolved through it (first listed claim whose first value is non-blank; blank values fall through, unlike the built-in rules), and `firstName` / `lastName` are returned when mapped and found.
+
 ## [5.7.0]
 
 - `/appid-<appId>/<tenantId>/users/count` GET: a single-tenant count without `includeRecipeIds` is now served from the user lifecycle ledger (anchored snapshot plus the changes since) by default, and the response always carries `approximate` and `asOf`. The `allowApproximate` query param is deprecated and ignored. Counts across all tenants or filtered by recipe are still computed exactly (`approximate: false`).
